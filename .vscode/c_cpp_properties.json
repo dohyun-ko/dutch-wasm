@@ -4,7 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/Users/dori/Projects/WASM/emsdk/upstream/emscripten/system/include"
+                "/Users/dori/Projects/WASM/emsdk/upstream/emscripten/lib"
             ],
             "defines": [],
             "macFrameworkPath": [
@@ -14,6 +14,29 @@
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "macos-clang-arm64"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "d:\\gist\\2-1\\OOP\\Project\\wasm\\dutch-wasm/**",
+                "d:\\emscripten\\emsdk\\upstream\\emscripten\\system\\include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/MinGW/bin/g++.exe",
+            "intelliSenseMode": "windows-clang-x64",
+            "compilerPathInCppPropertiesJson": "C:/MinGW/bin/g++.exe",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/**"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "cppStandard": "c++17"
         }
     ],
     "version": 4
