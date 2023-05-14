@@ -17,14 +17,12 @@ val getElementById(string id) {
 int main() {
     val root = getElementById("root");
 
-    Flex container("column", "center", "center", "10px");
-    Button loginButton("Login");
-    Input usernameInput("Username");
-    Input passwordInput("Password");
+    Flex* container = new Flex("column", "center", "center", "10px");
+    Button* loginButton = new Button("Login");
+    Input* usernameInput = new Input("Username");
+    Input* passwordInput = new Input("Password");
 
-    root.call<void>("appendChild", container.getElement());
+    root.call<void>("appendChild", container->getElement());
 
-    container.appendChildren({&usernameInput, &passwordInput, &loginButton});
-
-    
+    container->appendChildren({usernameInput, passwordInput, loginButton});
 }

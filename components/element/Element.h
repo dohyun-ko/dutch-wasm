@@ -15,6 +15,8 @@ class Element {
 
 public:
     Element(string tag);
+    
+    virtual ~Element();
 
     void appendChildren(Element* child);
 

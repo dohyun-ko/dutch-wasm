@@ -15,3 +15,7 @@ Flex::Flex(
 ) : Element("div") {
     getElement().set("style", "display: flex; flex-direction: " + direction + "; justify-content: " + justifyContent + "; align-items: " + alignItems + "; gap: " + gap + ";");
 }
+
+Flex::~Flex() {
+    
+}

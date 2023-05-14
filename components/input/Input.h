@@ -12,4 +12,6 @@ class Input : public Element {
     string placeholder;
 public:
     Input(string placeholder = "");
+    
+    virtual ~Input() override;
 };

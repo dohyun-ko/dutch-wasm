@@ -4,7 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/Users/dori/Projects/WASM/emsdk/upstream/emscripten/lib"
+                "/Users/dori/Projects/WASM/emsdk/upstream/emscripten/system/include"
             ],
             "defines": [],
             "macFrameworkPath": [

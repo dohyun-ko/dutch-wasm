@@ -16,5 +16,7 @@ public:
         string alignItems = "center",
         string gap = "0"
     );
+    
+    virtual ~Flex() override;
 };
 
