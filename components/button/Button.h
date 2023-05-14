@@ -14,7 +14,8 @@ class Button: public Element {
 
 public:
     Button(string text);
-    
+    virtual ~Button() override;
+
     void changeText(string text);
     void setOnClick(void (*callback)());
 };

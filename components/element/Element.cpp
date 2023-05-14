@@ -8,12 +8,19 @@ using namespace std;
 
 
 void Element::appendChild(Element* child) {
-    element.call<void>("appendChild", child->getElement());
+    getElement().call<void>("appendChild", child->getElement());
     children.push_back(child);
 }
 
 Element::Element(string tag) {
     element = val::global("document").call<val>("createElement", val(tag));
+}
+
+Element::~Element() {
+    for (Element* child : children) {
+        delete child;
+    }
+    getElement().call<void>("remove");
 }
 
 void Element::appendChildren(Element* child) {
