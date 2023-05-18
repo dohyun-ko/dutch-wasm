@@ -2,20 +2,25 @@
 
 #include <emscripten/val.h>
 #include <string>
+#include <functional>
+#include <unordered_map>
 
 #include "../element/Element.h"
+#include "../state/State.h"
 
-using namespace emscripten;
-using namespace std;
 
 class Button: public Element {
-    string text;
-    void (*onClick)();
+    State* text;
+    std::function<void()> onClick;
+    static std::unordered_map<string, std::function<void()>> handlers;
+    virtual void update() override;
 
 public:
-    Button(string text);
+    Button(State* text);
+
     virtual ~Button() override;
 
-    void changeText(string text);
-    void setOnClick(void (*callback)());
+    void setOnClick(std::function<void()> onClick);
+
+    static void clickHandler(emscripten::val e);
 };

@@ -1,5 +1,6 @@
 emcc --bind -O3 \
   components/element/Element.cpp \
+  components/state/State.cpp \
   components/button/Button.cpp \
   components/flex/Flex.cpp \
   components/input/Input.cpp \
