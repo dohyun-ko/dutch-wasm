@@ -10,6 +10,8 @@ add_executable(index
     components/button/Button.cpp
     components/flex/Flex.cpp
     components/input/Input.cpp
+    components/state/State.cpp
+    components/style/Style.cpp
     index.cpp
 )
 # Link the Emscripten bindings library
