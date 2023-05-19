@@ -2,3 +2,8 @@
 **/*.wasm
 
 .vscode/
+
+CMakefiles/*
+CMake_install.cmake
+CMakeCache.txt
+Makefile
