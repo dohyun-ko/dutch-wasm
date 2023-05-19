@@ -12,9 +12,10 @@ add_executable(index
     components/input/Input.cpp
     components/state/State.cpp
     components/style/Style.cpp
+    request/request.cpp
     index.cpp
 )
 # Link the Emscripten bindings library
 target_link_libraries(index
-    "--bind"
+    "--bind -s FETCH=1"
 )
