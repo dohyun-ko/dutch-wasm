@@ -8,9 +8,11 @@ using namespace std;
 
 class State {
     string val = "";
+
     vector<Element*> observers;
 
     void notify();
+
 public:
     State(string val);
 

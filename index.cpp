@@ -6,6 +6,8 @@
 #include "components/button/Button.h"
 #include "components/flex/Flex.h"
 #include "components/input/Input.h"
+#include "components/state/State.h"
+#include "components/style/Style.h"
 
 
 using namespace emscripten;
@@ -27,11 +29,24 @@ int main() {
 
     root.call<void>("appendChild", container->getElement());
 
+
+    loginButton->getStyle()
+        .setWidth("200px")
+        .setHeight("44px")
+        .setBackground("#405cf5")
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#FFFFFF")
+        .setPadding("0 25px");
+
     container->appendChildren({usernameInput, passwordInput, loginButton});
 
     loginButton->setOnClick([&]() {
         loginText->setState("Logout");
     });
 
-}
+    cout << loginButton->getStyle().getCssString() << endl;
 
+
+}
