@@ -6,16 +6,20 @@
 using namespace emscripten;
 using namespace std;
 
+class Style;
+class State;
+
 class Element {
     static int idCount;
     string id;
     val element;
+    Style* style;
     vector<Element*> children;
 
     void appendChild(Element* child);
 
 public:
-    Element(string tag);
+    explicit Element(string tag, Style* style = nullptr);
     
     virtual ~Element();
 
@@ -29,4 +33,6 @@ public:
     virtual void update();
 
     string getId();
+
+    Style& getStyle();
 };
