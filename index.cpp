@@ -7,9 +7,9 @@
 #include "components/button/Button.h"
 #include "components/flex/Flex.h"
 #include "components/input/Input.h"
-#include "request/request.h"
 #include "components/state/State.h"
 #include "components/style/Style.h"
+#include "apiClient/apiClient.h"
 
 using namespace emscripten;
 using namespace std;
@@ -21,10 +21,12 @@ val getElementById(string id) {
 int main() {
     val root = getElementById("root");
 
+    State* webTextState = new State("loading");
     State* loginText = new State("Login");
 
     Flex* container = new Flex("column", "center", "center", "10px");
     Button* loginButton = new Button(loginText);
+    Button* webButton = new Button(webTextState);
     Input* usernameInput = new Input("Username");
     Input* passwordInput = new Input("Password");
 
@@ -41,23 +43,31 @@ int main() {
         .setColor("#FFFFFF")
         .setPadding("0 25px");
 
-    container->appendChildren({usernameInput, passwordInput, loginButton});
+    webButton->getStyle()
+        .setWidth("200px")
+        .setHeight("44px")
+        .setBackground("#405cf5")
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#FFFFFF")
+        .setPadding("0 25px");
+
+    container->appendChildren({usernameInput, passwordInput, loginButton, webButton});
 
     loginButton->setOnClick([&]() {
         loginText->setState("Logout");
     });
     cout << loginButton->getStyle().getCssString() << endl;
 
-    Request* request = new Request("http://localhost:3000", "GET");
-    request->setOnSuccess([](emscripten_fetch_t *fetch) {
-        cout << "Success" << endl;
-        cout << fetch->status << endl;
-        string data = string((char*)fetch->data, fetch->numBytes);
-        cout << data << endl;
-    });
-    request->setOnError([](emscripten_fetch_t *fetch) {
-        cout << "Error" << endl;
-    });
-    request->send();
-    delete request;
+    ApiClient* apiClient = new ApiClient("http://localhost:3000", "GET");
+    emscripten_fetch_t* res = apiClient->send();
+    if (res->status != 200) {
+        cout << "Error: " << res->status << " " << res->statusText << endl;
+        delete apiClient;
+        return 1;
+    }
+    string data = string(res->data, res->numBytes);
+    webTextState->setState(data);
+    delete apiClient;
 }
