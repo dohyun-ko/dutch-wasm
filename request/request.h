@@ -10,7 +10,7 @@ class Request {
         void send();
         void setOnSuccess(void (*onSuccess)(emscripten_fetch_t *fetch));
         void setOnError(void (*onError)(emscripten_fetch_t *fetch));
-        emscripten_fetch_t* getFetch();
+        void setOnProgress(void (*onProgress)(emscripten_fetch_t *fetch));
     private:
         string url;
         string method;
@@ -18,4 +18,5 @@ class Request {
         emscripten_fetch_t *fetch;
         void (*onSuccess)(emscripten_fetch_t *fetch);
         void (*onError)(emscripten_fetch_t *fetch);  
+        void (*onProgress)(emscripten_fetch_t *fetch);
 };

@@ -46,16 +46,18 @@ int main() {
     loginButton->setOnClick([&]() {
         loginText->setState("Logout");
     });
+    cout << loginButton->getStyle().getCssString() << endl;
 
     Request* request = new Request("http://localhost:3000", "GET");
     request->setOnSuccess([](emscripten_fetch_t *fetch) {
         cout << "Success" << endl;
         cout << fetch->status << endl;
-        cout << fetch->data << endl;
+        string data = string((char*)fetch->data, fetch->numBytes);
+        cout << data << endl;
     });
     request->setOnError([](emscripten_fetch_t *fetch) {
         cout << "Error" << endl;
     });
     request->send();
-    cout << loginButton->getStyle().getCssString() << endl;
+    delete request;
 }
