@@ -13,6 +13,9 @@ add_executable(index
     components/state/State.cpp
     components/style/Style.cpp
     apiClient/apiClient.cpp
+    pages/loginPage/LoginPage.cpp
+    pages/mainPage/MainPage.cpp
+    pages/page/Page.cpp
     index.cpp
 )
 # Link the Emscripten bindings library
