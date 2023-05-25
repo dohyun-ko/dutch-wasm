@@ -8,7 +8,7 @@
 #include "components/flex/Flex.h"
 #include "components/input/Input.h"
 #include "request/request.h"
-#include "components/state/State.h"
+#include "components/state/State.cpp"
 #include "components/style/Style.h"
 
 using namespace emscripten;
@@ -21,7 +21,7 @@ val getElementById(string id) {
 int main() {
     val root = getElementById("root");
 
-    State* loginText = new State("Login");
+    State<string>* loginText = new State<string>("Login");
 
     Flex* container = new Flex("column", "center", "center", "10px");
     Button* loginButton = new Button(loginText);
@@ -46,7 +46,7 @@ int main() {
     loginButton->setOnClick([&]() {
         loginText->setState("Logout");
     });
-
+    
     Request* request = new Request("http://localhost:3000", "GET");
     request->setOnSuccess([](emscripten_fetch_t *fetch) {
         cout << "Success" << endl;

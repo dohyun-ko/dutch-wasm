@@ -6,17 +6,17 @@
 #include <unordered_map>
 
 #include "../element/Element.h"
-#include "../state/State.h"
+#include "../state/State.cpp"
 
 
 class Button: public Element {
-    State* text;
+    State<string>* text;
     std::function<void()> onClick;
     static std::unordered_map<string, std::function<void()>> handlers;
     virtual void update() override;
 
 public:
-    Button(State* text);
+    Button(State<string>* text);
 
     virtual ~Button() override;
 

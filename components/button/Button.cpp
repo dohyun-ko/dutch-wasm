@@ -6,15 +6,15 @@
 
 #include "../element/Element.h"
 #include "Button.h"
-#include "../state/State.h"
+#include "../state/State.cpp"
 #include "../style/Style.h"
 
 #include <iostream>
 
 
-Button::Button(State* text) : Element("button"), text(text) {
+Button::Button(State<string>* text) : Element("button"), text(text) {
     text->attach(this);
-    getElement().set("innerHTML", text->getState());
+    getElement().set("innerHTML", text->getValue());
 }
 
 Button::~Button() {
@@ -22,7 +22,7 @@ Button::~Button() {
 }
 
 void Button::update() {
-    getElement().set("innerHTML", text->getState());
+    getElement().set("innerHTML", text->getValue());
     getElement().set("style", getStyle().getCssString());
 }
 
