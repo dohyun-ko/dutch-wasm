@@ -7,7 +7,6 @@ using namespace emscripten;
 using namespace std;
 
 class Style;
-class State;
 
 class Element {
     static int idCount;

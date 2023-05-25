@@ -22,8 +22,8 @@ val getElementById(string id) {
 int main() {
     val root = getElementById("root");
 
-    State* webTextState = new State("loading");
-    State* loginText = new State("Login");
+    State<string>* webTextState = new State<string>("loading");
+    State<string>* loginText = new State<string>("Login");
 
     Flex* container = new Flex("column", "center", "center", "10px");
     Button* loginButton = new Button(loginText);
@@ -59,6 +59,9 @@ int main() {
     loginButton->setOnClick([&]() {
         loginText->setState("Logout");
     });
+    
+    ApiClient* request = new ApiClient("http://localhost:3000", "GET");
+    request->send();
     cout << loginButton->getStyle().getCssString() << endl;
 
     unique_ptr<ApiClient> apiClient(new ApiClient("http://localhost:3000/test", "GET", { QueryParam("test", "12345678901234567890123456789012345678901234567890") }));

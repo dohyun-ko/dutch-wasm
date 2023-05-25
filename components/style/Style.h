@@ -36,7 +36,7 @@ public:
 
     ~Style();
 
-     void attach(Element* observer);
+    void attach(Element* observer);
 
     void detach(Element* observer);
 
