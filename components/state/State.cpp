@@ -1,31 +1,41 @@
+#pragma once
+
 #include <string>
-#include <vector>
 #include "../element/Element.h"
-#include "State.h"
+#include <vector>
 
 using namespace std;
 
-void State::notify() {
-    for (auto observer : observers) {
-        observer->update();
+template <class T>
+class State {
+    T val;
+
+    vector<Element*> observers;
+
+    void notify() {
+        for (auto observer : observers) {
+            observer->update();
+        }
     }
-}
 
-State::State(string val) : val(val) {}
+public:
+    State(T val) : val(val) {}
+    ~State() {}
 
-void State::attach(Element* observer) {
-    observers.push_back(observer);
-}
+    void attach(Element* observer) {
+        observers.push_back(observer);
+    }
 
-void State::detach(Element* observer) {
-    observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
-}
+    void detach(Element* observer) {
+        observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
+    }
 
-void State::setState(string val) {
-    this->val = val;
-    notify();
-}
+    virtual void setState(T val) {
+        this->val = val;
+        notify();
+    }
 
-string State::getState() {
-    return val;
-}
+    virtual T getValue() {
+        return val;
+    }
+};
