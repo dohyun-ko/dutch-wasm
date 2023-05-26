@@ -7,7 +7,7 @@
 #include "components/button/Button.h"
 #include "components/flex/Flex.h"
 #include "components/input/Input.h"
-#include "components/state/State.h"
+#include "components/state/State.cpp"
 #include "components/style/Style.h"
 #include "apiClient/apiClient.h"
 
