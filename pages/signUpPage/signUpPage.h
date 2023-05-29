@@ -1,11 +1,11 @@
-#pragma once
+#pragma once 
 #include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 
-class LoginPage: public Page {
+class SignUpPage: public Page {
     State<string>* webTextState;
     State<string>* loginText;
     Flex* container;
@@ -13,9 +13,10 @@ class LoginPage: public Page {
     Button* webButton;
     Input* usernameInput;
     Input* passwordInput;
+    Input* nicknameInput;
     public:
-        LoginPage(val root);
-        ~LoginPage();
+        SignUpPage(val root);
+        ~SignUpPage();
         void render();
         void remove();
 };

@@ -11,6 +11,7 @@ class ApiClient {
         ~ApiClient();
         void send();
         emscripten_fetch_t* getResponse();
+        string getData();
     private:
         int timeout;
         string url;

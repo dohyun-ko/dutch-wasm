@@ -27,16 +27,23 @@ void ApiClient::send() {
     strcpy(attr.requestMethod, this->method.c_str());
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY | EMSCRIPTEN_FETCH_WAITABLE;
     attr.timeoutMSecs = this->timeout;
+
+    //add query params to the url
     string urlWithQueryParams = this->url + this->queryParams.getQueryForm();
     this->response = emscripten_fetch(&attr, urlWithQueryParams.c_str());
+
+    //wait for the response to be fetched
     while(this->response->numBytes != this->response->totalBytes || this->response->totalBytes == 0){
         cout << this->response->numBytes << " " << this->response->totalBytes << endl;
         emscripten_sleep(100);
     }
-    cout<<"Response: "<<response->data<<endl;
 }
 
 //get the response already fetched
 emscripten_fetch_t* ApiClient::getResponse() {
     return this->response;
+}
+
+string ApiClient::getData() {
+    return string(this->response->data, this->response->numBytes);
 }

@@ -5,8 +5,8 @@ using namespace emscripten;
 
 class Page {
     protected:
-        val root;
+        val* root;
     public:
-        Page(val root);
+        Page(val* root);
         virtual void render() = 0;
 };

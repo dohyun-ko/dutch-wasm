@@ -14,9 +14,9 @@ add_executable(index
     components/style/Style.cpp
     apiClient/apiClient.cpp
     apiClient/queryParam.cpp
-    pages/loginPage/LoginPage.cpp
-    pages/mainPage/MainPage.cpp
     pages/page/Page.cpp
+    pages/loginPage/loginPage.cpp
+    pages/signUpPage/signUpPage.cpp
     index.cpp
 )
 # Link the Emscripten bindings library

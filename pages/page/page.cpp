@@ -4,6 +4,6 @@
 
 using namespace emscripten;;
 
-Page::Page(val root) {
+Page::Page(val* root) {
     this->root = root;
 }

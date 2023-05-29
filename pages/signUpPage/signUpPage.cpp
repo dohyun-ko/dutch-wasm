@@ -1,11 +1,11 @@
-#include "loginPage.h"
+#include "signUpPage.h"
 #include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 
-LoginPage::LoginPage(val root): Page(&root) {
+SignUpPage::SignUpPage(val root): Page(&root) {
     webTextState = new State<string>("loading");
     loginText = new State<string>("Login");
 
@@ -14,19 +14,20 @@ LoginPage::LoginPage(val root): Page(&root) {
     webButton = new Button(webTextState);
     usernameInput = new Input("Username");
     passwordInput = new Input("Password");
+    nicknameInput = new Input("Nickname");
 
-    container->appendChildren({usernameInput, passwordInput, loginButton, webButton});
+    container->appendChildren({usernameInput, passwordInput, nicknameInput, loginButton, webButton});
 }
 
-void LoginPage::render() {
+void SignUpPage::render() {
     root->call<void>("appendChild", container->getElement());
 }
 
-void LoginPage::remove() {
+void SignUpPage::remove() {
     root->call<void>("removeChild", container->getElement());
 }
 
-LoginPage::~LoginPage() {
+SignUpPage::~SignUpPage() {
     delete webTextState;
     delete loginText;
     delete container;
@@ -34,4 +35,5 @@ LoginPage::~LoginPage() {
     delete webButton;
     delete usernameInput;
     delete passwordInput;
+    delete nicknameInput;
 }
