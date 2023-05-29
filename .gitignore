@@ -2,6 +2,7 @@
 **/*.wasm
 
 .vscode/
+_deps/
 
 CMakefiles/*
 CMake_install.cmake

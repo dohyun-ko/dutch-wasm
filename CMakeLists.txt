@@ -1,26 +1,36 @@
-# Use a recent version of CMake
 cmake_minimum_required(VERSION 3.12)
-# Name your project
+include(FetchContent)
+
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.10.5
+)
+FetchContent_MakeAvailable(json)
+
 project(index)
 
 set(CMAKE_CXX_STANDARD 14)
-# Add your source files
+
+
+
 add_executable(index
-    components/element/Element.cpp
-    components/button/Button.cpp
-    components/flex/Flex.cpp
-    components/input/Input.cpp
-    components/state/State.cpp
-    components/style/Style.cpp
-    apiClient/apiClient.cpp
-    apiClient/queryParam.cpp
-    pages/page/Page.cpp
-    pages/loginPage/loginPage.cpp
-    pages/signUpPage/signUpPage.cpp
-    index.cpp
+    src/components/element/Element.cpp
+    src/components/button/Button.cpp
+    src/components/flex/Flex.cpp
+    src/components/input/Input.cpp
+    src/components/state/State.cpp
+    src/components/style/Style.cpp
+    src/apiClient/apiClient.cpp
+    src/apiClient/queryParam.cpp
+    src/pages/page/Page.cpp
+    src/pages/loginPage/loginPage.cpp
+    src/pages/signUpPage/signUpPage.cpp
+    src/index.cpp
 )
 # Link the Emscripten bindings library
 target_link_libraries(index
+    PRIVATE nlohmann_json::nlohmann_json
     "--bind -s FETCH=1 -O3 -sASYNCIFY"
 )
 

@@ -19,6 +19,7 @@
             "name": "Win32",
             "includePath": [
                 "d:\\gist\\2-1\\OOP\\Project\\wasm\\dutch-wasm/**",
+                "D:\\gist\\2-1\\OOP\\Project\\wasm\\dutch-wasm\\_deps\\json-src\\include",
                 "d:\\emscripten\\emsdk\\upstream\\emscripten\\system\\include"
             ],
             "defines": [

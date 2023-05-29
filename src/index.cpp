@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <nlohmann/json.hpp>
 
 #include "components/button/Button.h"
 #include "components/flex/Flex.h"
@@ -15,6 +16,7 @@
 #include "pages/signUpPage/signUpPage.h"
 
 using namespace emscripten;
+using json = nlohmann::json;
 using namespace std;
 
 val getElementById(string id) {
@@ -72,4 +74,7 @@ int main() {
 
     SignUpPage* signUpPage = new SignUpPage(root);
     signUpPage->render();
+
+    auto j3 = json::parse(R"({"username": "test", "password": "test"})");
+    cout << j3["username"] << endl;
 }
