@@ -6,11 +6,14 @@
 #include "../../components/input/Input.h"
 
 class LoginPage: public Page {
-    State<string>* webTextState;
-    State<string>* loginText;
+    State<string>* loginTextState;
+    State<string>* signUpTextState;
+    State<string>* backwardTextState;
+    Flex* header;
     Flex* container;
+    Button* backwardButton;
     Button* loginButton;
-    Button* webButton;
+    Button* signUpButton;
     Input* usernameInput;
     Input* passwordInput;
     public:

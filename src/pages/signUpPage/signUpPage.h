@@ -6,14 +6,15 @@
 #include "../../components/input/Input.h"
 
 class SignUpPage: public Page {
-    State<string>* webTextState;
-    State<string>* loginText;
+    State<string>* signUpTextState;
+    State<string>* backwardTextState;
+    Flex* header;
     Flex* container;
-    Button* loginButton;
-    Button* webButton;
+    Button* backwardButton;
+    Button* signUpButton;
     Input* usernameInput;
     Input* passwordInput;
-    Input* nicknameInput;
+    Input* emailInput;
     public:
         SignUpPage(val root);
         ~SignUpPage();
