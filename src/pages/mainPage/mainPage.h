@@ -18,7 +18,11 @@ class MainPage : public Element {
     Button* addMoneyButton;
     Button* sendButton;
 
+    static MainPage* instance;
+    MainPage();
+
     public:
-        MainPage();
         ~MainPage();
+
+        static MainPage* getInstance();
 };

@@ -17,6 +17,7 @@
 using json = nlohmann::json;
 
 State<string> *LoginPage::loginTextState = new State<string>("Login");
+LoginPage* LoginPage::instance = nullptr;
 
 LoginPage::LoginPage(): Element("div") {
     signUpTextState = new State<string>("Sign Up");
@@ -62,6 +63,14 @@ LoginPage::LoginPage(): Element("div") {
     LoginPage::appendChildren(container);
 }
 
+LoginPage* LoginPage::getInstance() {
+    if (LoginPage::instance == nullptr) {
+        LoginPage::instance = new LoginPage();
+    }
+
+    return LoginPage::instance;
+
+}
 
 void LoginPage::LoginButtonHander(emscripten::val e)
 {
@@ -77,8 +86,8 @@ void LoginPage::SignUpButtonHander(emscripten::val e) {
     std::cout << "router->navigate" << std::endl;
 }
 
-LoginPage::~LoginPage()
-{
+LoginPage::~LoginPage() {
+    LoginPage::instance = nullptr;
     delete loginTextState;
     delete signUpTextState;
     delete container;

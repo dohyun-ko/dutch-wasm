@@ -145,6 +145,12 @@ Style& Style::setColor(const string& color) {
     return *this;
 }
 
+Style& Style::setCursor(const string& cursor) {
+    this->cursor = cursor;
+    notify();
+    return *this;
+}
+
 string Style::getCssString() const {
     string cssString = "";
 
@@ -222,6 +228,10 @@ string Style::getCssString() const {
 
     if (color != "") {
         cssString += "color: " + color + "; ";
+    }
+
+    if (cursor != "") {
+        cssString += "cursor: " + cursor + "; ";
     }
 
     return cssString;

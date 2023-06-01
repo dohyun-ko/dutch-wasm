@@ -20,6 +20,8 @@ State<string> *SignUpPage::usernameState = new State<string>("");
 State<string> *SignUpPage::passwordState = new State<string>("");
 State<string> *SignUpPage::emailState = new State<string>("");
 
+SignUpPage* SignUpPage::instance = nullptr;
+
 SignUpPage::SignUpPage(): Element("div") {
     signUpTextState = new State<string>("Sign Up");
     backwardTextState = new State<string>("Back");
@@ -71,8 +73,16 @@ SignUpPage::SignUpPage(): Element("div") {
     SignUpPage::appendChildren(container);
 }
 
+SignUpPage* SignUpPage::getInstance() {
+    if (SignUpPage::instance == nullptr) {
+        SignUpPage::instance = new SignUpPage();
+    }
+
+    return SignUpPage::instance;
+}
 
 SignUpPage::~SignUpPage() {
+    SignUpPage::instance = nullptr;
     delete signUpTextState;
     delete container;
     delete signUpButton;

@@ -14,6 +14,10 @@ class SignUpPage: public Element {
     Input* usernameInput;
     Input* passwordInput;
     Input* emailInput;
+
+    static SignUpPage* instance;
+    SignUpPage();
+
     public:
         static State<string>* usernameState;
         static State<string>* passwordState;
@@ -22,6 +26,9 @@ class SignUpPage: public Element {
         static void getPassword(emscripten::val event);
         static void getEmail(emscripten::val event);
         static void SignUpButtonHander(emscripten::val event);
-        SignUpPage();
         ~SignUpPage();
+
+        static SignUpPage* getInstance();
+
+        
 };
