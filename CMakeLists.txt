@@ -26,6 +26,7 @@ add_executable(index
     src/pages/page/Page.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
+    src/pages/mainPage/mainPage.cpp
     src/index.cpp
 )
 # Link the Emscripten bindings library
