@@ -81,7 +81,7 @@ int main() {
             {"/signUp", []() { return SignUpPage::getInstance(); }},
             {"/main", []() { return MainPage::getInstance(); }}
         },
-        "/login"
+        "/signUp"
     );
 
 
