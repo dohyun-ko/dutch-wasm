@@ -1,9 +1,11 @@
 #include <emscripten/fetch.h>
 #include <string>
+#include <nlohmann/json.hpp>
 
 #include "queryParam.h"
 #pragma once
 using namespace std;
+using json = nlohmann::json;
 
 class ApiClient {
     public:
@@ -12,6 +14,7 @@ class ApiClient {
         void send();
         emscripten_fetch_t* getResponse();
         string getData();
+        json getJsonData();
     private:
         int timeout;
         string url;
