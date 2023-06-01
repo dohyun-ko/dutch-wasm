@@ -38,7 +38,7 @@ int main() {
             {"/signUp", new SignUpPage()},
             {"/main", new MainPage()}
         },
-        "/login"
+        "/signUp"
     );
 
     while (true) {
