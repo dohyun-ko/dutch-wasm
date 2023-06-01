@@ -26,6 +26,7 @@ add_executable(index
     src/apiClient/queryParam.cpp
     src/pageComponent/log/log.cpp
     src/pages/page/Page.cpp
+    src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
     src/pages/mainPage/mainPage.cpp
@@ -34,6 +35,6 @@ add_executable(index
 # Link the Emscripten bindings library
 target_link_libraries(index
     PRIVATE nlohmann_json::nlohmann_json
-    "--bind -s FETCH=1 -O3 -sASYNCIFY"
+    "--bind -lembind -s FETCH=1 -O3 -sASYNCIFY"
 )
 

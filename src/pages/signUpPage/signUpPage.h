@@ -18,6 +18,6 @@ class SignUpPage: public Page {
     public:
         SignUpPage(val root);
         ~SignUpPage();
-        void render();
-        void remove();
+        void render() override;
+        void remove() override;
 };

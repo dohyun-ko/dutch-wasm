@@ -9,4 +9,5 @@ class Page {
     public:
         Page(val* root);
         virtual void render() = 0;
+        virtual void remove() = 0;
 };

@@ -19,7 +19,7 @@ class State {
     }
 
 public:
-    State(T val) : val(val) {}
+    State(const T& val) : val(val) {}
     ~State() {}
 
     void attach(Element* observer) {
@@ -30,7 +30,7 @@ public:
         observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
     }
 
-    virtual void setState(T val) {
+    virtual void setState(const T& val) {
         this->val = val;
         notify();
     }

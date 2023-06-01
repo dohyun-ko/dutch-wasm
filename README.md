@@ -6,3 +6,11 @@
 # How to compile with CMake
 1. emcmake cmake .
 2. emmake make
+
+
+# Thing to do someday
+- Router에 네이게이터 추가: path를 스택으로 관리
+
+# Things to think
+- Button, Input 등의 State<T>* 를 레퍼런스로 바꿀지
+

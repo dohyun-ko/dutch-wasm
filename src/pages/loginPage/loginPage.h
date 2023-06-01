@@ -19,6 +19,6 @@ class LoginPage: public Page {
     public:
         LoginPage(val root);
         ~LoginPage();
-        void render();
-        void remove();
+        void render() override;
+        void remove() override;
 };

@@ -2,9 +2,11 @@
 #include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
+#include "../../components/style/Style.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
+#include <iostream>
 
 LoginPage::LoginPage(val root): Page(&root) {
     loginTextState = new State<string>("Login");
@@ -16,8 +18,8 @@ LoginPage::LoginPage(val root): Page(&root) {
     backwardButton = new Button(backwardTextState);
     loginButton = new Button(loginTextState);
     signUpButton = new Button(signUpTextState);
-    usernameInput = new Input("Username");
-    passwordInput = new Input("Password");
+    usernameInput = new Input(new State<string>("Username"));
+    passwordInput = new Input(new State<string>("Password"));
 
     backwardButton->getStyle()
         .setWidth("20px")
@@ -48,16 +50,32 @@ LoginPage::LoginPage(val root): Page(&root) {
         .setColor("#FFFFFF")
         .setPadding("0 25px");
 
+    usernameInput->getStyle()
+        .setWidth("148px")
+        .setHeight("44px")
+        .setBorder("1px solid black")
+        .setBorderRadius("6px")
+        .setPadding("0 25px");
+
+    passwordInput->getStyle()
+        .setWidth("148px")
+        .setHeight("44px")
+        .setBorder("1px solid black")
+        .setBorderRadius("6px")
+        .setPadding("0 25px");
+
+
     header->appendChildren({backwardButton});
     container->appendChildren({header, usernameInput, passwordInput, loginButton, signUpButton});
 }
 
 void LoginPage::render() {
+    std::cout << "LoginPage::render()" << std::endl;
     root->call<void>("appendChild", container->getElement());
 }
 
 void LoginPage::remove() {
-    root->call<void>("removeChild", container->getElement());
+    root->call<void>("removeChild", container->getElement()); // TODO: destruct each element recursively
 }
 
 LoginPage::~LoginPage() {

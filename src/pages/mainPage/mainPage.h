@@ -23,6 +23,7 @@ class MainPage : public Page {
         MainPage(val root);
         ~MainPage();
         void render();
+
         void update();
         void remove();
 };
