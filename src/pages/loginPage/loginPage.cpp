@@ -7,13 +7,18 @@
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
 #include "../../apiClient/apiClient.h"
+#include "../../apiClient/queryParam.h"
 #include <iostream>
 #include <functional>
 #include <emscripten/bind.h>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 State<string> *LoginPage::loginTextState = new State<string>("Login");
 
-LoginPage::LoginPage(val root): Page(&root) {
+LoginPage::LoginPage(val root) : Page(&root)
+{
     signUpTextState = new State<string>("Sign Up");
     backwardTextState = new State<string>("Back");
 
@@ -68,32 +73,35 @@ LoginPage::LoginPage(val root): Page(&root) {
         .setBorderRadius("6px")
         .setPadding("0 25px");
 
-
     header->appendChildren({backwardButton});
     container->appendChildren({header, usernameInput, passwordInput, loginButton, signUpButton});
 }
 
-void LoginPage::render() {
+void LoginPage::render()
+{
     std::cout << "LoginPage::render()" << std::endl;
     root->call<void>("appendChild", container->getElement());
 }
 
-void LoginPage::remove() {
+void LoginPage::remove()
+{
     root->call<void>("removeChild", container->getElement()); // TODO: destruct each element recursively
 }
 
-void LoginPage::LoginButtonHander(emscripten::val e) {
+void LoginPage::LoginButtonHander(emscripten::val e)
+{
     std::cout << "LoginPage::LoginButtonHander()" << std::endl;
-    loginTextState->setState("Logging in...");
-    ApiClient apiClient();
+    return;
 }
 
-void LoginPage::setOnClick() {
+void LoginPage::setOnClick()
+{
     cout << "LoginPage::setOnClick()" << endl;
     loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHander"));
 }
 
-LoginPage::~LoginPage() {
+LoginPage::~LoginPage()
+{
     delete loginTextState;
     delete signUpTextState;
     delete container;
@@ -103,6 +111,7 @@ LoginPage::~LoginPage() {
     delete passwordInput;
 }
 
-EMSCRIPTEN_BINDINGS(Page){
+EMSCRIPTEN_BINDINGS(Page)
+{
     emscripten::function("LoginPage.LoginButtonHander", &LoginPage::LoginButtonHander);
 }

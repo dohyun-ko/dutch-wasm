@@ -12,8 +12,6 @@ project(index)
 
 set(CMAKE_CXX_STANDARD 14)
 
-
-
 add_executable(index
     src/components/element/Element.cpp
     src/components/button/Button.cpp
@@ -34,6 +32,11 @@ add_executable(index
 # Link the Emscripten bindings library
 target_link_libraries(index
     PRIVATE nlohmann_json::nlohmann_json
-    "--bind -lembind -s FETCH=1 -O3 -sASYNCIFY"
+    "--bind -lembind -fexceptions -s FETCH=1 -O3 -sASYNCIFY"
+)
+
+target_compile_options(index
+    PRIVATE
+    -fexceptions
 )
 

@@ -3,6 +3,8 @@
 #include <emscripten/fetch.h>
 #include <string>
 #include <iostream>
+#include "../exception/exceptions.h"
+
 using namespace std;  
 
 //init the api client
@@ -33,9 +35,16 @@ void ApiClient::send() {
     this->response = emscripten_fetch(&attr, urlWithQueryParams.c_str());
 
     //wait for the response to be fetched
+    time_t start = time(0);
     while(this->response->numBytes != this->response->totalBytes || this->response->totalBytes == 0){
-        cout << this->response->numBytes << " " << this->response->totalBytes << endl;
+        //cout << this->response->numBytes << " " << this->response->totalBytes << endl;
         emscripten_sleep(100);
+        if(time(0) - start > this->timeout/1000) {
+            throw TimeoutExcetption();
+        }
+    }
+    if(this->response->status != 200) {
+        throw NetworkException(this->response->status);
     }
 }
 
