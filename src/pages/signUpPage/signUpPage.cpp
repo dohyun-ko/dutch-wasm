@@ -1,5 +1,8 @@
 #include <emscripten/bind.h>
 #include <iostream>
+#include <nlohmann/json.hpp>
+#include <vector>
+#include <string>
 
 #include "signUpPage.h"
 #include "../page/page.h"
@@ -8,6 +11,10 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
+#include "../../apiClient/apiClient.h"
+
+using json = nlohmann::json;
+using namespace std;
 
 State<string> *SignUpPage::usernameState = new State<string>("");
 State<string> *SignUpPage::passwordState = new State<string>("");
@@ -100,6 +107,25 @@ void SignUpPage::SignUpButtonHander(emscripten::val e) {
     std::cout << "username: " << username << std::endl;
     std::cout << "password: " << password << std::endl;
     std::cout << "email: " << email << std::endl;
+
+    if(username == "" || password == "" || email == "") {
+        std::cout << "username, password, email is empty" << std::endl;
+        return;
+    }
+
+    ApiClient apiClient = ApiClient("http://15.165.55.135:8080/user", "POST", {
+        QueryParam("username", username),
+        QueryParam("password", password),
+        QueryParam("email", email)
+    }, "", 5000);
+
+    try {
+        apiClient.send();
+        json data = apiClient.getJsonData();
+        std::cout << data["uuid"] << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 EMSCRIPTEN_BINDINGS(SignUpPage)
