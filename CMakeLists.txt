@@ -21,12 +21,15 @@ add_executable(index
     src/components/input/Input.cpp
     src/components/state/State.cpp
     src/components/style/Style.cpp
+    src/components/text/Text.cpp
     src/apiClient/apiClient.cpp
     src/apiClient/queryParam.cpp
+    src/pageComponent/log/log.cpp
     src/pages/page/Page.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
+    src/pages/mainPage/mainPage.cpp
     src/index.cpp
 )
 # Link the Emscripten bindings library

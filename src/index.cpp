@@ -15,6 +15,7 @@
 #include "pages/loginPage/loginPage.h"
 #include "pages/signUpPage/signUpPage.h"
 #include "router/Router.h"
+#include "pages/mainPage/mainPage.h"
 
 using namespace emscripten;
 using json = nlohmann::json;
@@ -38,5 +39,16 @@ int main() {
 
     router.navigate("/signUp");
 
-    return 0;
+    SignUpPage* signUpPage = new SignUpPage(root);
+    signUpPage->render();
+
+    emscripten_sleep(3000);
+
+    signUpPage->remove();
+
+    MainPage* mainPage = new MainPage(root);
+    mainPage->render();
+
+    auto j3 = json::parse(R"({"username": "test", "password": "test"})");
+    cout << j3["username"] << endl;
 }
