@@ -22,8 +22,8 @@ Button::~Button() {
 }
 
 void Button::update() {
+    Element::update();
     getElement().set("innerHTML", text->getValue());
-    getElement().set("style", getStyle().getCssString());
 }
 
 void Button::setOnClick() {

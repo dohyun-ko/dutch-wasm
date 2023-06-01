@@ -14,7 +14,14 @@ class SignUpPage: public Element {
     Input* usernameInput;
     Input* passwordInput;
     Input* emailInput;
+
+    static SignUpPage* instance;
+    SignUpPage();
+
     public:
-        SignUpPage();
         ~SignUpPage();
+
+        static SignUpPage* getInstance();
+
+        
 };

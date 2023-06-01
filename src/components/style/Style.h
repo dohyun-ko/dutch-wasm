@@ -26,7 +26,8 @@ class Style {
     string bottom;
     string fontSize;
     string color;
-    
+    string cursor;
+
     vector<Element*> observers;
 
     void notify();
@@ -77,6 +78,8 @@ public:
     Style& setFontSize(const string& fontSize);
 
     Style& setColor(const string& color);
+
+    Style& setCursor(const string& cursor);
 
     string getCssString() const;
 };

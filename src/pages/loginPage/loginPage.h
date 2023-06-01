@@ -22,10 +22,15 @@ class LoginPage : public Element
     Input* usernameInput;
     Input* passwordInput;
 
-public:
-    static State<string> *loginTextState;
+    static LoginPage* instance;
     LoginPage();
+
+public:
     ~LoginPage();
+
+    static State<string> *loginTextState;
+
+    static LoginPage* getInstance();
 
     static void LoginButtonHander(emscripten::val event);
     static void SignUpButtonHander(emscripten::val event);

@@ -56,7 +56,7 @@ val Element::getElement() {
 }
 
 void Element::update() {
-    // do nothing
+    getElement().set("style", getStyle().getCssString());
 }
 
 string Element::getId() {

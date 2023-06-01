@@ -1,5 +1,8 @@
 #include "mainPage.h"
 
+
+MainPage* MainPage::instance = nullptr;
+
 MainPage::MainPage(): Element("div") {
     logoutTextState = new State<string>("Logout");
     addMoneyTextState = new State<string>("Add money");
@@ -20,7 +23,16 @@ MainPage::MainPage(): Element("div") {
     MainPage::appendChildren(container);
 }
 
+MainPage* MainPage::getInstance() {
+    if (MainPage::instance == nullptr) {
+        MainPage::instance = new MainPage();
+    }
+
+    return MainPage::instance;
+}
+
 MainPage::~MainPage() {
+    MainPage::instance = nullptr;
     delete backwardTextState;
     delete logoutTextState;
     delete addMoneyTextState;

@@ -6,6 +6,8 @@
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
 
+SignUpPage* SignUpPage::instance = nullptr;
+
 SignUpPage::SignUpPage(): Element("div") {
     signUpTextState = new State<string>("Login");
     backwardTextState = new State<string>("Back");
@@ -52,8 +54,16 @@ SignUpPage::SignUpPage(): Element("div") {
     SignUpPage::appendChildren(container);
 }
 
+SignUpPage* SignUpPage::getInstance() {
+    if (SignUpPage::instance == nullptr) {
+        SignUpPage::instance = new SignUpPage();
+    }
+
+    return SignUpPage::instance;
+}
 
 SignUpPage::~SignUpPage() {
+    SignUpPage::instance = nullptr;
     delete signUpTextState;
     delete container;
     delete signUpButton;

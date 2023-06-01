@@ -4,12 +4,16 @@
 #include <string>
 
 #include "../element/Element.h"
+#include "../state/State.cpp"
 
 using namespace emscripten;
-using namespace std;
 
 class Text: public Element {
+    State<string>* text;
+
     public:
-        Text(string text);
+        Text(State<string>* text, Style* style = nullptr);
         virtual ~Text() override;
+
+        virtual void update() override;
 };
