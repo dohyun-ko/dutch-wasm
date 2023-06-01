@@ -27,28 +27,32 @@ val getElementById(std::string id) {
 int main() {
     val root = getElementById("root");
 
-    Router router(
-        {
-            {"/login", new LoginPage(root)},
-            {"/signUp", new SignUpPage(root)}
-        },
-        "/login"
-    );
+    // Router router(
+    //     {
+    //         {"/login", new LoginPage(root)},
+    //         {"/signUp", new SignUpPage(root)}
+    //     },
+    //     "/login"
+    // );
 
-    emscripten_sleep(3000);
+    LoginPage* loginPage = new LoginPage(root);
+    loginPage->setOnClick();
+    loginPage->render();
 
-    router.navigate("/signUp");
+    // emscripten_sleep(3000);
 
-    SignUpPage* signUpPage = new SignUpPage(root);
-    signUpPage->render();
+    // router.navigate("/signUp");
 
-    emscripten_sleep(3000);
+    // SignUpPage* signUpPage = new SignUpPage(root);
+    // signUpPage->render();
 
-    signUpPage->remove();
+    // emscripten_sleep(3000);
 
-    MainPage* mainPage = new MainPage(root);
-    mainPage->render();
+    // signUpPage->remove();
 
-    auto j3 = json::parse(R"({"username": "test", "password": "test"})");
-    cout << j3["username"] << endl;
+    // MainPage* mainPage = new MainPage(root);
+    // mainPage->render();
+
+    // auto j3 = json::parse(R"({"username": "test", "password": "test"})");
+    // cout << j3["username"] << endl;
 }

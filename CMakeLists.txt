@@ -24,7 +24,6 @@ add_executable(index
     src/components/text/Text.cpp
     src/apiClient/apiClient.cpp
     src/apiClient/queryParam.cpp
-    src/pageComponent/log/log.cpp
     src/pages/page/Page.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp

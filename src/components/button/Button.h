@@ -14,6 +14,7 @@ class Button: public Element {
     std::function<void()> onClick;
     static std::unordered_map<string, std::function<void()>> handlers;
     virtual void update() override;
+    friend void handleClick(emscripten::val event);
 
 public:
     Button(State<string>* text);

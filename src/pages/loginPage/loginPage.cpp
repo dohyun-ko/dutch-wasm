@@ -6,10 +6,14 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
+#include "../../apiClient/apiClient.h"
 #include <iostream>
+#include <functional>
+#include <emscripten/bind.h>
+
+State<string> *LoginPage::loginTextState = new State<string>("Login");
 
 LoginPage::LoginPage(val root): Page(&root) {
-    loginTextState = new State<string>("Login");
     signUpTextState = new State<string>("Sign Up");
     backwardTextState = new State<string>("Back");
 
@@ -78,6 +82,17 @@ void LoginPage::remove() {
     root->call<void>("removeChild", container->getElement()); // TODO: destruct each element recursively
 }
 
+void LoginPage::LoginButtonHander(emscripten::val e) {
+    std::cout << "LoginPage::LoginButtonHander()" << std::endl;
+    loginTextState->setState("Logging in...");
+    ApiClient apiClient();
+}
+
+void LoginPage::setOnClick() {
+    cout << "LoginPage::setOnClick()" << endl;
+    loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHander"));
+}
+
 LoginPage::~LoginPage() {
     delete loginTextState;
     delete signUpTextState;
@@ -86,4 +101,8 @@ LoginPage::~LoginPage() {
     delete signUpButton;
     delete usernameInput;
     delete passwordInput;
+}
+
+EMSCRIPTEN_BINDINGS(Page){
+    emscripten::function("LoginPage.LoginButtonHander", &LoginPage::LoginButtonHander);
 }
