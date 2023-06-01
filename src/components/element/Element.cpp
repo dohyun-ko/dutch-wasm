@@ -22,9 +22,9 @@ Element::Element(string tag, Style* style) : style(style) {
 }
 
 Element::~Element() {
-    for (Element* child : children) {
-        delete child;
-    }
+    // for (Element* child : children) {
+    //     delete child;
+    // } // TODO : memory leak
     getElement().call<void>("remove");
 }
 
@@ -42,6 +42,13 @@ void Element::appendChildren(vector<Element*> children) {
     for (Element* child : children) {
         appendChild(child);
     }
+}
+
+void Element::clearChildren() {
+    for (Element* child : children) {
+        delete child;
+    }
+    // children.clear(); // TODO: memory leak
 }
 
 val Element::getElement() {
