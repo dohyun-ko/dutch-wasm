@@ -14,28 +14,29 @@
 #include "apiClient/apiClient.h"
 #include "pages/loginPage/loginPage.h"
 #include "pages/signUpPage/signUpPage.h"
+#include "router/Router.h"
 
 using namespace emscripten;
 using json = nlohmann::json;
-using namespace std;
 
-val getElementById(string id) {
+val getElementById(std::string id) {
     return val::global("document").call<val>("getElementById", val(id));
 }
 
 int main() {
     val root = getElementById("root");
 
-    LoginPage* loginPage = new LoginPage(root);
-    loginPage->render();
+    Router router(
+        {
+            {"/login", new LoginPage(root)},
+            {"/signUp", new SignUpPage(root)}
+        },
+        "/login"
+    );
 
     emscripten_sleep(3000);
 
-    loginPage->remove();
+    router.navigate("/signUp");
 
-    SignUpPage* signUpPage = new SignUpPage(root);
-    signUpPage->render();
-
-    auto j3 = json::parse(R"({"username": "test", "password": "test"})");
-    cout << j3["username"] << endl;
+    return 0;
 }

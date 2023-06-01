@@ -12,11 +12,13 @@ SignUpPage::SignUpPage(val root): Page(&root) {
 
     header = new Flex("row", "center", "center", "10px");
     container = new Flex("column", "center", "center", "10px");
-    usernameInput = new Input("Username");
-    passwordInput = new Input("Password");
-    emailInput = new Input("Email");
+    usernameInput = new Input(new State<string>("Username"));
+    passwordInput = new Input(new State<string>("Password"));
+    emailInput = new Input(new State<string>("Email"));
     backwardButton = new Button(backwardTextState);
     signUpButton = new Button(signUpTextState);
+
+    backwardButton->setOnClick();
 
     signUpButton->getStyle()
         .setWidth("200px")
@@ -26,6 +28,27 @@ SignUpPage::SignUpPage(val root): Page(&root) {
         .setBorderRadius("6px")
         .setFontSize("1rem")
         .setColor("#FFFFFF")
+        .setPadding("0 25px");
+
+    usernameInput->getStyle()
+        .setWidth("148px")
+        .setHeight("44px")
+        .setBorder("1px solid black")
+        .setBorderRadius("6px")
+        .setPadding("0 25px");
+
+    passwordInput->getStyle()
+        .setWidth("148px")
+        .setHeight("44px")
+        .setBorder("1px solid black")
+        .setBorderRadius("6px")
+        .setPadding("0 25px");
+
+    emailInput->getStyle()
+        .setWidth("148px")
+        .setHeight("44px")
+        .setBorder("1px solid black")
+        .setBorderRadius("6px")
         .setPadding("0 25px");
 
     header->appendChildren({backwardButton});

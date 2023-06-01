@@ -26,28 +26,15 @@ void Button::update() {
     getElement().set("style", getStyle().getCssString());
 }
 
-void Button::setOnClick(std::function<void()> onClick) {
-    handlers[getId()] = onClick;
-
-    getElement().set("onclick", val::module_property("clickHandler"));
+void Button::setOnClick() {
+    std::cout << "setOnClick" << endl;
+    getElement().set("onclick", emscripten::val::module_property("handleClick"));
 }
 
-void Button::clickHandler(emscripten::val e) {
-    // emscripten::val event = emscripten::val::global("event");
-    
-    try {
-        std::cout << "clickHandler" << std::endl;
-
-        emscripten::val target = e["target"];
-        std::string id = target["id"].as<std::string>();
-        handlers[id]();
-    } catch (const std::exception& e) {
-        
-    }
+void handleClick(emscripten::val event) {
+    std::cout << "clicked" << endl;
 }
 
-std::unordered_map<string, std::function<void()>> Button::handlers;
-
-EMSCRIPTEN_BINDINGS(Button) {
-    emscripten::function("clickHandler", &Button::clickHandler);
+EMSCRIPTEN_BINDINGS(components) {
+    emscripten::function("handleClick", &handleClick);
 }

@@ -20,7 +20,5 @@ public:
 
     virtual ~Button() override;
 
-    void setOnClick(std::function<void()> onClick);
-
-    static void clickHandler(emscripten::val e);
+    void setOnClick();
 };
