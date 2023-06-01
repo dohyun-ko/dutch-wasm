@@ -27,6 +27,8 @@ public:
     // overloading
     void appendChildren(vector<Element*> children);
 
+    void clearChildren();
+
     val getElement();
 
     virtual void update();

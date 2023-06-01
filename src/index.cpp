@@ -27,19 +27,26 @@ val getElementById(std::string id) {
 int main() {
     val root = getElementById("root");
 
-    // Router router(
-    //     {
-    //         {"/login", new LoginPage(root)},
-    //         {"/signUp", new SignUpPage(root)}
-    //     },
-    //     "/login"
-    // );
+    Element* layout = new Element("div");
 
-    LoginPage* loginPage = new LoginPage(root);
-    loginPage->setOnClick();
-    loginPage->render();
+    root.call<void>("appendChild", layout->getElement());
 
-    // emscripten_sleep(3000);
+    Router router(
+        layout,
+        {
+            {"/login", new LoginPage()},
+            {"/signUp", new SignUpPage()},
+            {"/main", new MainPage()}
+        },
+        "/login"
+    );
+
+    while (true) {
+        emscripten_sleep(100);
+    }
+
+    // emscripten_set_main_loop() // TODO: use this instead of sleep
+
 
     // router.navigate("/signUp");
 
@@ -50,9 +57,5 @@ int main() {
 
     // signUpPage->remove();
 
-    // MainPage* mainPage = new MainPage(root);
     // mainPage->render();
-
-    // auto j3 = json::parse(R"({"username": "test", "password": "test"})");
-    // cout << j3["username"] << endl;
 }

@@ -6,29 +6,28 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 
-class LoginPage : public Page
+class LoginPage : public Element
 {
     State<string> *signUpTextState;
     State<string> *backwardTextState;
 
-    Flex *header;
-    Flex *container;
+    Style* buttonStyle;
 
-    Button *backwardButton;
-    Button *loginButton;
-    Button *signUpButton;
+    Flex* container;
 
-    Input *usernameInput;
-    Input *passwordInput;
+    Button* backwardButton;
+    Button* loginButton;
+    Button* signUpButton;
+
+    Input* usernameInput;
+    Input* passwordInput;
 
 public:
     static State<string> *loginTextState;
-    LoginPage(val root);
+    LoginPage();
     ~LoginPage();
-    void render() override;
-    void remove() override;
-    void setOnClick();
+
     static void LoginButtonHander(emscripten::val event);
-    void SignUpButtonHander();
-    void BackwardButtonHander();
+    static void SignUpButtonHander(emscripten::val event);
+    static void BackwardButtonHander(emscripten::val event);
 };
