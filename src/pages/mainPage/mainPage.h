@@ -3,14 +3,13 @@
 #include "../../components/flex/Flex.h"
 #pragma once
 
-class MainPage : public Page {
+class MainPage : public Element {
     State<string>* backwardTextState;
     State<string>* logoutTextState;
     State<string>* addMoneyTextState;
     State<string>* sendTextState;
 
     Flex* container;
-    Flex* header;
     Flex* body;
     Flex* moneyContainer;
 
@@ -20,10 +19,6 @@ class MainPage : public Page {
     Button* sendButton;
 
     public:
-        MainPage(val root);
+        MainPage();
         ~MainPage();
-        void render();
-
-        void update();
-        void remove();
 };

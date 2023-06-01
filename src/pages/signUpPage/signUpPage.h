@@ -5,10 +5,9 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 
-class SignUpPage: public Page {
+class SignUpPage: public Element {
     State<string>* signUpTextState;
     State<string>* backwardTextState;
-    Flex* header;
     Flex* container;
     Button* backwardButton;
     Button* signUpButton;
@@ -16,8 +15,6 @@ class SignUpPage: public Page {
     Input* passwordInput;
     Input* emailInput;
     public:
-        SignUpPage(val root);
+        SignUpPage();
         ~SignUpPage();
-        void render() override;
-        void remove() override;
 };

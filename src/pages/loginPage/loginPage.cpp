@@ -7,7 +7,8 @@
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
 #include "../../apiClient/apiClient.h"
-#include "../../apiClient/queryParam.h"
+#include "../../router/Router.h"
+#include "../../components/element/Element.h"
 #include <iostream>
 #include <functional>
 #include <emscripten/bind.h>
@@ -17,47 +18,26 @@ using json = nlohmann::json;
 
 State<string> *LoginPage::loginTextState = new State<string>("Login");
 
-LoginPage::LoginPage(val root) : Page(&root)
-{
+LoginPage::LoginPage(): Element("div") {
     signUpTextState = new State<string>("Sign Up");
     backwardTextState = new State<string>("Back");
 
-    header = new Flex("row", "center", "center", "10px");
+    buttonStyle = new Style();
+    buttonStyle
+        ->setWidth("200px")
+        .setHeight("44px")
+        .setBackground("#405cf5")
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#FFFFFF")
+        .setPadding("0 25px");
+
     container = new Flex("column", "center", "center", "10px");
-    backwardButton = new Button(backwardTextState);
-    loginButton = new Button(loginTextState);
-    signUpButton = new Button(signUpTextState);
+    loginButton = new Button(loginTextState, buttonStyle);
+    signUpButton = new Button(signUpTextState, buttonStyle);
     usernameInput = new Input(new State<string>("Username"));
     passwordInput = new Input(new State<string>("Password"));
-
-    backwardButton->getStyle()
-        .setWidth("20px")
-        .setHeight("20px")
-        .setBackground("none")
-        .setBorder("none")
-        .setFontSize("1rem")
-        .setColor("#000000")
-        .setPadding("0 25px");
-
-    loginButton->getStyle()
-        .setWidth("200px")
-        .setHeight("44px")
-        .setBackground("#405cf5")
-        .setBorder("none")
-        .setBorderRadius("6px")
-        .setFontSize("1rem")
-        .setColor("#FFFFFF")
-        .setPadding("0 25px");
-
-    signUpButton->getStyle()
-        .setWidth("200px")
-        .setHeight("44px")
-        .setBackground("#405cf5")
-        .setBorder("none")
-        .setBorderRadius("6px")
-        .setFontSize("1rem")
-        .setColor("#FFFFFF")
-        .setPadding("0 25px");
 
     usernameInput->getStyle()
         .setWidth("148px")
@@ -73,20 +53,15 @@ LoginPage::LoginPage(val root) : Page(&root)
         .setBorderRadius("6px")
         .setPadding("0 25px");
 
-    header->appendChildren({backwardButton});
-    container->appendChildren({header, usernameInput, passwordInput, loginButton, signUpButton});
+
+    container->appendChildren({usernameInput, passwordInput, loginButton, signUpButton});
+
+    loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHander"));
+    signUpButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.SignUpButtonHander"));
+
+    LoginPage::appendChildren(container);
 }
 
-void LoginPage::render()
-{
-    std::cout << "LoginPage::render()" << std::endl;
-    root->call<void>("appendChild", container->getElement());
-}
-
-void LoginPage::remove()
-{
-    root->call<void>("removeChild", container->getElement()); // TODO: destruct each element recursively
-}
 
 void LoginPage::LoginButtonHander(emscripten::val e)
 {
@@ -94,10 +69,12 @@ void LoginPage::LoginButtonHander(emscripten::val e)
     return;
 }
 
-void LoginPage::setOnClick()
-{
-    cout << "LoginPage::setOnClick()" << endl;
-    loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHander"));
+void LoginPage::SignUpButtonHander(emscripten::val e) {
+    std::cout << "LoginPage::SignUpButtonHander()" << std::endl;
+    Router* router = Router::getInstance();
+    std::cout << "router: " << router << std::endl;
+    router->navigate("/signUp"); // TODO: maybe it's better to change navigate to a static method
+    std::cout << "router->navigate" << std::endl;
 }
 
 LoginPage::~LoginPage()
@@ -114,4 +91,5 @@ LoginPage::~LoginPage()
 EMSCRIPTEN_BINDINGS(Page)
 {
     emscripten::function("LoginPage.LoginButtonHander", &LoginPage::LoginButtonHander);
+    emscripten::function("LoginPage.SignUpButtonHander", &LoginPage::SignUpButtonHander);
 }
