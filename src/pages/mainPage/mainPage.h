@@ -1,22 +1,21 @@
-#include "../page/page.h"
-#include "../../components/button/Button.h"
-#include "../../components/flex/Flex.h"
 #pragma once
 
+#include "../../components/button/Button.h"
+#include "../../components/flex/Flex.h"
+#include "../../components/text/Text.h"
+
 class MainPage : public Element {
-    State<string>* backwardTextState;
-    State<string>* logoutTextState;
-    State<string>* addMoneyTextState;
-    State<string>* sendTextState;
 
-    Flex* container;
-    Flex* body;
-    Flex* moneyContainer;
+    State<string>* myBalance;
 
-    Button* backwardButton;
-    Button* logoutButton;
-    Button* addMoneyButton;
+    Element* container;
+    Flex* leftSide;
+    Flex* rightSide;
+    Text* balanceText;
+    Text* myBalanceText;
+
     Button* sendButton;
+    Button* receiveButton;
 
     static MainPage* instance;
     MainPage();

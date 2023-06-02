@@ -27,19 +27,10 @@ LoginPage::LoginPage(): Element("div") {
     signUpTextState = new State<string>("Sign Up");
 
     buttonStyle = new Style();
-    buttonStyle
-        ->setWidth("200px")
-        .setHeight("44px")
-        .setBackground("#405cf5")
-        .setBorder("none")
-        .setBorderRadius("6px")
-        .setFontSize("1rem")
-        .setColor("#FFFFFF")
-        .setPadding("0 25px");
 
     container = new Flex("column", "center", "center", "10px");
-    loginButton = new Button(loginTextState, buttonStyle);
-    signUpButton = new Button(signUpTextState, buttonStyle);
+    loginButton = new Button(loginTextState, Style::defaultButtonStyle());
+    signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
     usernameInput = new Input(new State<string>("Username"));
     passwordInput = new Input(new State<string>("Password"));
     loginText = new Text(loginSuccessState);

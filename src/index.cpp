@@ -38,10 +38,20 @@ int main() {
     Element* layout = new Element("div");
 
     layout->getStyle()
+        .setPosition("relative")
         .setDisplay("flex")
         .setFlexDirection("column")
         .setAlignItems("center");
-
+  
+    Element* header = new Element("div");
+    header->getStyle()
+        .setPosition("absolute")
+        .setTop("0")
+        .setLeft("0")
+        .setDisplay("flex")
+        .setAlignItems("center")
+        .setWidth("100%")
+        .setHeight("80px");
 
     Element* body = new Element("div");
     body->getStyle()
@@ -50,17 +60,11 @@ int main() {
         .setAlignItems("center")
         .setJustifyContent("center")
         .setWidth("100%")
-        .setHeight("calc(100vh - 80px)");
+        .setHeight("calc(100vh)")
+        .setBackground(Style::primaryYellow);
     
-        
-    Element* header = new Element("div");
-    header->getStyle()
-        .setDisplay("flex")
-        .setAlignItems("center")
-        .setWidth("100%")
-        .setHeight("80px");
 
-    Button* backButton = new Button(new State<string>("<"));
+    Button* backButton = new Button(new State<string>("⬅️"));
     backButton->getStyle()
         .setBorder("none")
         .setBackground("transparent")
