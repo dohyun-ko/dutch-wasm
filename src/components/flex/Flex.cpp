@@ -3,6 +3,7 @@
 
 #include "../element/Element.h"
 #include "Flex.h"
+#include "../style/Style.h"
 
 using namespace emscripten;
 using namespace std;
@@ -12,8 +13,13 @@ Flex::Flex(
     string justifyContent,
     string alignItems,
     string gap
-) : Element("div") {
-    getElement().set("style", "display: flex; flex-direction: " + direction + "; justify-content: " + justifyContent + "; align-items: " + alignItems + "; gap: " + gap + ";");
+) : Element("div", new Style()) {
+    this->getStyle()
+        .setDisplay("flex")
+        .setFlexDirection(direction)
+        .setJustifyContent(justifyContent)
+        .setAlignItems(alignItems)
+        .setGap(gap);
 }
 
 Flex::~Flex() {

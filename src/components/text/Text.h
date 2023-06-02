@@ -11,9 +11,10 @@ using namespace emscripten;
 class Text: public Element {
     State<string>* text;
 
+    virtual void update() override;
+
     public:
         Text(State<string>* text, Style* style = nullptr);
         virtual ~Text() override;
 
-        virtual void update() override;
 };

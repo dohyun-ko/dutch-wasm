@@ -8,8 +8,9 @@
 using namespace emscripten;
 using namespace std;
 
-Text::Text(State<string>* text, Style* style) : Element("p"), text(text) {
-    getElement().set("innerHTML", text);
+Text::Text(State<string>* text, Style* style) : Element("p", style), text(text) {
+    text->attach(this);
+    getElement().set("innerHTML", text->getValue());
 }
 
 Text::~Text() {

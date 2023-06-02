@@ -22,9 +22,9 @@ Element::Element(string tag, Style* style) : style(style) {
 }
 
 Element::~Element() {
-    // for (Element* child : children) {
-    //     delete child;
-    // } // TODO : memory leak
+    for (Element* child : children) {
+        delete child;
+    } // TODO : memory leak
     getElement().call<void>("remove");
 }
 

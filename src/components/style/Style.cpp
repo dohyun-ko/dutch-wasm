@@ -4,6 +4,26 @@
 
 using namespace std;
 
+string Style::primaryBlue = "#30A2FF";
+string Style::secondaryBlue = "#00C4FF";
+string Style::primaryYellow = "#FFE7A0";
+string Style::secondaryYellow = "#FFF5B8";
+
+Style* Style::defaultButtonStyle() {
+    Style* style = new Style();
+    style->setWidth("200px")
+        .setHeight("44px")
+        .setBackground(Style::primaryBlue)
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#FFFFFF")
+        .setPadding("0 25px")
+        .setBoxShadow("2px 4px 3px rgba(0, 0, 0, 0.15)");
+
+    return style;
+}
+
 Style::Style() {}
 
 Style::~Style() {}
@@ -97,6 +117,12 @@ Style& Style::setAlignItems(const string& alignItems) {
     return *this;
 }
 
+Style& Style::setGridTemplateColumns(const string& gridTemplateColumns) {
+    this->gridTemplateColumns = gridTemplateColumns;
+    notify();
+    return *this;
+}
+
 Style& Style::setGap(const string& gap) {
     this->gap = gap;
     notify();
@@ -151,6 +177,18 @@ Style& Style::setCursor(const string& cursor) {
     return *this;
 }
 
+Style& Style::setBoxShadow(const string& boxShadow) {
+    this->boxShadow = boxShadow;
+    notify();
+    return *this;
+}
+
+Style& Style::setHoverStyle(Style* hoverStyle) {
+    this->hoverStyle = hoverStyle;
+    notify();
+    return *this;
+}
+
 string Style::getCssString() const {
     string cssString = "";
 
@@ -198,6 +236,10 @@ string Style::getCssString() const {
         cssString += "align-items: " + alignItems + "; ";
     }
 
+    if (gridTemplateColumns != "") {
+        cssString += "grid-template-columns: " + gridTemplateColumns + "; ";
+    }
+
     if (gap != "") {
         cssString += "gap: " + gap + "; ";
     }
@@ -232,6 +274,10 @@ string Style::getCssString() const {
 
     if (cursor != "") {
         cssString += "cursor: " + cursor + "; ";
+    }
+
+    if (boxShadow != "") {
+        cssString += "box-shadow: " + boxShadow + "; ";
     }
 
     return cssString;

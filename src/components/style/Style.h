@@ -18,6 +18,7 @@ class Style {
     string flexDirection;
     string justifyContent;
     string alignItems;
+    string gridTemplateColumns;
     string gap;
     string position;
     string top;
@@ -27,6 +28,8 @@ class Style {
     string fontSize;
     string color;
     string cursor;
+    string boxShadow;
+    Style* hoverStyle;
 
     vector<Element*> observers;
 
@@ -63,6 +66,8 @@ public:
 
     Style& setAlignItems(const string& alignItems);
 
+    Style& setGridTemplateColumns(const string& gridTemplateColumns);
+
     Style& setGap(const string& gap);
 
     Style& setPosition(const string& position);
@@ -81,5 +86,16 @@ public:
 
     Style& setCursor(const string& cursor);
 
+    Style& setBoxShadow(const string& boxShadow);
+
+    Style& setHoverStyle(Style* hoverStyle);
+
     string getCssString() const;
+
+    static string primaryBlue;
+    static string secondaryBlue;
+    static string primaryYellow;
+    static string secondaryYellow;
+
+    static Style* defaultButtonStyle();
 };

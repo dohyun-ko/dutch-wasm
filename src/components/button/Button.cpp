@@ -27,14 +27,5 @@ void Button::update() {
 }
 
 void Button::setOnClick() {
-    std::cout << "setOnClick" << endl;
     getElement().set("onclick", emscripten::val::module_property("handleClick"));
-}
-
-void handleClick(emscripten::val event) {
-    std::cout << "clicked" << endl;
-}
-
-EMSCRIPTEN_BINDINGS(components) {
-    emscripten::function("handleClick", &handleClick);
 }
