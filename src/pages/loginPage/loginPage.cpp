@@ -28,23 +28,8 @@ LoginPage::LoginPage(): Element("div") {
     container = new Flex("column", "center", "center", "10px");
     loginButton = new Button(loginTextState, Style::defaultButtonStyle());
     signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
-    usernameInput = new Input(new State<string>("Username"));
-    passwordInput = new Input(new State<string>("Password"));
-
-    usernameInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
-    passwordInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
+    usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
+    passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
 
     container->appendChildren({usernameInput, passwordInput, loginButton, signUpButton});
 

@@ -24,6 +24,21 @@ Style* Style::defaultButtonStyle() {
     return style;
 }
 
+Style* Style::defaultInputStyle() {
+    Style* style = new Style();
+    style->setWidth("148px")
+        .setHeight("44px")
+        .setBackground(Style::secondaryYellow)
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#000000")
+        .setPadding("0 25px")
+        .setBoxShadow("inset 2px 2px 3px rgba(0, 0, 0, 0.15)");
+
+    return style;
+}
+
 Style::Style() {}
 
 Style::~Style() {}

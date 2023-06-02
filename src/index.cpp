@@ -16,6 +16,7 @@
 #include "pages/signUpPage/signUpPage.h"
 #include "router/Router.h"
 #include "pages/mainPage/mainPage.h"
+#include "pages/dutchListPage/dutchListPage.h"
 
 using namespace emscripten;
 using json = nlohmann::json;
@@ -83,9 +84,10 @@ int main() {
         {
             {"/login", []() { return LoginPage::getInstance(); }},
             {"/signUp", []() { return SignUpPage::getInstance(); }},
-            {"/main", []() { return MainPage::getInstance(); }}
+            {"/main", []() { return MainPage::getInstance(); }},
+            {"/dutchList", []() { return DutchListPage::getInstance(); }}
         },
-        "/main"
+        "/dutchList"
     );
 
 

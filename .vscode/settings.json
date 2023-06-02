@@ -83,6 +83,10 @@
         "iomanip": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "__tree": "cpp",
+        "cfenv": "cpp",
+        "span": "cpp",
+        "stack": "cpp"
     }
 }

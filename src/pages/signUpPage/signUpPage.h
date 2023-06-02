@@ -7,7 +7,6 @@
 
 class SignUpPage: public Element {
     State<string>* signUpTextState;
-    State<string>* backwardTextState;
     Flex* container;
     Button* backwardButton;
     Button* signUpButton;

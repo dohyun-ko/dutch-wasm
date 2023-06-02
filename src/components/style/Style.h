@@ -98,4 +98,5 @@ public:
     static string secondaryYellow;
 
     static Style* defaultButtonStyle();
+    static Style* defaultInputStyle();
 };
