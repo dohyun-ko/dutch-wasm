@@ -1,28 +1,30 @@
 #pragma once
 #include <emscripten/bind.h>
+#include <emscripten/fetch.h>
 #include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
+#include "../../components/text/Text.h"
 
 class LoginPage : public Element
 {
     
     State<string> *loginTextState;
     State<string> *signUpTextState;
-    State<string> *backwardTextState;
 
     Style* buttonStyle;
 
     Flex* container;
 
-    Button* backwardButton;
     Button* loginButton;
     Button* signUpButton;
 
     Input* usernameInput;
     Input* passwordInput;
+
+    Text* loginText;
 
     static LoginPage* instance;
     LoginPage();
@@ -30,9 +32,15 @@ class LoginPage : public Element
 public:
     ~LoginPage();
 
+    static State<string>* loginSuccessState;
+    static State<string>* usernameState;
+    static State<string>* passwordState;
+
     static LoginPage* getInstance();
 
-    static void LoginButtonHander(emscripten::val event);
-    static void SignUpButtonHander(emscripten::val event);
-    static void BackwardButtonHander(emscripten::val event);
+    static void LoginButtonHandler(emscripten::val event);
+    static void SignUpButtonHandler(emscripten::val event);
+    static void getUsername(emscripten::val event);
+    static void getPassword(emscripten::val event);
+    static void LoginNetworkHandler(emscripten_fetch_t *fetch);
 };
