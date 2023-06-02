@@ -14,7 +14,7 @@ Text::Text(State<string>* text, Style* style) : Element("p", style), text(text) 
 }
 
 Text::~Text() {
-    
+    text->detach(this);
 }
 
 void Text::update() {
