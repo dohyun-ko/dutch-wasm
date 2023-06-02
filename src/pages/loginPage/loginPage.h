@@ -8,6 +8,8 @@
 
 class LoginPage : public Element
 {
+    
+    State<string> *loginTextState;
     State<string> *signUpTextState;
     State<string> *backwardTextState;
 
@@ -27,8 +29,6 @@ class LoginPage : public Element
 
 public:
     ~LoginPage();
-
-    static State<string> *loginTextState;
 
     static LoginPage* getInstance();
 

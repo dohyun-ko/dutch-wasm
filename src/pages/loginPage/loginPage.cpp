@@ -16,10 +16,10 @@
 
 using json = nlohmann::json;
 
-State<string> *LoginPage::loginTextState = new State<string>("Login");
 LoginPage* LoginPage::instance = nullptr;
 
 LoginPage::LoginPage(): Element("div") {
+    loginTextState = new State<string>("Login");
     signUpTextState = new State<string>("Sign Up");
     backwardTextState = new State<string>("Back");
 
