@@ -1,4 +1,5 @@
 #pragma once
+
 #include <emscripten/bind.h>
 #include <emscripten/fetch.h>
 #include "../page/page.h"
@@ -42,5 +43,6 @@ public:
     static void SignUpButtonHandler(emscripten::val event);
     static void getUsername(emscripten::val event);
     static void getPassword(emscripten::val event);
-    static void LoginNetworkHandler(emscripten_fetch_t *fetch);
+    static void LoginSuccessHandler(emscripten_fetch_t *fetch);
+    static void LoginfailedHandler(emscripten_fetch_t *fetch);
 };

@@ -11,7 +11,6 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
-#include "../../apiClient/apiClient.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -19,6 +18,7 @@ using namespace std;
 State<string> *SignUpPage::usernameState = new State<string>("");
 State<string> *SignUpPage::passwordState = new State<string>("");
 State<string> *SignUpPage::emailState = new State<string>("");
+State<string> *SignUpPage::signUpSuccessState = new State<string>("");
 
 SignUpPage* SignUpPage::instance = nullptr;
 
@@ -31,6 +31,7 @@ SignUpPage::SignUpPage(): Element("div") {
     passwordInput = new Input(new State<string>("Password"));
     emailInput = new Input(new State<string>("Email"));
     signUpButton = new Button(signUpTextState);
+    signUpText = new Text(signUpSuccessState);
 
     signUpButton->getStyle()
         .setWidth("200px")
@@ -63,7 +64,7 @@ SignUpPage::SignUpPage(): Element("div") {
         .setBorderRadius("6px")
         .setPadding("0 25px");
 
-    container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton});
+    container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton, signUpText});
 
     signUpButton->getElement().set("onclick", emscripten::val::module_property("SignUpPage.SignUpButtonHander"));
     usernameInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getUsername"));
@@ -110,32 +111,32 @@ void SignUpPage::getEmail(emscripten::val e) {
 }
 
 void SignUpPage::SignUpButtonHander(emscripten::val e) {
-    string username = SignUpPage::usernameState->getValue();
-    string password = SignUpPage::passwordState->getValue();
-    string email = SignUpPage::emailState->getValue();
+    std::cout << "SignUpPage.SignUpButtonHander" << std::endl;
+    std::cout << "username: " << SignUpPage::usernameState->getValue() << std::endl;
+    std::cout << "password: " << SignUpPage::passwordState->getValue() << std::endl;
+    std::cout << "email: " << SignUpPage::emailState->getValue() << std::endl;
 
-    std::cout << "username: " << username << std::endl;
-    std::cout << "password: " << password << std::endl;
-    std::cout << "email: " << email << std::endl;
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+    strcpy(attr.requestMethod, "POST");
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.onsuccess = SignUpPage::SignUpNetworkHandler;
+    signUpSuccessState->setState("Signing Up...");
 
-    if(username == "" || password == "" || email == "") {
-        std::cout << "username, password, email is empty" << std::endl;
-        return;
-    }
+    string url = "http://15.165.55.135:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
+    emscripten_fetch(&attr, url.c_str());
+}
 
-    ApiClient apiClient = ApiClient("http://15.165.55.135:8080/user", "POST", {
-        QueryParam("username", username),
-        QueryParam("password", password),
-        QueryParam("email", email)
-    }, "", 5000);
-
+void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch) {
+    std::cout << "SignUpPage.SignUpNetworkHandler" << std::endl;
+    std::cout << "status: " << fetch->status << std::endl;
     try {
-        apiClient.send();
-        json data = apiClient.getJsonData();
-        std::cout << data["uuid"] << std::endl;
-    } catch (const std::exception& e) {
-        std::cout << e.what() << std::endl;
+        json j= json::parse(string(fetch->data, fetch->numBytes));
+        SignUpPage::signUpSuccessState->setState(j["uuid"]);
+    } catch (json::parse_error& e) {
+        std::cout << "parse error: " << e.what() << std::endl;
     }
+    emscripten_fetch_close(fetch);
 }
 
 EMSCRIPTEN_BINDINGS(SignUpPage)

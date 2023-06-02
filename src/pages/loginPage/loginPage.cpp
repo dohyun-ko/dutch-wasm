@@ -7,7 +7,6 @@
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
 #include "../../components/text/Text.h"
-#include "../../apiClient/apiClient.h"
 #include "../../router/Router.h"
 #include "../../components/element/Element.h"
 #include <iostream>
@@ -97,7 +96,8 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
     emscripten_fetch_attr_init(&attr);
     strcpy(attr.requestMethod, "POST");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-    attr.onsuccess = LoginPage::LoginNetworkHandler;
+    attr.onsuccess = LoginPage::LoginSuccessHandler;
+    attr.onerror = LoginPage::LoginfailedHandler;
     loginSuccessState->setState("loading...");
 
     string url =  "http://15.165.55.135:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue(); 
@@ -106,7 +106,7 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
     return;
 }
 
-void LoginPage::LoginNetworkHandler(emscripten_fetch_t* fetch){
+void LoginPage::LoginSuccessHandler(emscripten_fetch_t* fetch){
     cout << "LoginPage::LoginNetworkHandler()" << endl;
     cout << "fetch->status: " << fetch->status << endl;
     try {
@@ -116,6 +116,15 @@ void LoginPage::LoginNetworkHandler(emscripten_fetch_t* fetch){
         cout << "parse error: " << e.what() << endl;
     }
     
+    emscripten_fetch_close(fetch);
+}
+
+void LoginPage::LoginfailedHandler(emscripten_fetch_t* fetch){
+    cout << "LoginPage::LoginfailedHandler()" << endl;
+    cout << "fetch->status: " << fetch->status << endl;
+    if(fetch->status == 401){
+        LoginPage::loginSuccessState->setState("login failed");
+    }
     emscripten_fetch_close(fetch);
 }
 
