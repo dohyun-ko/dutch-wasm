@@ -12,6 +12,9 @@
 #include <iostream>
 #include <functional>
 #include <emscripten/bind.h>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 State<string> *LoginPage::loginTextState = new State<string>("Login");
 LoginPage* LoginPage::instance = nullptr;
@@ -60,10 +63,10 @@ LoginPage* LoginPage::getInstance() {
 
 }
 
-void LoginPage::LoginButtonHander(emscripten::val e) {
+void LoginPage::LoginButtonHander(emscripten::val e)
+{
     std::cout << "LoginPage::LoginButtonHander()" << std::endl;
-    loginTextState->setState("Logging in...");
-    ApiClient apiClient();
+    return;
 }
 
 void LoginPage::SignUpButtonHander(emscripten::val e) {
@@ -85,7 +88,8 @@ LoginPage::~LoginPage() {
     delete passwordInput;
 }
 
-EMSCRIPTEN_BINDINGS(Page){
+EMSCRIPTEN_BINDINGS(Page)
+{
     emscripten::function("LoginPage.LoginButtonHander", &LoginPage::LoginButtonHander);
     emscripten::function("LoginPage.SignUpButtonHander", &LoginPage::SignUpButtonHander);
 }
