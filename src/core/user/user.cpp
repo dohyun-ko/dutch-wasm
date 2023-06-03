@@ -17,8 +17,3 @@ std::string User::getUsername() {
 std::string User::getEmail() {
     return this->email;
 }
-
-std::shared_ptr<Dutch> User::makeDutch(int targetMoney, std::vector<std::shared_ptr<User>> sendUsers) {
-    return std::make_shared<Dutch>(targetMoney, std::make_shared<User>(*this), sendUsers);
-}
-

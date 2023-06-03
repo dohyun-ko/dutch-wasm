@@ -9,6 +9,7 @@
 #include "../../components/text/Text.h"
 #include "../../router/Router.h"
 #include "../../components/element/Element.h"
+#include "../../globalState/userState/userState.h"
 #include <iostream>
 #include <functional>
 #include <emscripten/bind.h>
@@ -100,9 +101,11 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
 void LoginPage::LoginSuccessHandler(emscripten_fetch_t* fetch){
     cout << "LoginPage::LoginNetworkHandler()" << endl;
     cout << "fetch->status: " << fetch->status << endl;
+    UserState* userState = UserState::getInstance();
     try {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         LoginPage::loginSuccessState->setState(j["uuid"]);
+        userState->getState()->setState(User(j["uuid"], j["username"], j["email"]));
     } catch (json::parse_error& e) {
         cout << "parse error: " << e.what() << endl;
     }
