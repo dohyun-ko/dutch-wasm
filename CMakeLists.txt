@@ -20,7 +20,6 @@ add_executable(index
     src/components/state/State.cpp
     src/components/style/Style.cpp
     src/components/text/Text.cpp
-    src/pages/page/Page.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
