@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
@@ -16,6 +17,7 @@ class MainPage : public Element {
 
     Button* sendButton;
     Button* receiveButton;
+    Button* loginButton; //global state에 유저 정보가 있으면 이 버튼ㅇ르 안보이게 해야함
 
     static MainPage* instance;
     MainPage();
