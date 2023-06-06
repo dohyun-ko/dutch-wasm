@@ -38,6 +38,8 @@ SignUpPage::SignUpPage(): Element("div") {
     passwordInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getPassword"));
     emailInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getEmail"));
 
+    passwordInput->getElement().set("type", "password");
+
     SignUpPage::appendChildren(container);
 }
 

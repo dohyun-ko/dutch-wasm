@@ -87,7 +87,7 @@ int main() {
             {"/main", []() { return MainPage::getInstance(); }},
             {"/dutchList", []() { return DutchListPage::getInstance(); }}
         },
-        "/dutchList"
+        "/login"
     );
 
 

@@ -31,6 +31,8 @@ LoginPage::LoginPage(): Element("div") {
     usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
     passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
 
+    passwordInput->getElement().set("type", "password");
+
     container->appendChildren({usernameInput, passwordInput, loginButton, signUpButton});
 
     loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHander"));

@@ -27,9 +27,9 @@ class Style {
     string bottom;
     string fontSize;
     string color;
+    string fontWeight;
     string cursor;
     string boxShadow;
-    Style* hoverStyle;
 
     vector<Element*> observers;
 
@@ -84,11 +84,11 @@ public:
 
     Style& setColor(const string& color);
 
+    Style& setFontWeight(const string& fontWeight);
+
     Style& setCursor(const string& cursor);
 
     Style& setBoxShadow(const string& boxShadow);
-
-    Style& setHoverStyle(Style* hoverStyle);
 
     string getCssString() const;
 
