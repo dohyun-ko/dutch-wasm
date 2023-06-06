@@ -5,6 +5,7 @@
 
 #include "../element/Element.h"
 #include "../state/State.cpp"
+#include "../style/Style.h"
 
 using namespace emscripten;
 using namespace std;
@@ -14,7 +15,7 @@ class Input : public Element {
     
     void update() override;
 public:
-    Input(State<string>* placeholder = new State<string>(""));
+    Input(State<string>* placeholder = new State<string>(""), Style* style = nullptr);
     
     virtual ~Input() override;
 };
