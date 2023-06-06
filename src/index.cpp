@@ -15,36 +15,38 @@
 #include "pages/signUpPage/signUpPage.h"
 #include "router/Router.h"
 #include "pages/mainPage/mainPage.h"
-#include "pages/dutchListPage/dutchListPage.h"
 
 using namespace emscripten;
 using json = nlohmann::json;
 
-val getElementById(std::string id) {
+val getElementById(std::string id)
+{
     return val::global("document").call<val>("getElementById", val(id));
 }
 
-static void backButtonHander(emscripten::val e) {
+static void backButtonHander(emscripten::val e)
+{
     Router::getInstance()->navigate("back");
 }
 
-EMSCRIPTEN_BINDINGS(layout){
+EMSCRIPTEN_BINDINGS(layout)
+{
     emscripten::function("layout.backButtonHander", &backButtonHander);
 }
 
-
-int main() {
+int main()
+{
     val root = getElementById("root");
 
-    Element* layout = new Element("div");
+    Element *layout = new Element("div");
 
     layout->getStyle()
         .setPosition("relative")
         .setDisplay("flex")
         .setFlexDirection("column")
         .setAlignItems("center");
-  
-    Element* header = new Element("div");
+
+    Element *header = new Element("div");
     header->getStyle()
         .setPosition("absolute")
         .setTop("0")
@@ -54,7 +56,7 @@ int main() {
         .setWidth("100%")
         .setHeight("80px");
 
-    Element* body = new Element("div");
+    Element *body = new Element("div");
     body->getStyle()
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -63,15 +65,14 @@ int main() {
         .setWidth("100%")
         .setHeight("calc(100vh)")
         .setBackground(Style::primaryYellow);
-    
 
-    Button* backButton = new Button(new State<string>("⬅️"));
+    Button *backButton = new Button(new State<string>("⬅️"));
     backButton->getStyle()
         .setBorder("none")
         .setBackground("transparent")
         .setFontSize("2rem")
         .setCursor("pointer");
-        
+
     backButton->getElement().set("onclick", emscripten::val::module_property("layout.backButtonHander"));
     header->appendChildren(backButton);
     layout->appendChildren({header, body});
@@ -81,21 +82,21 @@ int main() {
     Router router(
         body,
         {
-            {"/login", []() { return LoginPage::getInstance(); }},
-            {"/signUp", []() { return SignUpPage::getInstance(); }},
-            {"/main", []() { return MainPage::getInstance(); }},
-            {"/dutchList", []() { return DutchListPage::getInstance(); }}
+            {"/login", []()
+             { return LoginPage::getInstance(); }},
+            {"/signUp", []()
+             { return SignUpPage::getInstance(); }},
+            {"/main", []()
+             { return MainPage::getInstance(); }},
         },
-        "/login"
-    );
+        "/login");
 
-
-    while (true) {
+    while (true)
+    {
         emscripten_sleep(100);
     }
 
     // emscripten_set_main_loop() // TODO: use this instead of sleep
-
 
     // router.navigate("/signUp");
 
@@ -108,4 +109,3 @@ int main() {
 
     // mainPage->render();
 }
-
