@@ -12,6 +12,7 @@
 class MakeDutchPage : public Element {
     
     State<vector<string>>* sendUsers;
+    State<int>* dutchBalance;
 
     Button* makeButton;
     Button* addUserButtons[8]; //전체 유저를 가져오는 버튼 (event의 target을 이용해서 유저 uuid를 가져올 수 있도록 로직 구성예정)
@@ -26,4 +27,8 @@ class MakeDutchPage : public Element {
         ~MakeDutchPage();
 
         static MakeDutchPage* getInstance();
+        static void makeButtonHandler(emscripten::val event);
+        static void addUserButtonHandler(emscripten::val event);
+        static void subUserButtonHandler(emscripten::val event);
+        static void dutchBalanceInputHandler(emscripten::val event);
 };
