@@ -5,7 +5,6 @@
 #include <string>
 
 #include "signUpPage.h"
-#include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
@@ -20,49 +19,18 @@ State<string> *SignUpPage::passwordState = new State<string>("");
 State<string> *SignUpPage::emailState = new State<string>("");
 State<string> *SignUpPage::signUpSuccessState = new State<string>("");
 
-SignUpPage* SignUpPage::instance = nullptr;
+SignUpPage *SignUpPage::instance = nullptr;
 
-SignUpPage::SignUpPage(): Element("div") {
+SignUpPage::SignUpPage() : Element("div")
+{
     signUpTextState = new State<string>("Sign Up");
-    backwardTextState = new State<string>("Back");
 
     container = new Flex("column", "center", "center", "10px");
-    usernameInput = new Input(new State<string>("Username"));
-    passwordInput = new Input(new State<string>("Password"));
-    emailInput = new Input(new State<string>("Email"));
-    signUpButton = new Button(signUpTextState);
+    usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
+    passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
+    emailInput = new Input(new State<string>("Email"), Style::defaultInputStyle());
+    signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
     signUpText = new Text(signUpSuccessState);
-
-    signUpButton->getStyle()
-        .setWidth("200px")
-        .setHeight("44px")
-        .setBackground("#405cf5")
-        .setBorder("none")
-        .setBorderRadius("6px")
-        .setFontSize("1rem")
-        .setColor("#FFFFFF")
-        .setPadding("0 25px");
-
-    usernameInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
-    passwordInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
-    emailInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
 
     container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton, signUpText});
 
@@ -71,18 +39,23 @@ SignUpPage::SignUpPage(): Element("div") {
     passwordInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getPassword"));
     emailInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getEmail"));
 
+    passwordInput->getElement().set("type", "password");
+
     SignUpPage::appendChildren(container);
 }
 
-SignUpPage* SignUpPage::getInstance() {
-    if (SignUpPage::instance == nullptr) {
+SignUpPage *SignUpPage::getInstance()
+{
+    if (SignUpPage::instance == nullptr)
+    {
         SignUpPage::instance = new SignUpPage();
     }
 
     return SignUpPage::instance;
 }
 
-SignUpPage::~SignUpPage() {
+SignUpPage::~SignUpPage()
+{
     SignUpPage::instance = nullptr;
     delete signUpTextState;
     delete container;
@@ -92,25 +65,29 @@ SignUpPage::~SignUpPage() {
     delete emailInput;
 }
 
-void SignUpPage::getUsername(emscripten::val e) {
+void SignUpPage::getUsername(emscripten::val e)
+{
     cout << "SignUpPage.getUsername" << endl;
     string username = e["target"]["value"].as<string>();
     SignUpPage::usernameState->setState(username);
 }
 
-void SignUpPage::getPassword(emscripten::val e) {
+void SignUpPage::getPassword(emscripten::val e)
+{
     cout << "SignUpPage.getPassword" << endl;
     string password = e["target"]["value"].as<string>();
     SignUpPage::passwordState->setState(password);
 }
 
-void SignUpPage::getEmail(emscripten::val e) {
+void SignUpPage::getEmail(emscripten::val e)
+{
     cout << "SignUpPage.getEmail" << endl;
     string email = e["target"]["value"].as<string>();
     SignUpPage::emailState->setState(email);
 }
 
-void SignUpPage::SignUpButtonHander(emscripten::val e) {
+void SignUpPage::SignUpButtonHander(emscripten::val e)
+{
     std::cout << "SignUpPage.SignUpButtonHander" << std::endl;
     std::cout << "username: " << SignUpPage::usernameState->getValue() << std::endl;
     std::cout << "password: " << SignUpPage::passwordState->getValue() << std::endl;
@@ -127,13 +104,17 @@ void SignUpPage::SignUpButtonHander(emscripten::val e) {
     emscripten_fetch(&attr, url.c_str());
 }
 
-void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch) {
+void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch)
+{
     std::cout << "SignUpPage.SignUpNetworkHandler" << std::endl;
     std::cout << "status: " << fetch->status << std::endl;
-    try {
-        json j= json::parse(string(fetch->data, fetch->numBytes));
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
         SignUpPage::signUpSuccessState->setState(j["uuid"]);
-    } catch (json::parse_error& e) {
+    }
+    catch (json::parse_error &e)
+    {
         std::cout << "parse error: " << e.what() << std::endl;
     }
     emscripten_fetch_close(fetch);

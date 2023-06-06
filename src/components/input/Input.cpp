@@ -5,7 +5,7 @@
 #include "../style/Style.h"
 #include "../state/State.cpp"
 
-Input::Input(State<string>* placeholder) : Element("input"), placeholder(placeholder) {
+Input::Input(State<string>* placeholder, Style* style) : Element("input", style), placeholder(placeholder) {
     placeholder->attach(this);
     getElement().set("placeholder", placeholder->getValue());
 }
@@ -15,6 +15,6 @@ Input::~Input() {
 }
 
 void Input::update() {
+    Element::update();
     getElement().set("placeholder", placeholder->getValue());
-    getElement().set("style", getStyle().getCssString());
 }
