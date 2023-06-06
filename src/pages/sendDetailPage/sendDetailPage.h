@@ -10,6 +10,7 @@ class SendDetailPage : public Element {
 
     State<int> *charge; //더치 금액
     State<int> *myBalance; //내 잔액
+    State<int> *sendCharge; //보내는 금액
 
     Text* chargeText; //더치 금액 보여주기
     Text* receiveUserText; //받는 사람 보여주기
@@ -26,4 +27,5 @@ class SendDetailPage : public Element {
 
         static SendDetailPage* getInstance();
         static void sendButtonHandler(emscripten::val event);
+        static void inputHandler(emscripten::val event);
 };

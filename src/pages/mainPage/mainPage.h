@@ -27,4 +27,8 @@ class MainPage : public Element {
         ~MainPage();
 
         static MainPage* getInstance();
+        static void sendButtonHandler(emscripten::val event);
+        static void receiveButtonHandler(emscripten::val event);
+        static void loginButtonHandler(emscripten::val event);
+        static void makeDutchButtonHandler(emscripten::val event);
 };

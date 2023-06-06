@@ -19,4 +19,5 @@ class ReceiveDetailPage : public Element {
         ~ReceiveDetailPage();
 
         static ReceiveDetailPage* getInstance();
+        static void completeButtonHandler(emscripten::val event);
 };
