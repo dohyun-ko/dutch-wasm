@@ -1,5 +1,4 @@
 #include "loginPage.h"
-#include "../page/page.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../components/style/Style.h"
@@ -17,13 +16,14 @@
 
 using json = nlohmann::json;
 
-LoginPage* LoginPage::instance = nullptr;
+LoginPage *LoginPage::instance = nullptr;
 
-State<string>* LoginPage::usernameState = new State<string>("");
-State<string>* LoginPage::passwordState = new State<string>("");
-State<string>* LoginPage::loginSuccessState = new State<string>("test");
+State<string> *LoginPage::usernameState = new State<string>("");
+State<string> *LoginPage::passwordState = new State<string>("");
+State<string> *LoginPage::loginSuccessState = new State<string>("test");
 
-LoginPage::LoginPage(): Element("div") {
+LoginPage::LoginPage() : Element("div")
+{
     loginTextState = new State<string>("Login");
     signUpTextState = new State<string>("Sign Up");
 
@@ -36,20 +36,7 @@ LoginPage::LoginPage(): Element("div") {
     passwordInput = new Input(new State<string>("Password"));
     loginText = new Text(loginSuccessState);
 
-    usernameInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
-    passwordInput->getStyle()
-        .setWidth("148px")
-        .setHeight("44px")
-        .setBorder("1px solid black")
-        .setBorderRadius("6px")
-        .setPadding("0 25px");
-
+    passwordInput->getElement().set("type", "password");
 
     container->appendChildren({usernameInput, passwordInput, loginButton, signUpButton, loginText});
 
@@ -61,7 +48,8 @@ LoginPage::LoginPage(): Element("div") {
     LoginPage::appendChildren(container);
 }
 
-LoginPage::~LoginPage() {
+LoginPage::~LoginPage()
+{
     LoginPage::instance = nullptr;
     delete loginTextState;
     delete signUpTextState;
@@ -72,13 +60,14 @@ LoginPage::~LoginPage() {
     delete passwordInput;
 }
 
-LoginPage* LoginPage::getInstance() {
-    if (LoginPage::instance == nullptr) {
+LoginPage *LoginPage::getInstance()
+{
+    if (LoginPage::instance == nullptr)
+    {
         LoginPage::instance = new LoginPage();
     }
 
     return LoginPage::instance;
-
 }
 
 void LoginPage::LoginButtonHandler(emscripten::val e)
@@ -92,51 +81,58 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
     attr.onerror = LoginPage::LoginfailedHandler;
     loginSuccessState->setState("loading...");
 
-    string url =  "http://15.165.55.135:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue(); 
+    string url = "http://15.165.55.135:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue();
     emscripten_fetch(&attr, url.c_str());
 
     return;
 }
 
-void LoginPage::LoginSuccessHandler(emscripten_fetch_t* fetch){
+void LoginPage::LoginSuccessHandler(emscripten_fetch_t *fetch)
+{
     cout << "LoginPage::LoginNetworkHandler()" << endl;
     cout << "fetch->status: " << fetch->status << endl;
-    UserState* userState = UserState::getInstance();
-    try {
+    try
+    {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         LoginPage::loginSuccessState->setState(j["uuid"]);
-        userState->getState()->setState(User(j["uuid"], j["username"], j["email"]));
-    } catch (json::parse_error& e) {
+    }
+    catch (json::parse_error &e)
+    {
         cout << "parse error: " << e.what() << endl;
     }
-    
+
     emscripten_fetch_close(fetch);
 }
 
-void LoginPage::LoginfailedHandler(emscripten_fetch_t* fetch){
+void LoginPage::LoginfailedHandler(emscripten_fetch_t *fetch)
+{
     cout << "LoginPage::LoginfailedHandler()" << endl;
     cout << "fetch->status: " << fetch->status << endl;
-    if(fetch->status == 401){
+    if (fetch->status == 401)
+    {
         LoginPage::loginSuccessState->setState("login failed");
     }
     emscripten_fetch_close(fetch);
 }
 
-void LoginPage::SignUpButtonHandler(emscripten::val e) {
+void LoginPage::SignUpButtonHandler(emscripten::val e)
+{
     std::cout << "LoginPage::SignUpButtonHander()" << std::endl;
-    Router* router = Router::getInstance();
+    Router *router = Router::getInstance();
     std::cout << "router: " << router << std::endl;
     router->navigate("/signUp"); // TODO: maybe it's better to change navigate to a static method
     std::cout << "router->navigate" << std::endl;
 }
 
-void LoginPage::getUsername(emscripten::val e) {
+void LoginPage::getUsername(emscripten::val e)
+{
     cout << "LoginPage::getUsername()" << endl;
     string username = e["target"]["value"].as<string>();
     LoginPage::usernameState->setState(username);
 }
 
-void LoginPage::getPassword(emscripten::val e) {
+void LoginPage::getPassword(emscripten::val e)
+{
     cout << "LoginPage::getPassword()" << endl;
     string password = e["target"]["value"].as<string>();
     LoginPage::passwordState->setState(password);
