@@ -18,6 +18,7 @@ class MainPage : public Element {
     Button* sendButton;
     Button* receiveButton;
     Button* loginButton; //global state에 유저 정보가 있으면 이 버튼을 안보이게 해야함 - branch 20 참고
+    Button* makeDutchButton;
 
     static MainPage* instance;
     MainPage();
