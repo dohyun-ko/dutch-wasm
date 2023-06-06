@@ -1,8 +1,11 @@
 #include "mainPage.h"
 
+#include <iostream>
+
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/style/Style.h"
+#include "../../router/Router.h"
 
 MainPage* MainPage::instance = nullptr;
 
@@ -66,4 +69,28 @@ MainPage* MainPage::getInstance() {
 MainPage::~MainPage() {
     MainPage::instance = nullptr;
     delete container;
+}
+
+void MainPage::sendButtonHandler(emscripten::val event) {
+    std::cout << "MainPage::sendButtonHandler" << std::endl;
+    Router* router = Router::getInstance();
+    router->navigate("/send");
+}
+
+void MainPage::receiveButtonHandler(emscripten::val event) {
+    std::cout << "MainPage::receiveButtonHandler" << std::endl;
+    Router* router = Router::getInstance();
+    router->navigate("/receive");
+}
+
+void MainPage::loginButtonHandler(emscripten::val event) {
+    std::cout << "MainPage::loginButtonHandler" << std::endl;
+    Router* router = Router::getInstance();
+    router->navigate("/login");
+}
+
+void MainPage::makeDutchButtonHandler(emscripten::val event) {
+    std::cout << "MainPage::makeDutchButtonHandler" << std::endl;
+    Router* router = Router::getInstance();
+    router->navigate("/makeDutch");
 }
