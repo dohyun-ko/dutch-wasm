@@ -23,7 +23,7 @@ add_executable(index
     src/components/style/Style.cpp
     src/components/text/Text.cpp
     src/globalState/userState/userState.cpp
-    src/globalState/dutchState/dutchState.cpp
+    src/globalState/sendDutchState/sendDutchState.cpp
     src/pages/page/Page.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
