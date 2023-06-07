@@ -91,7 +91,7 @@ int main()
           { return MainPage::getInstance(); }},
          {"/sendDetail", []()
           { return SendDetailPage::getInstance(); }}},
-        "/sendDetail");
+        "/main");
 
     while (true)
     {
