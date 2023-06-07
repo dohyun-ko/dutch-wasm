@@ -60,7 +60,7 @@ SendDetailPage::SendDetailPage() : Element("div")
 
     billLower = new Flex("column", "center", "center", "10px");
     billLower->getStyle()
-        .setWidth("100%");
+        .setMargin("10px");
 
     sendButton = new Button(new State<string>("Send"), Style::defaultButtonStyle());
 
