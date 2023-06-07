@@ -8,24 +8,25 @@ using namespace std;
 
 class Style;
 
-class Element {
+class Element
+{
     static int idCount;
     string id;
     val element;
-    Style* style;
-    vector<Element*> children;
+    Style *style;
+    vector<Element *> children;
 
-    void appendChild(Element* child);
+    void appendChild(Element *child);
 
 public:
-    explicit Element(string tag, Style* style = nullptr);
-    
+    explicit Element(string tag, Style *style = nullptr, string id = "");
+
     virtual ~Element();
 
-    void appendChildren(Element* child);
+    void appendChildren(Element *child);
 
     // overloading
-    void appendChildren(vector<Element*> children);
+    void appendChildren(vector<Element *> children);
 
     void clearChildren();
 
@@ -35,5 +36,5 @@ public:
 
     string getId();
 
-    Style& getStyle();
+    Style &getStyle();
 };

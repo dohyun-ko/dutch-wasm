@@ -249,6 +249,13 @@ Style &Style::setLineHeight(const string &lineHeight)
     return *this;
 }
 
+Style &Style::setAspectRatio(const string &aspectRatio)
+{
+    this->aspectRatio = aspectRatio;
+    notify();
+    return *this;
+}
+
 string Style::getCssString() const
 {
     string cssString = "";
@@ -376,6 +383,11 @@ string Style::getCssString() const
     if (lineHeight != "")
     {
         cssString += "line-height: " + lineHeight + "; ";
+    }
+
+    if (aspectRatio != "")
+    {
+        cssString += "aspect-ratio: " + aspectRatio + "; ";
     }
 
     return cssString;

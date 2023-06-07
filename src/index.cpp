@@ -89,9 +89,11 @@ int main()
           { return SignUpPage::getInstance(); }},
          {"/main", []()
           { return MainPage::getInstance(); }},
+         {"/send", []()
+          { return SendPage::getInstance(); }},
          {"/sendDetail", []()
           { return SendDetailPage::getInstance(); }}},
-        "/sendDetail");
+        "/send");
 
     while (true)
     {

@@ -5,19 +5,20 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
 
-class ReceiveDetailPage : public Element {
+class ReceiveDetailPage : public Element
+{
 
-    State<int> *charge; //더치 금액
-    State<bool> *isComplete; //더치 완료 여부
+    State<int> *charge;      // 더치 금액
+    State<bool> *isComplete; // 더치 완료 여부
 
-    Button* completeButton; //더치 완료 버튼
+    Button *completeButton; // 더치 완료 버튼
 
-    static ReceiveDetailPage* instance;
+    static ReceiveDetailPage *instance;
     ReceiveDetailPage();
 
-    public:
-        ~ReceiveDetailPage();
+public:
+    ~ReceiveDetailPage();
 
-        static ReceiveDetailPage* getInstance();
-        static void completeButtonHandler(emscripten::val event);
+    static ReceiveDetailPage *getInstance();
+    static void completeButtonHandler(emscripten::val event);
 };

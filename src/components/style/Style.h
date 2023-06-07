@@ -33,6 +33,7 @@ class Style
     string boxShadow;
     string textAlign;
     string lineHeight;
+    string aspectRatio;
 
     vector<Element *> observers;
 
@@ -96,6 +97,8 @@ public:
     Style &setTextAlign(const string &textAlign);
 
     Style &setLineHeight(const string &lineHeight);
+
+    Style &setAspectRatio(const string &aspectRatio);
 
     string getCssString() const;
 
