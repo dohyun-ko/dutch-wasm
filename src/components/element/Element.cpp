@@ -13,7 +13,7 @@ int Element::idCount = 0;
 Element::Element(string tag, Style *style) : style(style)
 {
     element = val::global("document").call<val>("createElement", val(tag));
-    string newId = "element" + to_string(idCount++);
+    string newId = id.length() > 0 ? id : tag + to_string(idCount++);
     element.set("id", newId);
     id = newId;
     if (style != nullptr)
