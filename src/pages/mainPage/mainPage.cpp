@@ -7,8 +7,12 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/style/Style.h"
 #include "../../router/Router.h"
+#include "../../globalState/userState/userState.h"
 
 MainPage *MainPage::instance = nullptr;
+
+State<User>* MainPage::userState = UserState::getInstance()->getCurrentUser();
+State<string>* MainPage::loginState = UserState::getInstance()->getLoginState();
 
 MainPage::MainPage() : Element("div")
 {
@@ -62,12 +66,18 @@ MainPage::MainPage() : Element("div")
         .setTextAlign("center")
         .setLineHeight("50px");
 
+    loginSuccessText = new Text(loginState);
+
     loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
 
     loginButton->getStyle()
         .setBackground(Style::secondary);
 
-    rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+    if(userState->getValue().getUUID() == "") {
+        rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+    } else {
+        rightSide->appendChildren({myBalanceText, balanceText, loginSuccessText});
+    }
 
     container->appendChildren({leftSide, rightSide});
 

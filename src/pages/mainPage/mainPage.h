@@ -4,6 +4,7 @@
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
+#include "../../core/user/user.h"
 
 class MainPage : public Element
 {
@@ -15,6 +16,7 @@ class MainPage : public Element
     Flex *rightSide;
     Text *balanceText;
     Text *myBalanceText;
+    Text *loginSuccessText;
 
     Button *sendButton;
     Button *receiveButton;
@@ -26,6 +28,9 @@ class MainPage : public Element
 
 public:
     ~MainPage();
+
+    static State<User>* userState;
+    static State<string>* loginState;
 
     static MainPage *getInstance();
     static void sendButtonHandler(emscripten::val event);

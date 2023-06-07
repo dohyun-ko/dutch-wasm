@@ -3,7 +3,8 @@
 UserState* UserState::instance = nullptr;
 
 UserState::UserState() {
-    this->state = new State<User>(User("","",""));
+    this->currentUser = new State<User>(User("","",""));
+    this->loginState = new State<string>("Login");
 }
 
 UserState* UserState::getInstance() {
@@ -13,7 +14,11 @@ UserState* UserState::getInstance() {
     return instance;
 }
 
-State<User>* UserState::getState() {
-    return this->state;
+State<User>* UserState::getCurrentUser() {
+    return this->currentUser;
+}
+
+State<string>* UserState::getLoginState() {
+    return this->loginState;
 }
 

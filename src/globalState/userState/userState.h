@@ -2,14 +2,16 @@
 #include <string>
 
 #include "../../core/user/user.h"
-#include "../../components/state/state.cpp"
+#include "../../components/state/State.cpp"
 
 class UserState {
     private:
         UserState();
-        State<User>* state;
+        State<User>* currentUser;
+        State<string>* loginState;
         static UserState* instance;
     public:
         static UserState* getInstance();
-        State<User>* getState();
+        State<User>* getCurrentUser();
+        State<string>* getLoginState();
 };
