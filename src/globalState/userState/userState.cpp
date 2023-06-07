@@ -5,6 +5,7 @@ UserState* UserState::instance = nullptr;
 UserState::UserState() {
     this->currentUser = new State<User>(User("","",""));
     this->loginState = new State<string>("Login");
+    this->balanceState = new State<string>("0.00");
 }
 
 UserState* UserState::getInstance() {
@@ -20,5 +21,9 @@ State<User>* UserState::getCurrentUser() {
 
 State<string>* UserState::getLoginState() {
     return this->loginState;
+}
+
+State<string>* UserState::getBalanceState() {
+    return this->balanceState;
 }
 

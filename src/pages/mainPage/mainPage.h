@@ -1,5 +1,7 @@
 #pragma once
 
+#include <emscripten/fetch.h>
+
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
@@ -8,9 +10,6 @@
 
 class MainPage : public Element
 {
-
-    State<string> *myBalance;
-
     Element *container;
     Flex *leftSide;
     Flex *rightSide;
@@ -31,10 +30,12 @@ public:
 
     static State<User>* userState;
     static State<string>* loginState;
+    static State<string>* balanceState;
 
     static MainPage *getInstance();
     static void sendButtonHandler(emscripten::val event);
     static void receiveButtonHandler(emscripten::val event);
     static void loginButtonHandler(emscripten::val event);
     static void makeDutchButtonHandler(emscripten::val event);
+    static void getBalanceNetworkHandler(emscripten_fetch_t *fetch);
 };
