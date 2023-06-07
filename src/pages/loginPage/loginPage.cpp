@@ -31,8 +31,8 @@ LoginPage::LoginPage() : Element("div")
     container = new Flex("column", "center", "center", "10px");
     loginButton = new Button(loginTextState, Style::defaultButtonStyle());
     signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
-    usernameInput = new Input(new State<string>("Username"));
-    passwordInput = new Input(new State<string>("Password"));
+    usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
+    passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
     loginText = new Text(loginSuccessState);
 
     passwordInput->getElement().set("type", "password");

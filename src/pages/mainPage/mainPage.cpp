@@ -4,9 +4,10 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/style/Style.h"
 
-MainPage* MainPage::instance = nullptr;
+MainPage *MainPage::instance = nullptr;
 
-MainPage::MainPage(): Element("div") {
+MainPage::MainPage() : Element("div")
+{
 
     MainPage::getStyle()
         .setWidth("100%")
@@ -34,7 +35,7 @@ MainPage::MainPage(): Element("div") {
     rightSide->getStyle()
         .setWidth("100%")
         .setHeight("100%")
-        .setBackground(Style::primaryBlue);
+        .setBackground(Style::primary);
 
     sendButton = new Button(new State<string>("Send"), Style::defaultButtonStyle());
     receiveButton = new Button(new State<string>("Receive"), Style::defaultButtonStyle());
@@ -47,23 +48,40 @@ MainPage::MainPage(): Element("div") {
         .setColor("white");
 
     balanceText = new Text(myBalance);
+    balanceText->getStyle()
+        .setFontSize("24px")
+        .setColor(Style::secondary)
+        .setBackground(Style::primaryVariant)
+        .setBorderRadius("10px")
+        .setWidth("150px")
+        .setHeight("50px")
+        .setTextAlign("center")
+        .setLineHeight("50px");
 
-    rightSide->appendChildren({myBalanceText,balanceText});
+    loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
+
+    loginButton->getStyle()
+        .setBackground(Style::secondary);
+
+    rightSide->appendChildren({myBalanceText, balanceText, loginButton});
 
     container->appendChildren({leftSide, rightSide});
 
     MainPage::appendChildren(container);
 }
 
-MainPage* MainPage::getInstance() {
-    if (MainPage::instance == nullptr) {
+MainPage *MainPage::getInstance()
+{
+    if (MainPage::instance == nullptr)
+    {
         MainPage::instance = new MainPage();
     }
 
     return MainPage::instance;
 }
 
-MainPage::~MainPage() {
+MainPage::~MainPage()
+{
     MainPage::instance = nullptr;
     delete container;
 }
