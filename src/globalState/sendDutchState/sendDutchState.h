@@ -7,9 +7,11 @@
 class SendDutchState {
     private:
         SendDutchState();
-        State<vector<string>>* state;
+        State<vector<string>>* sendUUIDsState;
+        State<string>* nowUUID;
         static SendDutchState* instance;
     public:
         static SendDutchState* getInstance();
-        State<vector<string>>* getState();
+        State<vector<string>>* getSendUUIDs();
+        State<string>* getNowUUID();
 };

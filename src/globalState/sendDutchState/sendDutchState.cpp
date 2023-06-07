@@ -3,7 +3,8 @@
 SendDutchState* SendDutchState::instance = nullptr;
 
 SendDutchState::SendDutchState() {
-    this->state = new State<vector<string>>(vector<string>());
+    this->sendUUIDsState = new State<vector<string>>(vector<string>());
+    this->nowUUID = new State<string>("");
 }
 
 SendDutchState* SendDutchState::getInstance() {
@@ -13,6 +14,10 @@ SendDutchState* SendDutchState::getInstance() {
     return instance;
 }
 
-State<vector<string>>* SendDutchState::getState() {
-    return this->state;
+State<vector<string>>* SendDutchState::getSendUUIDs() {
+    return this->sendUUIDsState;
+}
+
+State<string>* SendDutchState::getNowUUID() {
+    return this->nowUUID;
 }
