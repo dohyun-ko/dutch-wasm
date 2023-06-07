@@ -16,7 +16,7 @@ class Button: public Element {
     friend void handleClick(emscripten::val event);
 
 public:
-    Button(State<string>* text, Style* style = nullptr);
+    Button(State<string>* text, Style* style = nullptr, string id = "");
 
     virtual ~Button() override;
 

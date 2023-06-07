@@ -18,7 +18,7 @@ class Element {
     void appendChild(Element* child);
 
 public:
-    explicit Element(string tag, Style* style = nullptr);
+    explicit Element(string tag, Style* style = nullptr, string id = "");
     
     virtual ~Element();
 
