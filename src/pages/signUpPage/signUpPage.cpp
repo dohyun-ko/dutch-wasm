@@ -104,7 +104,7 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     attr.onsuccess = SignUpPage::SignUpNetworkHandler;
     signUpSuccessState->setState("Signing Up...");
 
-    string url = "http://15.165.55.135:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
+    string url = "http://13.124.243.56:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 

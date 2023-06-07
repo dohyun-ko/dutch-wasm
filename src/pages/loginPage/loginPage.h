@@ -7,6 +7,7 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/text/Text.h"
+#include "../../core/user/user.h"
 
 class LoginPage : public Element
 {
@@ -32,7 +33,8 @@ class LoginPage : public Element
 public:
     ~LoginPage();
 
-    static State<string>* loginSuccessState;
+    static State<string>* loginState;
+    static State<User>* userState;
     static State<string>* usernameState;
     static State<string>* passwordState;
 
