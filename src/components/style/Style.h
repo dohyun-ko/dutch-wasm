@@ -6,7 +6,8 @@ using namespace std;
 
 class Element;
 
-class Style {
+class Style
+{
     string width;
     string height;
     string background;
@@ -30,8 +31,10 @@ class Style {
     string fontWeight;
     string cursor;
     string boxShadow;
+    string textAlign;
+    string lineHeight;
 
-    vector<Element*> observers;
+    vector<Element *> observers;
 
     void notify();
 
@@ -40,63 +43,67 @@ public:
 
     ~Style();
 
-    void attach(Element* observer);
+    void attach(Element *observer);
 
-    void detach(Element* observer);
+    void detach(Element *observer);
 
-    Style& setWidth(const string& width);
-    
-    Style& setHeight(const string& height);
+    Style &setWidth(const string &width);
 
-    Style& setBackground(const string& background);
+    Style &setHeight(const string &height);
 
-    Style& setMargin(const string& margin);
+    Style &setBackground(const string &background);
 
-    Style& setPadding(const string& padding);
+    Style &setMargin(const string &margin);
 
-    Style& setBorder(const string& border);
+    Style &setPadding(const string &padding);
 
-    Style& setBorderRadius(const string& borderRadius);
+    Style &setBorder(const string &border);
 
-    Style& setDisplay(const string& display);
+    Style &setBorderRadius(const string &borderRadius);
 
-    Style& setFlexDirection(const string& flexDirection);
+    Style &setDisplay(const string &display);
 
-    Style& setJustifyContent(const string& justifyContent);
+    Style &setFlexDirection(const string &flexDirection);
 
-    Style& setAlignItems(const string& alignItems);
+    Style &setJustifyContent(const string &justifyContent);
 
-    Style& setGridTemplateColumns(const string& gridTemplateColumns);
+    Style &setAlignItems(const string &alignItems);
 
-    Style& setGap(const string& gap);
+    Style &setGridTemplateColumns(const string &gridTemplateColumns);
 
-    Style& setPosition(const string& position);
+    Style &setGap(const string &gap);
 
-    Style& setTop(const string& top);
+    Style &setPosition(const string &position);
 
-    Style& setLeft(const string& left);
+    Style &setTop(const string &top);
 
-    Style& setRight(const string& right);
+    Style &setLeft(const string &left);
 
-    Style& setBottom(const string& bottom);
+    Style &setRight(const string &right);
 
-    Style& setFontSize(const string& fontSize);
+    Style &setBottom(const string &bottom);
 
-    Style& setColor(const string& color);
+    Style &setFontSize(const string &fontSize);
 
-    Style& setFontWeight(const string& fontWeight);
+    Style &setColor(const string &color);
 
-    Style& setCursor(const string& cursor);
+    Style &setFontWeight(const string &fontWeight);
 
-    Style& setBoxShadow(const string& boxShadow);
+    Style &setCursor(const string &cursor);
+
+    Style &setBoxShadow(const string &boxShadow);
+
+    Style &setTextAlign(const string &textAlign);
+
+    Style &setLineHeight(const string &lineHeight);
 
     string getCssString() const;
 
-    static string primaryBlue;
-    static string secondaryBlue;
-    static string primaryYellow;
-    static string secondaryYellow;
+    static string primary;
+    static string primaryVariant;
+    static string secondary;
+    static string secondaryVariant;
 
-    static Style* defaultButtonStyle();
-    static Style* defaultInputStyle();
+    static Style *defaultButtonStyle();
+    static Style *defaultInputStyle();
 };

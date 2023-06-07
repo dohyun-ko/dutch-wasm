@@ -12,7 +12,7 @@
 #include <iostream>
 
 
-Button::Button(State<string>* text, Style* style) : Element("button", style), text(text) {
+Button::Button(State<string>* text, Style* style, string id) : Element("button", style, id), text(text) {
     text->attach(this);
     getElement().set("innerHTML", text->getValue());
 }

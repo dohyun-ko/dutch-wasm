@@ -13,8 +13,10 @@
 #include "components/style/Style.h"
 #include "pages/loginPage/loginPage.h"
 #include "pages/signUpPage/signUpPage.h"
-#include "router/Router.h"
+#include "pages/sendPage/sendPage.h"
+#include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/mainPage/mainPage.h"
+#include "router/Router.h"
 
 using namespace emscripten;
 using json = nlohmann::json;
@@ -64,7 +66,7 @@ int main()
         .setJustifyContent("center")
         .setWidth("100%")
         .setHeight("calc(100vh)")
-        .setBackground(Style::primaryYellow);
+        .setBackground(Style::secondary);
 
     Button *backButton = new Button(new State<string>("⬅️"));
     backButton->getStyle()
@@ -81,15 +83,15 @@ int main()
 
     Router router(
         body,
-        {
-            {"/login", []()
-             { return LoginPage::getInstance(); }},
-            {"/signUp", []()
-             { return SignUpPage::getInstance(); }},
-            {"/main", []()
-             { return MainPage::getInstance(); }},
-        },
-        "/login");
+        {{"/login", []()
+          { return LoginPage::getInstance(); }},
+         {"/signUp", []()
+          { return SignUpPage::getInstance(); }},
+         {"/main", []()
+          { return MainPage::getInstance(); }},
+         {"/sendDetail", []()
+          { return SendDetailPage::getInstance(); }}},
+        "/sendDetail");
 
     while (true)
     {
