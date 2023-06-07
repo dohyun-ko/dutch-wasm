@@ -73,6 +73,12 @@ LoginPage *LoginPage::getInstance()
 void LoginPage::LoginButtonHandler(emscripten::val e)
 {
     std::cout << "LoginPage::LoginButtonHander()" << std::endl;
+
+    if(LoginPage::usernameState->getValue() == "" || LoginPage::passwordState->getValue() == "") {
+        LoginPage::loginSuccessState->setState("username or password is empty");
+        return;
+    }
+
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
     strcpy(attr.requestMethod, "POST");

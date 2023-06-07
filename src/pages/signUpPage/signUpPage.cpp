@@ -92,6 +92,10 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     std::cout << "username: " << SignUpPage::usernameState->getValue() << std::endl;
     std::cout << "password: " << SignUpPage::passwordState->getValue() << std::endl;
     std::cout << "email: " << SignUpPage::emailState->getValue() << std::endl;
+    if(SignUpPage::usernameState->getValue() == "" || SignUpPage::passwordState->getValue() == "" || SignUpPage::emailState->getValue() == "") {
+        SignUpPage::signUpSuccessState->setState("Please fill out all fields");
+        return;
+    }
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
