@@ -24,6 +24,7 @@ add_executable(index
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
     src/pages/mainPage/mainPage.cpp
+    src/pages/sendDutchPage/sendDutchPage.cpp
     src/pages/receivePage/receivePage.cpp
     src/pages/receiveDetailPage/receiveDetailPage.cpp
     src/pages/sendPage/sendPage.cpp

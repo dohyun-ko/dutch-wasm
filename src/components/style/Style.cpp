@@ -4,10 +4,10 @@
 
 using namespace std;
 
-string Style::primaryBlue = "#30A2FF";
-string Style::secondaryBlue = "#00C4FF";
-string Style::primaryYellow = "#FFE7A0";
-string Style::secondaryYellow = "#FFF5B8";
+string Style::primary = "#00ADB5";
+string Style::primaryVariant = "#EEEEEE";
+string Style::secondary = "#393E46";
+string Style::secondaryVariant = "#222831";
 
 Style *Style::defaultButtonStyle()
 {
@@ -15,7 +15,7 @@ Style *Style::defaultButtonStyle()
 
     style->setWidth("200px")
         .setHeight("44px")
-        .setBackground(Style::primaryBlue)
+        .setBackground(Style::primary)
         .setBorder("none")
         .setBorderRadius("6px")
         .setFontSize("1rem")
@@ -33,7 +33,7 @@ Style *Style::defaultInputStyle()
     Style *style = new Style();
     style->setWidth("148px")
         .setHeight("44px")
-        .setBackground(Style::secondaryYellow)
+        .setBackground(Style::primaryVariant)
         .setBorder("none")
         .setBorderRadius("6px")
         .setFontSize("1rem")
@@ -235,6 +235,20 @@ Style &Style::setBoxShadow(const string &boxShadow)
     return *this;
 }
 
+Style &Style::setTextAlign(const string &textAlign)
+{
+    this->textAlign = textAlign;
+    notify();
+    return *this;
+}
+
+Style &Style::setLineHeight(const string &lineHeight)
+{
+    this->lineHeight = lineHeight;
+    notify();
+    return *this;
+}
+
 string Style::getCssString() const
 {
     string cssString = "";
@@ -352,6 +366,16 @@ string Style::getCssString() const
     if (boxShadow != "")
     {
         cssString += "box-shadow: " + boxShadow + "; ";
+    }
+
+    if (textAlign != "")
+    {
+        cssString += "text-align: " + textAlign + "; ";
+    }
+
+    if (lineHeight != "")
+    {
+        cssString += "line-height: " + lineHeight + "; ";
     }
 
     return cssString;
