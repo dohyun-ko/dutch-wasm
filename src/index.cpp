@@ -13,7 +13,8 @@
 #include "components/style/Style.h"
 #include "pages/loginPage/loginPage.h"
 #include "pages/signUpPage/signUpPage.h"
-#include "pages/sendDutchPage/sendDutchPage.h"
+#include "pages/sendPage/sendPage.h"
+#include "router/Router.h"
 #include "pages/mainPage/mainPage.h"
 #include "router/Router.h"
 
@@ -82,15 +83,15 @@ int main()
 
     Router router(
         body,
-        {{"/login", []()
-          { return LoginPage::getInstance(); }},
-         {"/signUp", []()
-          { return SignUpPage::getInstance(); }},
-         {"/main", []()
-          { return MainPage::getInstance(); }},
-         {"/sendDutch", []()
-          { return SendDutchPage::getInstance(); }}},
-        "/sendDutch");
+        {
+            {"/login", []()
+             { return LoginPage::getInstance(); }},
+            {"/signUp", []()
+             { return SignUpPage::getInstance(); }},
+            {"/main", []()
+             { return MainPage::getInstance(); }},
+        },
+        "/login");
 
     while (true)
     {

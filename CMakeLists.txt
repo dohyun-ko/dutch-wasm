@@ -25,6 +25,11 @@ add_executable(index
     src/pages/signUpPage/signUpPage.cpp
     src/pages/mainPage/mainPage.cpp
     src/pages/sendDutchPage/sendDutchPage.cpp
+    src/pages/receivePage/receivePage.cpp
+    src/pages/receiveDetailPage/receiveDetailPage.cpp
+    src/pages/sendPage/sendPage.cpp
+    src/pages/sendDetailPage/sendDetailPage.cpp
+    src/pages/makeDutchPage/makeDutchPage.cpp
     src/index.cpp
 )
 # Link the Emscripten bindings library
