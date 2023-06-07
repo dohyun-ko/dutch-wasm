@@ -1,6 +1,7 @@
 #include "mainPage.h"
 
 #include <iostream>
+#include <emscripten/bind.h>
 
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
@@ -70,6 +71,8 @@ MainPage::MainPage() : Element("div")
 
     container->appendChildren({leftSide, rightSide});
 
+    loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
+
     MainPage::appendChildren(container);
 }
 
@@ -111,4 +114,8 @@ void MainPage::makeDutchButtonHandler(emscripten::val event) {
     std::cout << "MainPage::makeDutchButtonHandler" << std::endl;
     Router* router = Router::getInstance();
     router->navigate("/makeDutch");
+}
+
+EMSCRIPTEN_BINDINGS(MainPage) {
+    emscripten::function("MainPage.loginButtonHandler", &MainPage::loginButtonHandler);
 }
