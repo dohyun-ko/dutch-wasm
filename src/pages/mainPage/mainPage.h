@@ -37,5 +37,6 @@ public:
     static void receiveButtonHandler(emscripten::val event);
     static void loginButtonHandler(emscripten::val event);
     static void makeDutchButtonHandler(emscripten::val event);
+    static void notLoginedButtonHandler(emscripten::val event);
     static void getBalanceNetworkHandler(emscripten_fetch_t *fetch);
 };
