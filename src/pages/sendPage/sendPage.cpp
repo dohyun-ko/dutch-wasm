@@ -18,12 +18,12 @@ SendPageStates::SendPageStates()
     this->sendAmount = new State<string>("$0");
 }
 
-State<string>* SendPageStates::getReceiveUser()
+State<string> *SendPageStates::getReceiveUser()
 {
     return this->receiveUser;
 }
 
-State<string>* SendPageStates::getSendAmount()
+State<string> *SendPageStates::getSendAmount()
 {
     return this->sendAmount;
 }
@@ -39,9 +39,8 @@ void SendPageStates::setDutchReceiverUUID(string uuid)
 }
 
 SendPage *SendPage::instance = nullptr;
-SendPageStates* SendPage::dutchList[6] = {new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates()};
+SendPageStates *SendPage::dutchList[6] = {new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates()};
 State<vector<string>> *SendPage::dutchUUIDList = SendDutchState::getInstance()->getSendUUIDs();
-
 
 SendPage::SendPage() : Element("div")
 {
@@ -64,8 +63,8 @@ SendPage::SendPage() : Element("div")
         .setGridTemplateColumns("repeat(3, 1fr)")
         .setGap("25px");
 
-    dutchItemStyle = new Style();
-    dutchItemStyle->setWidth("100%")
+    dutchItemWrapperStyle = new Style();
+    dutchItemWrapperStyle->setWidth("100%")
         .setDisplay("flex")
         .setFlexDirection("column")
         .setAlignItems("center")
@@ -73,12 +72,9 @@ SendPage::SendPage() : Element("div")
         .setBackground(Style::secondaryVariant)
         .setBorder("none")
         .setBorderRadius("8px")
-        .setFontSize("20px")
-        .setFontWeight("bold")
-        .setColor(Style::secondaryVariant)
         .setAspectRatio("1.618")
         .setPadding("10px 0")
-        .setColor("white");
+        .setColor(Style::primaryVariant);
 
     dutchItemUserNameStyle = new Style();
     dutchItemUserNameStyle->setFontSize("16px")
@@ -99,39 +95,81 @@ SendPage::SendPage() : Element("div")
         .setMargin("0")
         .setHeight("20%");
 
+    dutchItemTitleStyle = new Style();
+    dutchItemTitleStyle->setFontSize("16px")
+        .setBorder("none")
+        .setBorderRadius("8px")
+        .setFontSize("20px")
+        .setFontWeight("bold")
+        .setColor(Style::primaryVariant)
+        .setMargin("0");
+
     string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItem1 = new Button(nullptr, dutchItemStyle, "dutchItem1");
-    dutchItem1->appendChildren({new Text(dutchList[0]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[0]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItemButtonStyle = new Style();
+    dutchItemButtonStyle
+        ->setBorder("none")
+        .setBorderRadius("6px")
+        .setPadding("5px 15px")
+        .setMargin("0")
+        .setBackground(Style::primaryVariant);
 
-    dutchItem2 = new Button(nullptr, dutchItemStyle,"dutchItem2");
-    dutchItem2->appendChildren({new Text(dutchList[1]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[1]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItemButtonTextState = new State<std::string>("View Detail");
 
-    dutchItem3 = new Button(nullptr, dutchItemStyle, "dutchItem3");
-    dutchItem3->appendChildren({new Text(dutchList[2]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[2]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItem1 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem1");
 
-    dutchItem4 = new Button(nullptr, dutchItemStyle, "dutchItem4");
-    dutchItem4->appendChildren({new Text(dutchList[3]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[3]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItem2 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem2");
 
-    dutchItem5 = new Button(nullptr, dutchItemStyle, "dutchItem5");
-    dutchItem5->appendChildren({new Text(dutchList[4]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[4]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItem3 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem3");
 
-    dutchItem6 = new Button(nullptr, dutchItemStyle, "dutchItem6");
-    dutchItem6->appendChildren({new Text(dutchList[5]->getReceiveUser()),
-                                new Text(new State<string>(username), dutchItemUserNameStyle),
-                                new Text(dutchList[5]->getSendAmount(), dutchItemChargeStyle)});
+    dutchItem4 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem4");
 
-    dutchItemContainer->appendChildren({dutchItem1, dutchItem2, dutchItem3, dutchItem4, dutchItem5, dutchItem6});
+    dutchItem5 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem5");
+
+    dutchItem6 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem6");
+
+    dutchItemWrapper1 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper1->appendChildren({new Text(dutchList[0]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[0]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem1});
+
+    dutchItemWrapper2 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper2->appendChildren({new Text(dutchList[1]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[1]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem2});
+
+    dutchItemWrapper3 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper3->appendChildren({new Text(dutchList[2]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[2]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem3});
+
+    dutchItemWrapper4 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper4->appendChildren({new Text(dutchList[3]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[3]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem4});
+
+    dutchItemWrapper5 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper5->appendChildren({new Text(dutchList[4]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[4]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem5});
+
+    dutchItemWrapper6 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper6->appendChildren({new Text(dutchList[5]->getReceiveUser(), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[5]->getSendAmount(), dutchItemChargeStyle),
+                                       dutchItem6});
+
+    dutchItemContainer->appendChildren({dutchItemWrapper1,
+                                        dutchItemWrapper2,
+                                        dutchItemWrapper3,
+                                        dutchItemWrapper4,
+                                        dutchItemWrapper5,
+                                        dutchItemWrapper6});
 
     SendPage::appendChildren({prevButton, dutchItemContainer, nextButton});
 
@@ -186,7 +224,8 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         dutchUUIDList->setState(j["dutch_target_list"]);
-        for(size_t i =0; i<(dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++){
+        for (size_t i = 0; i < (dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++)
+        {
             std::cout << "SendDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
             emscripten_fetch_attr_t dutchInfoFetchAttr;
             emscripten_fetch_attr_init(&dutchInfoFetchAttr);
@@ -197,7 +236,7 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
             string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[i];
             emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
         }
-    } 
+    }
     catch (json::parse_error &e)
     {
         cout << "SendPage::getDutchListHandler: parse error: " << e.what() << endl;
@@ -216,7 +255,7 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         int total_charge = j["target_balance"];
         int charge = total_charge / j["user_list"].size();
         int index = find(v.begin(), v.end(), j["dutch_uuid"]) - v.begin();
-        dutchList[index]->getSendAmount()->setState("$"+to_string(charge));
+        dutchList[index]->getSendAmount()->setState("$" + to_string(charge));
         string receiver = j["owner"];
         dutchList[index]->setDutchReceiverUUID(receiver);
 
@@ -247,7 +286,7 @@ void SendPage::getDutchReceiverInfoHandler(emscripten_fetch_t *fetch)
         string uuid = j["uuid"];
         for (size_t i = 0; i < 6; i++)
         {
-            if (dutchList[i]->getDutchReceiverUUID() == uuid && dutchList[i]->getReceiveUser()->getValue()=="Dutch by")
+            if (dutchList[i]->getDutchReceiverUUID() == uuid && dutchList[i]->getReceiveUser()->getValue() == "Dutch by")
             {
                 dutchList[i]->getReceiveUser()->setState("Dutch by " + receiver);
                 break;
@@ -264,22 +303,24 @@ void SendPage::nextButtonHandler(emscripten::val event)
 {
     cout << "SendPage::nextButtonHandler" << endl;
     vector<string> v = SendPage::dutchUUIDList->getValue();
-    for(size_t i=0;i<6;i++){
+    for (size_t i = 0; i < 6; i++)
+    {
         v.push_back(v.at(0));
         v.erase(v.begin());
     }
     SendPage::dutchUUIDList->setState(v);
 
-    for(size_t i =0; i<(SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++){
-            std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
-            emscripten_fetch_attr_t dutchInfoFetchAttr;
-            emscripten_fetch_attr_init(&dutchInfoFetchAttr);
-            strcpy(dutchInfoFetchAttr.requestMethod, "GET");
-            dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-            dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
+    for (size_t i = 0; i < (SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++)
+    {
+        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
+        emscripten_fetch_attr_t dutchInfoFetchAttr;
+        emscripten_fetch_attr_init(&dutchInfoFetchAttr);
+        strcpy(dutchInfoFetchAttr.requestMethod, "GET");
+        dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-            string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
-            emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
+        emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }
 
@@ -287,22 +328,24 @@ void SendPage::prevButtonHandler(emscripten::val event)
 {
     cout << "SendPage::prevButtonHandler" << endl;
     vector<string> v = SendPage::dutchUUIDList->getValue();
-    for(size_t i=0;i<6;i++){
-        v.insert(v.begin(), v.at(v.size()-1));
+    for (size_t i = 0; i < 6; i++)
+    {
+        v.insert(v.begin(), v.at(v.size() - 1));
         v.pop_back();
     }
     SendPage::dutchUUIDList->setState(v);
 
-    for(size_t i =0; i<(SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++){
-            std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
-            emscripten_fetch_attr_t dutchInfoFetchAttr;
-            emscripten_fetch_attr_init(&dutchInfoFetchAttr);
-            strcpy(dutchInfoFetchAttr.requestMethod, "GET");
-            dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-            dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
+    for (size_t i = 0; i < (SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++)
+    {
+        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
+        emscripten_fetch_attr_t dutchInfoFetchAttr;
+        emscripten_fetch_attr_init(&dutchInfoFetchAttr);
+        strcpy(dutchInfoFetchAttr.requestMethod, "GET");
+        dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-            string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
-            emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
+        emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }
 
