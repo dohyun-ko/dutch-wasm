@@ -3,8 +3,28 @@
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../globalState/userState/userState.h"
+#include "../../globalState/receiveDutchState/receiveDutchState.h"
+
+ReceivePageStates::ReceivePageStates()
+{
+    sendUserList = new State<string>("");
+    targetAmount = new State<string>("");
+}
+
+State<string>* ReceivePageStates::getSendUserList()
+{
+    return sendUserList;
+}
+
+State<string>* ReceivePageStates::getTargetAmount()
+{
+    return targetAmount;
+}
 
 ReceivePage *ReceivePage::instance = nullptr;
+ReceivePageStates* ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
+State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
+
 
 ReceivePage::ReceivePage() : Element("div")
 {

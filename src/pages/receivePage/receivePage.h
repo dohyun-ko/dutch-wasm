@@ -7,6 +7,16 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
 
+class ReceivePageStates {
+    State<string> *sendUserList;
+    State<string> *targetAmount;
+
+    public:
+        ReceivePageStates();
+        State<string>* getSendUserList();
+        State<string>* getTargetAmount();
+};
+
 class ReceivePage : public Element
 {
     Button *nextButton;             // 8개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
@@ -34,6 +44,8 @@ class ReceivePage : public Element
 public:
     ~ReceivePage();
 
+    static ReceivePageStates *dutchList[6];
+    static State<vector<string>> *dutchUUIDList;
     static ReceivePage *getInstance();
     static void nextButtonHandler(emscripten::val event);
     static void prevButtonHandler(emscripten::val event);
