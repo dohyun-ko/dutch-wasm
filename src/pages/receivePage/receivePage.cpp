@@ -2,6 +2,7 @@
 #include "../../components/style/Style.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
+#include "../../globalState/userState/userState.h"
 
 ReceivePage *ReceivePage::instance = nullptr;
 
@@ -59,28 +60,30 @@ ReceivePage::ReceivePage() : Element("div")
         .setPadding("0px 10px 10px 10px")
         .setMargin("0")
         .setHeight("20%");
+    
+    string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItem1 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem1 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem1->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 
-    dutchItem2 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem2 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem2->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 
-    dutchItem3 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem3 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem3->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 
-    dutchItem4 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem4 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem4->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 
-    dutchItem5 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem5 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem5->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 
-    dutchItem6 = new Button(new State<string>("Dutch to"), dutchItemStyle);
+    dutchItem6 = new Button(new State<string>("Dutch to"+username), dutchItemStyle);
     dutchItem6->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
                                 new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
 

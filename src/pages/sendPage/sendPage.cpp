@@ -106,3 +106,8 @@ SendPage::~SendPage()
 
     delete dutchItemContainer;
 }
+
+void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
+{
+    
+}

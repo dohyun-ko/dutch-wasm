@@ -9,8 +9,6 @@
 
 class ReceivePage : public Element
 {
-
-    Button *receiveDutchButtons[8]; // 받을 수 있는 더치 리스트 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
     Button *nextButton;             // 8개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
     Button *prevButton;             // 8개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
 
@@ -20,14 +18,13 @@ class ReceivePage : public Element
     Style *dutchItemUserNameStyle;
     Style *dutchItemChargeStyle;
 
+// 받을 수 있는 더치 리스트 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
     Button *dutchItem1;
     Button *dutchItem2;
     Button *dutchItem3;
     Button *dutchItem4;
     Button *dutchItem5;
     Button *dutchItem6;
-    Button *dutchItem7;
-    Button *dutchItem8;
 
     Element *dutchItemContainer;
 
