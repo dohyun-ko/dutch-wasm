@@ -101,28 +101,34 @@ SendPage::SendPage() : Element("div")
 
     string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItem1 = new Button(SendPage::dutchList[0]->getReceiveUser(), dutchItemStyle);
-    dutchItem1->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem1 = new Button(nullptr, dutchItemStyle, "dutchItem1");
+    dutchItem1->appendChildren({new Text(dutchList[0]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[0]->getSendAmount(), dutchItemChargeStyle)});
 
-    dutchItem2 = new Button(SendPage::dutchList[1]->getReceiveUser(), dutchItemStyle);
-    dutchItem2->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem2 = new Button(nullptr, dutchItemStyle,"dutchItem2");
+    dutchItem2->appendChildren({new Text(dutchList[1]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[1]->getSendAmount(), dutchItemChargeStyle)});
 
-    dutchItem3 = new Button(SendPage::dutchList[2]->getReceiveUser(), dutchItemStyle);
-    dutchItem3->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem3 = new Button(nullptr, dutchItemStyle, "dutchItem3");
+    dutchItem3->appendChildren({new Text(dutchList[2]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[2]->getSendAmount(), dutchItemChargeStyle)});
 
-    dutchItem4 = new Button(SendPage::dutchList[3]->getReceiveUser(), dutchItemStyle);
-    dutchItem4->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem4 = new Button(nullptr, dutchItemStyle, "dutchItem4");
+    dutchItem4->appendChildren({new Text(dutchList[3]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[3]->getSendAmount(), dutchItemChargeStyle)});
 
-    dutchItem5 = new Button(SendPage::dutchList[4]->getReceiveUser(), dutchItemStyle);
-    dutchItem5->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem5 = new Button(nullptr, dutchItemStyle, "dutchItem5");
+    dutchItem5->appendChildren({new Text(dutchList[4]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[4]->getSendAmount(), dutchItemChargeStyle)});
 
-    dutchItem6 = new Button(SendPage::dutchList[5]->getReceiveUser(), dutchItemStyle);
-    dutchItem6->appendChildren({new Text(new State<string>(username), dutchItemUserNameStyle),
+    dutchItem6 = new Button(nullptr, dutchItemStyle, "dutchItem6");
+    dutchItem6->appendChildren({new Text(dutchList[5]->getReceiveUser()),
+                                new Text(new State<string>(username), dutchItemUserNameStyle),
                                 new Text(dutchList[5]->getSendAmount(), dutchItemChargeStyle)});
 
     dutchItemContainer->appendChildren({dutchItem1, dutchItem2, dutchItem3, dutchItem4, dutchItem5, dutchItem6});
@@ -167,6 +173,8 @@ SendPage::~SendPage()
 
 void SendPage::sendDutchButtonHandler(emscripten::val event)
 {
+    std::cout << "SendPage::sendDutchButtonHandler" << std::endl;
+    std::cout << "event: " << event["target"]["id"].as<string>() << std::endl;
     Router::getInstance()->navigate("/sendDetail");
 }
 
@@ -208,7 +216,7 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         int total_charge = j["target_balance"];
         int charge = total_charge / j["user_list"].size();
         int index = find(v.begin(), v.end(), j["dutch_uuid"]) - v.begin();
-        dutchList[index]->getSendAmount()->setState(to_string(charge));
+        dutchList[index]->getSendAmount()->setState("$"+to_string(charge));
         string receiver = j["owner"];
         dutchList[index]->setDutchReceiverUUID(receiver);
 

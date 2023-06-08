@@ -13,6 +13,11 @@
 
 Button::Button(State<string> *text, Style *style, string id) : Element("button", style, id), text(text)
 {
+    //text가 없을 수 도 있으므로(children만 있는 버튼)
+    if (text == nullptr)
+    {
+        return;
+    }
     text->attach(this);
     getElement().set("innerHTML", text->getValue());
 }
