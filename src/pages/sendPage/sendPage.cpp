@@ -4,6 +4,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <algorithm>
+#include <sstream>
 
 #include "../../components/style/Style.h"
 #include "../../components/state/State.cpp"
@@ -212,7 +213,15 @@ SendPage::~SendPage()
 void SendPage::sendDutchButtonHandler(emscripten::val event)
 {
     std::cout << "SendPage::sendDutchButtonHandler" << std::endl;
-    std::cout << "event: " << event["target"]["id"].as<string>() << std::endl;
+    string buttonId = event["target"]["id"].as<string>();
+    buttonId.erase(buttonId.begin(), buttonId.begin() + 9);
+    std::stringstream ssInt(buttonId);
+    int index=0;
+    ssInt >> index;
+    index--;
+
+    SendDutchState::getInstance()->getNowUUID()->setState(dutchUUIDList->getValue()[index]);
+
     Router::getInstance()->navigate("/sendDetail");
 }
 

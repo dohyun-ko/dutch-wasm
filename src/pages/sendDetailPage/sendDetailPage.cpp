@@ -1,9 +1,17 @@
 #include "sendDetailPage.h"
 
+#include <emscripten/bind.h>
+#include <nlohmann/json.hpp>
+
+#include "../../router/Router.h"
+
+using json = nlohmann::json;
+
 SendDetailPage *SendDetailPage::instance = nullptr;
 State<string> *SendDetailPage::nowUUID = SendDutchState::getInstance()->getNowUUID();
 State<string> *SendDetailPage::charge = new State<string>("0");
 State<string> *SendDetailPage::sendCharge = new State<string>("0");
+State<string> *SendDetailPage::receiveUser = new State<string>("User Name");
 
 SendDetailPage::SendDetailPage() : Element("div")
 {
@@ -39,7 +47,7 @@ SendDetailPage::SendDetailPage() : Element("div")
     chargeLabel = new Text(new State<string>("Total Charge: "));
     chargeText = new Text(charge);
     receiveUserLabel = new Text(new State<string>("Receiver: "));
-    receiveUserText = new Text(new State<string>("User Name"));
+    receiveUserText = new Text(receiveUser);
     myBalanceLabel = new Text(new State<string>("My Balance: "));
     myBalanceText = new Text(myBalance);
     sendChargeLabel = new Text(new State<string>("Send Charge: "));
@@ -70,6 +78,18 @@ SendDetailPage::SendDetailPage() : Element("div")
     billContainer->appendChildren({billTitle, billUpperDivider, billUpper, billLowerDivider, billLower});
 
     SendDetailPage::appendChildren({billContainer});
+
+    sendButton->getElement().set("onclick", emscripten::val::module_property("SendDetailPage.sendButtonHandler"));
+    sendChargeInput->getElement().set("oninput", emscripten::val::module_property("SendDetailPage.inputHandler"));
+
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+    strcpy(attr.requestMethod, "GET");
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.onsuccess = SendDetailPage::getDutchNetworkHandler;
+
+    string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + nowUUID->getValue();
+    emscripten_fetch(&attr, url.c_str());
 }
 
 SendDetailPage *SendDetailPage::getInstance()
@@ -92,10 +112,97 @@ SendDetailPage::~SendDetailPage()
 void SendDetailPage::sendButtonHandler(emscripten::val event)
 {
     std::cout << "SendDetailPage.sendButtonHandler" << std::endl;
+    std::cout << "sendCharge: " << sendCharge->getValue() << std::endl;
+    string sendChargeStr = "$" + sendCharge->getValue();
+    cout << sendChargeStr << endl;
+    cout << charge->getValue() << endl;
+    if(sendChargeStr == charge->getValue())
+    {
+        std::cout << "sendChargeStr == charge->getValue()" << std::endl;
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "POST");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = SendDetailPage::sendNetworkHandler;
+
+        string url = "http://13.124.243.56:8080/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+        emscripten_fetch(&attr, url.c_str());
+    } else {
+        emscripten_run_script("alert('Please input correct amount to send')");
+    }
 }
 
 void SendDetailPage::inputHandler(emscripten::val event)
 {
     std::cout << "SendDetailPage.inputHandler" << std::endl;
     sendCharge->setState(event["target"]["value"].as<string>());
+}
+
+void SendDetailPage::getDutchNetworkHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "SendDetailPage.getDutchNetworkHandler" << std::endl;
+    std::cout << "fetch->status: " << fetch->status << std::endl;
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
+        int totalCharge = j["target_balance"];
+        int charge = totalCharge / j["user_list"].size();
+        SendDetailPage::charge->setState("$" + to_string(charge));
+        string receiveUUD = j["owner"];
+
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "GET");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = SendDetailPage::getDutchReceiverNetworkHandler;
+
+        string url = "http://13.124.243.56:8080/user/find?uuid=" + receiveUUD;
+        emscripten_fetch(&attr, url.c_str());
+    }
+    catch(json::parse_error& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    catch(exception &e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    
+
+    emscripten_fetch_close(fetch);
+}
+
+void SendDetailPage::getDutchReceiverNetworkHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "SendDetailPage.getDutchReceiverNetworkHandler" << std::endl;
+    std::cout << "fetch->status: " << fetch->status << std::endl;
+
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
+        std::cout << j["username"] << std::endl;
+        receiveUser->setState(j["username"]);
+    }
+    catch(json::parse_error& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+    
+
+    emscripten_fetch_close(fetch);
+}
+
+void SendDetailPage::sendNetworkHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "SendDetailPage.sendNetworkHandler" << std::endl;
+    std::cout << "fetch->status: " << fetch->status << std::endl;
+
+    emscripten_fetch_close(fetch);
+    Router::getInstance()->navigate("back");
+}
+
+EMSCRIPTEN_BINDINGS(SendDetailPage)
+{
+    emscripten::function("SendDetailPage.sendButtonHandler", &SendDetailPage::sendButtonHandler);
+    emscripten::function("SendDetailPage.inputHandler", &SendDetailPage::inputHandler);
 }
