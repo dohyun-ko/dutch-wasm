@@ -10,38 +10,51 @@
 #include "../../globalState/sendDutchState/sendDutchState.h"
 #include "../../globalState/userState/userState.h"
 
-class SendPageStates {
+class SendPageStates
+{
     State<string> *receiveUser;
     State<string> *sendAmount;
     string dutchReceiverUUID;
-    public:
-        SendPageStates();
-        State<string>* getReceiveUser();
-        State<string>* getSendAmount();
-        string getDutchReceiverUUID();
-        void setDutchReceiverUUID(string uuid);
+
+public:
+    SendPageStates();
+    State<string> *getReceiveUser();
+    State<string> *getSendAmount();
+    string getDutchReceiverUUID();
+    void setDutchReceiverUUID(string uuid);
 };
 
 // global state로 sendDutchPage에게 Dutch의 UUID or dutch의 모든 정보 전달해야함
 class SendPage : public Element
 {
 
-    Button *nextButton;          // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
-    Button *prevButton;          // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
+    Button *nextButton; // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
+    Button *prevButton; // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
 
     State<int> *currentPage = 0;
 
-    Style *dutchItemStyle;
+    Style *dutchItemWrapperStyle;
     Style *dutchItemUserNameStyle;
     Style *dutchItemChargeStyle;
+    Style *dutchItemButtonStyle;
+    Style *dutchItemTitleStyle;
 
-// 보낼 수 있는 더치 리스트 클릭시 해당 sendDutchPage로 이동 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
+    Element *dutchItemWrapper1;
+    Element *dutchItemWrapper2;
+    Element *dutchItemWrapper3;
+    Element *dutchItemWrapper4;
+    Element *dutchItemWrapper5;
+    Element *dutchItemWrapper6;
+
+    // 보낼 수 있는 더치 리스트 클릭시 해당 sendDutchPage로 이동 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
     Button *dutchItem1;
     Button *dutchItem2;
     Button *dutchItem3;
     Button *dutchItem4;
     Button *dutchItem5;
     Button *dutchItem6;
+
+    State<std::string> *dutchItemButtonTextState;
 
     Element *dutchItemContainer;
 

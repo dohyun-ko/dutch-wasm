@@ -99,7 +99,7 @@ int main()
             {"/sendDetail", []()
              { return SendDetailPage::getInstance(); }},
         },
-        "/main");
+        "/receive");
 
     while (true)
     {
