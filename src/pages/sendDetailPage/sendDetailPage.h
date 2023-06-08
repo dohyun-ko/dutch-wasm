@@ -1,17 +1,20 @@
 #pragma once
 
+#include <iostream>
+#include <emscripten/fetch.h>
+
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
 #include "../../components/input/Input.h"
+#include "../../globalState/sendDutchState/sendDutchState.h"
+#include "../../globalState/userState/userState.h"
 
 class SendDetailPage : public Element
 {
 
-    State<std::string> *charge;     // 더치 금액
     State<std::string> *myBalance;  // 내 잔액
-    State<std::string> *sendCharge; // 보내는 금액
 
     Text *chargeText;       // 더치 금액 보여주기
     Text *receiveUserText;  // 받는 사람 보여주기
@@ -41,7 +44,12 @@ class SendDetailPage : public Element
 public:
     ~SendDetailPage();
 
+    static State<string> *nowUUID;
+    static State<string> *charge; //더치 금액
+    static State<string> *sendCharge; //보낼 금액
     static SendDetailPage *getInstance();
     static void sendButtonHandler(emscripten::val event);
     static void inputHandler(emscripten::val event);
+    static void sendNetworkHandler(emscripten_fetch_t *fetch);
+    static void getDutchNetworkHandler(emscripten_fetch_t *fetch);
 };

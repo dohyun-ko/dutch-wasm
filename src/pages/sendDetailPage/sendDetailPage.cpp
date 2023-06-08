@@ -1,12 +1,13 @@
 #include "sendDetailPage.h"
 
 SendDetailPage *SendDetailPage::instance = nullptr;
+State<string> *SendDetailPage::nowUUID = SendDutchState::getInstance()->getNowUUID();
+State<string> *SendDetailPage::charge = new State<string>("0");
+State<string> *SendDetailPage::sendCharge = new State<string>("0");
 
 SendDetailPage::SendDetailPage() : Element("div")
 {
-    charge = new State<std::string>("0");
-    myBalance = new State<std::string>("0");
-    sendCharge = new State<std::string>("0");
+    myBalance = UserState::getInstance()->getBalanceState();
 
     SendDetailPage::getStyle()
         .setWidth("100%")
@@ -86,4 +87,15 @@ SendDetailPage::~SendDetailPage()
     SendDetailPage::instance = nullptr;
 
     delete billContainer;
+}
+
+void SendDetailPage::sendButtonHandler(emscripten::val event)
+{
+    std::cout << "SendDetailPage.sendButtonHandler" << std::endl;
+}
+
+void SendDetailPage::inputHandler(emscripten::val event)
+{
+    std::cout << "SendDetailPage.inputHandler" << std::endl;
+    sendCharge->setState(event["target"]["value"].as<string>());
 }
