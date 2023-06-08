@@ -83,5 +83,7 @@ SendDetailPage *SendDetailPage::getInstance()
 
 SendDetailPage::~SendDetailPage()
 {
-    delete instance;
+    SendDetailPage::instance = nullptr;
+
+    delete billContainer;
 }

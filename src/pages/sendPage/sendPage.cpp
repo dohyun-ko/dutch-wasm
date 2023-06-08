@@ -1,7 +1,11 @@
 #include "sendPage.h"
+
+#include <emscripten/bind.h>
+
 #include "../../components/style/Style.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
+#include "../../router/Router.h"
 
 SendPage *SendPage::instance = nullptr;
 
@@ -88,6 +92,13 @@ SendPage::SendPage() : Element("div")
     dutchItemContainer->appendChildren({dutchItem1, dutchItem2, dutchItem3, dutchItem4, dutchItem5, dutchItem6});
 
     SendPage::appendChildren({prevButton, dutchItemContainer, nextButton});
+
+    dutchItem1->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
+    dutchItem2->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
+    dutchItem3->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
+    dutchItem4->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
+    dutchItem5->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
+    dutchItem6->getElement().set("onclick", emscripten::val::module_property("sendDutchButtonHandler"));
 }
 
 SendPage *SendPage::getInstance()
@@ -107,7 +118,17 @@ SendPage::~SendPage()
     delete dutchItemContainer;
 }
 
+void SendPage::sendDutchButtonHandler(emscripten::val event)
+{
+    Router::getInstance()->navigate("/sendDetail");
+}
+
 void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
 {
     
+}
+
+EMSCRIPTEN_BINDINGS(SendPage)
+{
+    emscripten::function("sendDutchButtonHandler", &SendPage::sendDutchButtonHandler);
 }
