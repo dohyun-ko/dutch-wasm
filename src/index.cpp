@@ -15,6 +15,7 @@
 #include "pages/signUpPage/signUpPage.h"
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
+#include "pages/receivePage/receivePage.h"
 #include "pages/mainPage/mainPage.h"
 #include "router/Router.h"
 
@@ -83,15 +84,21 @@ int main()
 
     Router router(
         body,
-        {{"/login", []()
-          { return LoginPage::getInstance(); }},
-         {"/signUp", []()
-          { return SignUpPage::getInstance(); }},
-         {"/main", []()
-          { return MainPage::getInstance(); }},
-         {"/sendDetail", []()
-          { return SendDetailPage::getInstance(); }}},
-        "/sendDetail");
+        {
+            {"/login", []()
+             { return LoginPage::getInstance(); }},
+            {"/signUp", []()
+             { return SignUpPage::getInstance(); }},
+            {"/main", []()
+             { return MainPage::getInstance(); }},
+            {"/send", []()
+             { return SendPage::getInstance(); }},
+            {"/sendDetail", []()
+             { return SendDetailPage::getInstance(); }},
+            {"/receive", []()
+             { return ReceivePage::getInstance(); }},
+        },
+        "/receive");
 
     while (true)
     {

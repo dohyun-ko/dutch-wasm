@@ -11,21 +11,24 @@
 
 #include <iostream>
 
-
-Button::Button(State<string>* text, Style* style, string id) : Element("button", style, id), text(text) {
+Button::Button(State<string> *text, Style *style, string id) : Element("button", style, id), text(text)
+{
     text->attach(this);
     getElement().set("innerHTML", text->getValue());
 }
 
-Button::~Button() {
+Button::~Button()
+{
     text->detach(this);
 }
 
-void Button::update() {
+void Button::update()
+{
     Element::update();
     getElement().set("innerHTML", text->getValue());
 }
 
-void Button::setOnClick() {
+void Button::setOnClick()
+{
     getElement().set("onclick", emscripten::val::module_property("handleClick"));
 }
