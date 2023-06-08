@@ -96,6 +96,8 @@ MainPage::MainPage() : Element("div")
     container->appendChildren({leftSide, rightSide});
 
     loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
+    sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.sendButtonHandler"));
+    receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.receiveButtonHandler"));
 
     MainPage::appendChildren(container);
 }
@@ -144,6 +146,7 @@ void MainPage::makeDutchButtonHandler(emscripten::val event)
     router->navigate("/makeDutch");
 }
 
+
 void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
 {
     std::cout << "MainPage::getBalanceNetworkHandler" << std::endl;
@@ -168,4 +171,6 @@ void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
 EMSCRIPTEN_BINDINGS(MainPage)
 {
     emscripten::function("MainPage.loginButtonHandler", &MainPage::loginButtonHandler);
+    emscripten::function("MainPage.sendButtonHandler", &MainPage::sendButtonHandler);
+    emscripten::function("MainPage.receiveButtonHandler", &MainPage::receiveButtonHandler);
 }

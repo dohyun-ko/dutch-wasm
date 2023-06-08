@@ -93,8 +93,6 @@ int main()
              { return MainPage::getInstance(); }},
             {"/send", []()
              { return SendPage::getInstance(); }},
-            {"/sendDetail", []()
-             { return SendDetailPage::getInstance(); }},
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
         },
