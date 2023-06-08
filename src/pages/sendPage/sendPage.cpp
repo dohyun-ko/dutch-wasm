@@ -102,5 +102,7 @@ SendPage *SendPage::getInstance()
 
 SendPage::~SendPage()
 {
-    delete instance;
+    SendPage::instance = nullptr;
+
+    delete dutchItemContainer;
 }

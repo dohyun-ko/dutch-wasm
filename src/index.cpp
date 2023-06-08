@@ -29,6 +29,7 @@ val getElementById(std::string id)
 
 static void backButtonHander(emscripten::val e)
 {
+    std::cout << "backButtonHander" << std::endl;
     Router::getInstance()->navigate("back");
 }
 

@@ -101,5 +101,7 @@ ReceivePage *ReceivePage::getInstance()
 
 ReceivePage::~ReceivePage()
 {
-    delete instance;
+    ReceivePage::instance = nullptr;
+
+    delete dutchItemContainer;
 }
