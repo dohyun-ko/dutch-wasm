@@ -13,6 +13,8 @@ project(index)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(index
+    src/core/user/user.cpp
+    src/core/dutch/dutch.cpp
     src/components/element/Element.cpp
     src/components/button/Button.cpp
     src/components/flex/Flex.cpp
@@ -20,6 +22,8 @@ add_executable(index
     src/components/state/State.cpp
     src/components/style/Style.cpp
     src/components/text/Text.cpp
+    src/globalState/userState/userState.cpp
+    src/globalState/sendDutchState/sendDutchState.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp

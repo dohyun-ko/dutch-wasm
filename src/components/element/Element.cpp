@@ -1,6 +1,5 @@
 #include <emscripten/val.h>
 #include <string>
-#include <optional>
 
 #include "../element/Element.h"
 #include "../style/Style.h"

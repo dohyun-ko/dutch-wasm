@@ -98,7 +98,7 @@ int main()
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
         },
-        "/receive");
+        "/main");
 
     while (true)
     {
