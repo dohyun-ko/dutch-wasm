@@ -10,13 +10,15 @@ class Style;
 
 class Element
 {
-    static int idCount;
     string id;
     val element;
     Style *style;
     vector<Element *> children;
 
     void appendChild(Element *child);
+
+protected:
+    static int idCount;
 
 public:
     explicit Element(string tag, Style *style = nullptr, string id = "");

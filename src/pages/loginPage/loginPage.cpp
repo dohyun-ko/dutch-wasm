@@ -127,6 +127,8 @@ void LoginPage::LoginfailedHandler(emscripten_fetch_t *fetch)
     if (fetch->status == 401)
     {
         LoginPage::loginState->setState("login failed");
+    } else {
+        LoginPage::loginState->setState("network error");
     }
     emscripten_fetch_close(fetch);
 }

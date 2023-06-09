@@ -19,11 +19,13 @@ add_executable(index
     src/components/button/Button.cpp
     src/components/flex/Flex.cpp
     src/components/input/Input.cpp
+    src/components/radio/Radio.cpp
     src/components/state/State.cpp
     src/components/style/Style.cpp
     src/components/text/Text.cpp
     src/globalState/userState/userState.cpp
     src/globalState/sendDutchState/sendDutchState.cpp
+    src/globalState/receiveDutchState/receiveDutchState.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp
@@ -33,6 +35,7 @@ add_executable(index
     src/pages/sendPage/sendPage.cpp
     src/pages/sendDetailPage/sendDetailPage.cpp
     src/pages/addBalancePage/addBalancePage.cpp
+    src/pages/makeDutchPage/makeDutchPage.cpp
     src/index.cpp
 )
 # Link the Emscripten bindings library

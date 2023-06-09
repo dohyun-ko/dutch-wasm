@@ -16,6 +16,7 @@
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
+#include "pages/makeDutchPage/makeDutchPage.h"
 #include "pages/mainPage/mainPage.h"
 #include "pages/addBalancePage/addBalancePage.h"
 #include "router/Router.h"
@@ -30,6 +31,7 @@ val getElementById(std::string id)
 
 static void backButtonHander(emscripten::val e)
 {
+    std::cout << "backButtonHander" << std::endl;
     Router::getInstance()->navigate("back");
 }
 
@@ -94,16 +96,18 @@ int main()
              { return MainPage::getInstance(); }},
             {"/send", []()
              { return SendPage::getInstance(); }},
-            {"/sendDetail", []()
-             { return SendDetailPage::getInstance(); }},
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
             {"/addBalance", []()
              { return AddBalancePage::getInstance(); }},
+            {"/sendDetail", []()
+             { return SendDetailPage::getInstance(); }},
+            {"/makeDutch", []()
+             { return MakeDutchPage::getInstance(); }},
         },
-        "/main");
-  
-    while (true)
+        "/makeDutch");
+
+  while (true)
     {
         emscripten_sleep(100);
     }

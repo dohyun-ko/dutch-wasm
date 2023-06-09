@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "../../components/state/state.cpp"
+#include "../../components/state/State.cpp"
 
 class SendDutchState {
     private:
