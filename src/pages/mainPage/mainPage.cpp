@@ -97,6 +97,17 @@ MainPage::MainPage() : Element("div")
 
     loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
 
+    if (userState->getValue().getUUID() == "")
+    {
+        sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
+        receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
+    }
+    else
+    {
+        sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.sendButtonHandler"));
+        receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.receiveButtonHandler"));
+    }
+
     MainPage::appendChildren(container);
 }
 
@@ -144,6 +155,12 @@ void MainPage::makeDutchButtonHandler(emscripten::val event)
     router->navigate("/makeDutch");
 }
 
+void MainPage::notLoginedButtonHandler(emscripten::val event)
+{
+    std::cout << "MainPage::notLoginedButtonHandler" << std::endl;
+    emscripten_run_script("alert('Need Login')");
+}
+
 void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
 {
     std::cout << "MainPage::getBalanceNetworkHandler" << std::endl;
@@ -151,7 +168,8 @@ void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
     try
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
-        MainPage::balanceState->setState(j["balance"]);
+        string balance = j["balance"];
+        MainPage::balanceState->setState("$"+balance);
     }
     catch (json::parse_error &e)
     {
@@ -168,4 +186,7 @@ void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
 EMSCRIPTEN_BINDINGS(MainPage)
 {
     emscripten::function("MainPage.loginButtonHandler", &MainPage::loginButtonHandler);
+    emscripten::function("MainPage.sendButtonHandler", &MainPage::sendButtonHandler);
+    emscripten::function("MainPage.receiveButtonHandler", &MainPage::receiveButtonHandler);
+    emscripten::function("MainPage.notLoginedButtonHandler", &MainPage::notLoginedButtonHandler);
 }

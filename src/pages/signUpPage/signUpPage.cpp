@@ -102,6 +102,7 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     strcpy(attr.requestMethod, "POST");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = SignUpPage::SignUpNetworkHandler;
+    attr.onerror = SignUpPage::SignUPFailedHandler;
     signUpSuccessState->setState("Signing Up...");
 
     string url = "http://13.124.243.56:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
@@ -120,6 +121,18 @@ void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch)
     catch (json::parse_error &e)
     {
         std::cout << "parse error: " << e.what() << std::endl;
+    }
+    emscripten_fetch_close(fetch);
+}
+
+void SignUpPage::SignUPFailedHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "SignUpPage.SignUPFailedHandler" << std::endl;
+    std::cout << "status: " << fetch->status << std::endl;
+    if (fetch->status == 401) {
+        SignUpPage::signUpSuccessState->setState("Username already exists");
+    } else {
+        SignUpPage::signUpSuccessState->setState("Sign Up Failed");
     }
     emscripten_fetch_close(fetch);
 }

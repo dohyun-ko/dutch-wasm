@@ -29,6 +29,7 @@ val getElementById(std::string id)
 
 static void backButtonHander(emscripten::val e)
 {
+    std::cout << "backButtonHander" << std::endl;
     Router::getInstance()->navigate("back");
 }
 
@@ -93,10 +94,10 @@ int main()
              { return MainPage::getInstance(); }},
             {"/send", []()
              { return SendPage::getInstance(); }},
-            {"/sendDetail", []()
-             { return SendDetailPage::getInstance(); }},
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
+            {"/sendDetail", []()
+             { return SendDetailPage::getInstance(); }},
         },
         "/main");
 

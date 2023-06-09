@@ -2,8 +2,29 @@
 #include "../../components/style/Style.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
+#include "../../globalState/userState/userState.h"
+#include "../../globalState/receiveDutchState/receiveDutchState.h"
+
+ReceivePageStates::ReceivePageStates()
+{
+    sendUserList = new State<string>("");
+    targetAmount = new State<string>("");
+}
+
+State<string>* ReceivePageStates::getSendUserList()
+{
+    return sendUserList;
+}
+
+State<string>* ReceivePageStates::getTargetAmount()
+{
+    return targetAmount;
+}
 
 ReceivePage *ReceivePage::instance = nullptr;
+ReceivePageStates* ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
+State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
+
 
 ReceivePage::ReceivePage() : Element("div")
 {
@@ -25,8 +46,8 @@ ReceivePage::ReceivePage() : Element("div")
         .setGridTemplateColumns("repeat(3, 1fr)")
         .setGap("25px");
 
-    dutchItemStyle = new Style();
-    dutchItemStyle->setWidth("100%")
+    dutchItemWrapperStyle = new Style();
+    dutchItemWrapperStyle->setWidth("100%")
         .setDisplay("flex")
         .setFlexDirection("column")
         .setAlignItems("center")
@@ -34,12 +55,9 @@ ReceivePage::ReceivePage() : Element("div")
         .setBackground(Style::secondaryVariant)
         .setBorder("none")
         .setBorderRadius("8px")
-        .setFontSize("20px")
-        .setFontWeight("bold")
-        .setColor(Style::secondaryVariant)
         .setAspectRatio("1.618")
         .setPadding("10px 0")
-        .setColor("white");
+        .setColor(Style::primaryVariant);
 
     dutchItemUserNameStyle = new Style();
     dutchItemUserNameStyle->setFontSize("12px")
@@ -59,32 +77,90 @@ ReceivePage::ReceivePage() : Element("div")
         .setPadding("0px 10px 10px 10px")
         .setMargin("0")
         .setHeight("20%");
+    dutchItemChargeStyle = new Style();
+    dutchItemChargeStyle->setFontSize("16px")
+        .setFontWeight("400")
+        .setWidth("calc(100\% - 20px)")
+        .setTextAlign("right")
+        .setPadding("0px 10px 10px 10px")
+        .setMargin("0")
+        .setHeight("20%");
 
-    dutchItem1 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem1->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    dutchItemTitleStyle = new Style();
+    dutchItemTitleStyle->setFontSize("16px")
+        .setBorder("none")
+        .setBorderRadius("8px")
+        .setFontSize("20px")
+        .setFontWeight("bold")
+        .setColor(Style::primaryVariant)
+        .setMargin("0");
 
-    dutchItem2 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem2->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItem3 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem3->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    dutchItemButtonStyle = new Style();
+    dutchItemButtonStyle
+        ->setBorder("none")
+        .setBorderRadius("6px")
+        .setPadding("5px 15px")
+        .setMargin("0")
+        .setBackground(Style::primaryVariant);
 
-    dutchItem4 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem4->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    dutchItemButtonTextState = new State<std::string>("View Detail");
 
-    dutchItem5 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem5->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    dutchItem1 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem1");
 
-    dutchItem6 = new Button(new State<string>("Dutch to"), dutchItemStyle);
-    dutchItem6->appendChildren({new Text(new State<string>("User Name, User Name"), dutchItemUserNameStyle),
-                                new Text(new State<string>("$ 50 / 100"), dutchItemChargeStyle)});
+    dutchItem2 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem2");
 
-    dutchItemContainer->appendChildren({dutchItem1, dutchItem2, dutchItem3, dutchItem4, dutchItem5, dutchItem6});
+    dutchItem3 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem3");
+
+    dutchItem4 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem4");
+
+    dutchItem5 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem5");
+
+    dutchItem6 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem6");
+
+    dutchItemWrapper1 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper1->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem1});
+
+    dutchItemWrapper2 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper2->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem2});
+
+    dutchItemWrapper3 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper3->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem3});
+
+    dutchItemWrapper4 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper4->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem4});
+
+    dutchItemWrapper5 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper5->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem5});
+
+    dutchItemWrapper6 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper6->appendChildren({new Text(new State<std::string>("user, user, user"), dutchItemTitleStyle),
+                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(new State<std::string>("$ 50 / 100"), dutchItemChargeStyle),
+                                       dutchItem6});
+
+    dutchItemContainer->appendChildren({dutchItemWrapper1,
+                                        dutchItemWrapper2,
+                                        dutchItemWrapper3,
+                                        dutchItemWrapper4,
+                                        dutchItemWrapper5,
+                                        dutchItemWrapper6});
 
     ReceivePage::appendChildren({prevButton, dutchItemContainer, nextButton});
 }
@@ -101,5 +177,7 @@ ReceivePage *ReceivePage::getInstance()
 
 ReceivePage::~ReceivePage()
 {
-    delete instance;
+    ReceivePage::instance = nullptr;
+
+    delete dutchItemContainer;
 }

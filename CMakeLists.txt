@@ -24,6 +24,7 @@ add_executable(index
     src/components/text/Text.cpp
     src/globalState/userState/userState.cpp
     src/globalState/sendDutchState/sendDutchState.cpp
+    src/globalState/receiveDutchState/receiveDutchState.cpp
     src/router/router.cpp
     src/pages/loginPage/loginPage.cpp
     src/pages/signUpPage/signUpPage.cpp

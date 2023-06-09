@@ -30,6 +30,7 @@ class SignUpPage: public Element {
         static void getEmail(emscripten::val event);
         static void SignUpButtonHander(emscripten::val event);
         static void SignUpNetworkHandler(emscripten_fetch_t *fetch);
+        static void SignUPFailedHandler(emscripten_fetch_t *fetch);
         ~SignUpPage();
 
         static SignUpPage* getInstance();
