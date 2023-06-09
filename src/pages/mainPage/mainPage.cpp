@@ -1,13 +1,23 @@
 #include "mainPage.h"
 
 #include <iostream>
+#include <exception>
+#include <emscripten/bind.h>
+#include <nlohmann/json.hpp>
 
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/style/Style.h"
 #include "../../router/Router.h"
+#include "../../globalState/userState/userState.h"
+
+using json = nlohmann::json;
 
 MainPage *MainPage::instance = nullptr;
+
+State<User> *MainPage::userState = UserState::getInstance()->getCurrentUser();
+State<string> *MainPage::loginState = UserState::getInstance()->getLoginState();
+State<string> *MainPage::balanceState = UserState::getInstance()->getBalanceState();
 
 MainPage::MainPage() : Element("div")
 {
@@ -19,8 +29,6 @@ MainPage::MainPage() : Element("div")
         .setFlexDirection("column")
         .setAlignItems("center")
         .setJustifyContent("center");
-
-    myBalance = new State<string>("0.00");
 
     container = new Element("div");
     container->getStyle()
@@ -50,7 +58,7 @@ MainPage::MainPage() : Element("div")
         .setFontSize("24px")
         .setColor("white");
 
-    balanceText = new Text(myBalance);
+    balanceText = new Text(balanceState);
     balanceText->getStyle()
         .setFontSize("24px")
         .setColor(Style::secondary)
@@ -61,14 +69,33 @@ MainPage::MainPage() : Element("div")
         .setTextAlign("center")
         .setLineHeight("50px");
 
+    loginSuccessText = new Text(loginState);
+
     loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
 
     loginButton->getStyle()
         .setBackground(Style::secondary);
 
-    rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+    if (userState->getValue().getUUID() == "")
+    {
+        rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+    }
+    else
+    {
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "GET");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = MainPage::getBalanceNetworkHandler;
+
+        string url = "http://13.124.243.56:8080/account/user?uuid=" + userState->getValue().getUUID();
+        emscripten_fetch(&attr, url.c_str());
+        rightSide->appendChildren({myBalanceText, balanceText, loginSuccessText});
+    }
 
     container->appendChildren({leftSide, rightSide});
+
+    loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
 
     MainPage::appendChildren(container);
 }
@@ -89,26 +116,56 @@ MainPage::~MainPage()
     delete container;
 }
 
-void MainPage::sendButtonHandler(emscripten::val event) {
+void MainPage::sendButtonHandler(emscripten::val event)
+{
     std::cout << "MainPage::sendButtonHandler" << std::endl;
-    Router* router = Router::getInstance();
+    Router *router = Router::getInstance();
     router->navigate("/send");
 }
 
-void MainPage::receiveButtonHandler(emscripten::val event) {
+void MainPage::receiveButtonHandler(emscripten::val event)
+{
     std::cout << "MainPage::receiveButtonHandler" << std::endl;
-    Router* router = Router::getInstance();
+    Router *router = Router::getInstance();
     router->navigate("/receive");
 }
 
-void MainPage::loginButtonHandler(emscripten::val event) {
+void MainPage::loginButtonHandler(emscripten::val event)
+{
     std::cout << "MainPage::loginButtonHandler" << std::endl;
-    Router* router = Router::getInstance();
+    Router *router = Router::getInstance();
     router->navigate("/login");
 }
 
-void MainPage::makeDutchButtonHandler(emscripten::val event) {
+void MainPage::makeDutchButtonHandler(emscripten::val event)
+{
     std::cout << "MainPage::makeDutchButtonHandler" << std::endl;
-    Router* router = Router::getInstance();
+    Router *router = Router::getInstance();
     router->navigate("/makeDutch");
+}
+
+void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "MainPage::getBalanceNetworkHandler" << std::endl;
+    std::cout << "fetch->status: " << fetch->status << std::endl;
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
+        MainPage::balanceState->setState(j["balance"]);
+    }
+    catch (json::parse_error &e)
+    {
+        std::cout << "json::parse_error: " << e.what() << std::endl;
+    }
+    catch (exception &e)
+    {
+        cout << "network error" << endl;
+    }
+
+    emscripten_fetch_close(fetch);
+}
+
+EMSCRIPTEN_BINDINGS(MainPage)
+{
+    emscripten::function("MainPage.loginButtonHandler", &MainPage::loginButtonHandler);
 }

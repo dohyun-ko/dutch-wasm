@@ -8,6 +8,8 @@
 #include "../../components/text/Text.h"
 #include "../../router/Router.h"
 #include "../../components/element/Element.h"
+#include "../../globalState/userState/userState.h"
+
 #include <iostream>
 #include <functional>
 #include <emscripten/bind.h>
@@ -19,7 +21,8 @@ LoginPage *LoginPage::instance = nullptr;
 
 State<string> *LoginPage::usernameState = new State<string>("");
 State<string> *LoginPage::passwordState = new State<string>("");
-State<string> *LoginPage::loginSuccessState = new State<string>("test");
+State<string> *LoginPage::loginState = UserState::getInstance()->getLoginState();
+State<User> *LoginPage::userState = UserState::getInstance()->getCurrentUser();
 
 LoginPage::LoginPage() : Element("div")
 {
@@ -33,7 +36,7 @@ LoginPage::LoginPage() : Element("div")
     signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
     usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
     passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
-    loginText = new Text(loginSuccessState);
+    loginText = new Text(loginState);
 
     passwordInput->getElement().set("type", "password");
 
@@ -72,15 +75,21 @@ LoginPage *LoginPage::getInstance()
 void LoginPage::LoginButtonHandler(emscripten::val e)
 {
     std::cout << "LoginPage::LoginButtonHander()" << std::endl;
+
+    if(LoginPage::usernameState->getValue() == "" || LoginPage::passwordState->getValue() == "") {
+        LoginPage::loginState->setState("username or password is empty");
+        return;
+    }
+
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
     strcpy(attr.requestMethod, "POST");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = LoginPage::LoginSuccessHandler;
     attr.onerror = LoginPage::LoginfailedHandler;
-    loginSuccessState->setState("loading...");
+    loginState->setState("loading...");
 
-    string url = "http://15.165.55.135:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue();
+    string url = "http://13.124.243.56:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue();
     emscripten_fetch(&attr, url.c_str());
 
     return;
@@ -90,17 +99,25 @@ void LoginPage::LoginSuccessHandler(emscripten_fetch_t *fetch)
 {
     cout << "LoginPage::LoginNetworkHandler()" << endl;
     cout << "fetch->status: " << fetch->status << endl;
+    Router *router = Router::getInstance();
     try
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
-        LoginPage::loginSuccessState->setState(j["uuid"]);
+        string username = j["username"];
+        string successText = "Hello! " + username;
+        LoginPage::loginState->setState(successText);
+        LoginPage::userState->setState(User(j["uuid"], j["username"], j["email"]));
+        cout << userState->getValue().getEmail() << endl;
     }
     catch (json::parse_error &e)
     {
         cout << "parse error: " << e.what() << endl;
+    } catch (exception &e) {
+        cout << "network error" << endl;
     }
 
     emscripten_fetch_close(fetch);
+    router->navigate("/main");
 }
 
 void LoginPage::LoginfailedHandler(emscripten_fetch_t *fetch)
@@ -109,7 +126,7 @@ void LoginPage::LoginfailedHandler(emscripten_fetch_t *fetch)
     cout << "fetch->status: " << fetch->status << endl;
     if (fetch->status == 401)
     {
-        LoginPage::loginSuccessState->setState("login failed");
+        LoginPage::loginState->setState("login failed");
     }
     emscripten_fetch_close(fetch);
 }

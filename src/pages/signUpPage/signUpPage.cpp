@@ -92,6 +92,10 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     std::cout << "username: " << SignUpPage::usernameState->getValue() << std::endl;
     std::cout << "password: " << SignUpPage::passwordState->getValue() << std::endl;
     std::cout << "email: " << SignUpPage::emailState->getValue() << std::endl;
+    if(SignUpPage::usernameState->getValue() == "" || SignUpPage::passwordState->getValue() == "" || SignUpPage::emailState->getValue() == "") {
+        SignUpPage::signUpSuccessState->setState("Please fill out all fields");
+        return;
+    }
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
@@ -100,7 +104,7 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     attr.onsuccess = SignUpPage::SignUpNetworkHandler;
     signUpSuccessState->setState("Signing Up...");
 
-    string url = "http://15.165.55.135:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
+    string url = "http://13.124.243.56:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 

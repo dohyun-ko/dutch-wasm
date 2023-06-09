@@ -101,8 +101,8 @@ int main()
             {"/addBalance", []()
              { return AddBalancePage::getInstance(); }},
         },
-        "/addBalance");
-
+        "/main");
+  
     while (true)
     {
         emscripten_sleep(100);
