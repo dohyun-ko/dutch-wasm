@@ -26,8 +26,6 @@ class SendPage : public Element
     Button *dutchItem4;
     Button *dutchItem5;
     Button *dutchItem6;
-    Button *dutchItem7;
-    Button *dutchItem8;
 
     Element *dutchItemContainer;
 

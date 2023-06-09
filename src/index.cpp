@@ -17,6 +17,7 @@
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
 #include "pages/mainPage/mainPage.h"
+#include "pages/addBalancePage/addBalancePage.h"
 #include "router/Router.h"
 
 using namespace emscripten;
@@ -97,9 +98,11 @@ int main()
              { return SendDetailPage::getInstance(); }},
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
+            {"/addBalance", []()
+             { return AddBalancePage::getInstance(); }},
         },
         "/main");
-
+  
     while (true)
     {
         emscripten_sleep(100);
