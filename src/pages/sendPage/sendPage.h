@@ -14,14 +14,15 @@ class SendPageStates
 {
     State<string> *receiveUser;
     State<string> *sendAmount;
-    string dutchReceiverUUID;
+    string dutchUUID;
 
 public:
     SendPageStates();
+    ~SendPageStates();
     State<string> *getReceiveUser();
     State<string> *getSendAmount();
-    string getDutchReceiverUUID();
-    void setDutchReceiverUUID(string uuid);
+    string getDutchUUID();
+    void setDutchUUID(string uuid);
 };
 
 // global state로 sendDutchPage에게 Dutch의 UUID or dutch의 모든 정보 전달해야함
@@ -66,11 +67,11 @@ public:
 
     static SendPageStates *dutchList[6];
     static State<vector<string>> *dutchUUIDList;
+    static int currentPageNumber;
     static SendPage *getInstance();
     static void nextButtonHandler(emscripten::val event);
     static void prevButtonHandler(emscripten::val event);
     static void sendDutchButtonHandler(emscripten::val event);
     static void getDutchListHandler(emscripten_fetch_t *fetch);
-    static void getDutchInfoHandler(emscripten_fetch_t *fetch);
-    static void getDutchReceiverInfoHandler(emscripten_fetch_t *fetch);
+    static void getDutchInfoHandler(emscripten_fetch_t *fetch);;
 };

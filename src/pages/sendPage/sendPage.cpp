@@ -15,8 +15,15 @@ using json = nlohmann::json;
 
 SendPageStates::SendPageStates()
 {
-    this->receiveUser = new State<string>("Dutch by");
-    this->sendAmount = new State<string>("$0");
+    this->receiveUser = new State<string>("");
+    this->sendAmount = new State<string>("");
+    this->dutchUUID = "";
+}
+
+SendPageStates::~SendPageStates()
+{
+    delete this->receiveUser;
+    delete this->sendAmount;
 }
 
 State<string> *SendPageStates::getReceiveUser()
@@ -29,19 +36,20 @@ State<string> *SendPageStates::getSendAmount()
     return this->sendAmount;
 }
 
-string SendPageStates::getDutchReceiverUUID()
+string SendPageStates::getDutchUUID()
 {
-    return this->dutchReceiverUUID;
+    return this->dutchUUID;
 }
 
-void SendPageStates::setDutchReceiverUUID(string uuid)
+void SendPageStates::setDutchUUID(string uuid)
 {
-    this->dutchReceiverUUID = uuid;
+    this->dutchUUID = uuid;
 }
 
 SendPage *SendPage::instance = nullptr;
 SendPageStates *SendPage::dutchList[6] = {new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates()};
 State<vector<string>> *SendPage::dutchUUIDList = SendDutchState::getInstance()->getSendUUIDs();
+int SendPage::currentPageNumber = 0;
 
 SendPage::SendPage() : Element("div")
 {
@@ -216,15 +224,16 @@ void SendPage::sendDutchButtonHandler(emscripten::val event)
     string buttonId = event["target"]["id"].as<string>();
     buttonId.erase(buttonId.begin(), buttonId.begin() + 9);
     std::stringstream ssInt(buttonId);
-    int index=0;
+    int index = 0;
     ssInt >> index;
     index--;
 
-    SendDutchState::getInstance()->getNowUUID()->setState(dutchUUIDList->getValue()[index]);
+    SendDutchState::getInstance()->getNowUUID()->setState(dutchList[index]->getDutchUUID());
 
     Router::getInstance()->navigate("/sendDetail");
 }
 
+// 나에게 있는 dutch의 리스트만 받아서 글로벌 스테이트에 저장
 void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
 {
     std::cout << "SendPage::getDutchListHandler" << std::endl;
@@ -236,6 +245,8 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
         for (size_t i = 0; i < (dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++)
         {
             std::cout << "SendDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
+            dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[i]);
+
             emscripten_fetch_attr_t dutchInfoFetchAttr;
             emscripten_fetch_attr_init(&dutchInfoFetchAttr);
             strcpy(dutchInfoFetchAttr.requestMethod, "GET");
@@ -253,6 +264,7 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
     emscripten_fetch_close(fetch);
 }
 
+// 각 dutch의 정보를 받아서 화면에 표시
 void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
 {
     std::cout << "SendPage::getDutchInfoHandler" << std::endl;
@@ -260,22 +272,35 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
     try
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
-        vector<string> v = dutchUUIDList->getValue();
-        int total_charge = j["target_balance"];
-        int charge = total_charge / j["user_list"].size();
-        int index = find(v.begin(), v.end(), j["dutch_uuid"]) - v.begin();
-        dutchList[index]->getSendAmount()->setState("$" + to_string(charge));
-        string receiver = j["owner"];
-        dutchList[index]->setDutchReceiverUUID(receiver);
+        // dutchUUID로 dutchList에서 index 찾기
+        int index = 0;
+        for (size_t i = 0; i < 6; i++)
+        {
+            if (dutchList[i]->getDutchUUID() == j["dutch_uuid"])
+            {
+                index = i;
+                break;
+            }
+        }
 
-        emscripten_fetch_attr_t dutchReceiverInfoFetchAttr;
-        emscripten_fetch_attr_init(&dutchReceiverInfoFetchAttr);
-        strcpy(dutchReceiverInfoFetchAttr.requestMethod, "GET");
-        dutchReceiverInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
-        dutchReceiverInfoFetchAttr.onsuccess = SendPage::getDutchReceiverInfoHandler;
+        // 소유자 확인
+        string receiver = j["owner_name"];
+        dutchList[index]->getReceiveUser()->setState("Dutch by " + receiver);
 
-        string url = "http://13.124.243.56:8080/user/find?uuid=" + receiver;
-        emscripten_fetch(&dutchReceiverInfoFetchAttr, url.c_str());
+        // dutch에 돈을 냈는지 확인
+        vector<string> sendUserList = j["send_user_list"];
+        std::cout << sendUserList[0] << ":::" << UserState::getInstance()->getCurrentUser()->getValue().getUUID() << std::endl;
+        if (find(sendUserList.begin(), sendUserList.end(), UserState::getInstance()->getCurrentUser()->getValue().getUUID()) == sendUserList.end())
+        {
+            // dutchList에 정보 저장
+            int total_charge = j["target_balance"];
+            int charge = total_charge / j["user_list"].size(); // 각자 내야하는 금액(normal dutch 기준)
+            dutchList[index]->getSendAmount()->setState("$" + to_string(charge));
+        }
+        else
+        {
+            dutchList[index]->getSendAmount()->setState("sended");
+        }
     }
     catch (json::parse_error &e)
     {
@@ -284,51 +309,32 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
     emscripten_fetch_close(fetch);
 }
 
-void SendPage::getDutchReceiverInfoHandler(emscripten_fetch_t *fetch)
-{
-    std::cout << "SendPage::getDutchReceiverInfoHandler" << std::endl;
-    std::cout << "status: " << fetch->status << std::endl;
-    try
-    {
-        json j = json::parse(string(fetch->data, fetch->numBytes));
-        string receiver = j["username"];
-        string uuid = j["uuid"];
-        for (size_t i = 0; i < 6; i++)
-        {
-            if (dutchList[i]->getDutchReceiverUUID() == uuid && dutchList[i]->getReceiveUser()->getValue() == "Dutch by")
-            {
-                dutchList[i]->getReceiveUser()->setState("Dutch by " + receiver);
-                break;
-            }
-        }
-    }
-    catch (json::parse_error &e)
-    {
-        cout << "SendPage::getDutchReceiverInfoHandler: parse error: " << e.what() << endl;
-    }
-}
-
+// 다음 버튼
 void SendPage::nextButtonHandler(emscripten::val event)
 {
     cout << "SendPage::nextButtonHandler" << endl;
-    vector<string> v = SendPage::dutchUUIDList->getValue();
+    if (currentPageNumber * 6 + 6 >= dutchUUIDList->getValue().size())
+        return;
+    currentPageNumber++;
+
     for (size_t i = 0; i < 6; i++)
     {
-        v.push_back(v.at(0));
-        v.erase(v.begin());
-    }
-    SendPage::dutchUUIDList->setState(v);
+        if (dutchUUIDList->getValue().size() <= currentPageNumber * 6 + i)
+        {
+            dutchList[i]->getSendAmount()->setState("");
+            dutchList[i]->getReceiveUser()->setState("");
+            continue;
+        }
+        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6] << std::endl;
+        dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[i + currentPageNumber * 6]);
 
-    for (size_t i = 0; i < (SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++)
-    {
-        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
         emscripten_fetch_attr_t dutchInfoFetchAttr;
         emscripten_fetch_attr_init(&dutchInfoFetchAttr);
         strcpy(dutchInfoFetchAttr.requestMethod, "GET");
         dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
         emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }
@@ -336,24 +342,28 @@ void SendPage::nextButtonHandler(emscripten::val event)
 void SendPage::prevButtonHandler(emscripten::val event)
 {
     cout << "SendPage::prevButtonHandler" << endl;
-    vector<string> v = SendPage::dutchUUIDList->getValue();
+    if (currentPageNumber == 0)
+        return;
+    currentPageNumber--;
+
     for (size_t i = 0; i < 6; i++)
     {
-        v.insert(v.begin(), v.at(v.size() - 1));
-        v.pop_back();
-    }
-    SendPage::dutchUUIDList->setState(v);
+        if (dutchUUIDList->getValue().size() <= currentPageNumber * 6 + i)
+        {
+            dutchList[i]->getSendAmount()->setState("");
+            dutchList[i]->getReceiveUser()->setState("");
+            continue;
+        }
+        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6] << std::endl;
+        dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[i + currentPageNumber * 6]);
 
-    for (size_t i = 0; i < (SendPage::dutchUUIDList->getValue().size() < 6 ? SendPage::dutchUUIDList->getValue().size() : 6); i++)
-    {
-        std::cout << "SendDutchList: " << SendPage::dutchUUIDList->getValue()[i] << std::endl;
         emscripten_fetch_attr_t dutchInfoFetchAttr;
         emscripten_fetch_attr_init(&dutchInfoFetchAttr);
         strcpy(dutchInfoFetchAttr.requestMethod, "GET");
         dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i];
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
         emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }
