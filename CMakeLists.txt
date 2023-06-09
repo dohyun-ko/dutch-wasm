@@ -34,6 +34,7 @@ add_executable(index
     src/pages/receiveDetailPage/receiveDetailPage.cpp
     src/pages/sendPage/sendPage.cpp
     src/pages/sendDetailPage/sendDetailPage.cpp
+    src/pages/addBalancePage/addBalancePage.cpp
     src/pages/makeDutchPage/makeDutchPage.cpp
     src/index.cpp
 )
