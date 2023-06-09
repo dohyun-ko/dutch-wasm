@@ -50,8 +50,9 @@ MainPage::MainPage() : Element("div")
 
     sendButton = new Button(new State<string>("Send"), Style::defaultButtonStyle());
     receiveButton = new Button(new State<string>("Receive"), Style::defaultButtonStyle());
+    makeButton = new Button(new State<string>("Make"), Style::defaultButtonStyle());
 
-    leftSide->appendChildren({sendButton, receiveButton});
+    leftSide->appendChildren({sendButton, receiveButton, makeButton});
 
     myBalanceText = new Text(new State<string>("My Balance"));
     myBalanceText->getStyle()
@@ -101,11 +102,13 @@ MainPage::MainPage() : Element("div")
     {
         sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
         receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
+        makeButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
     }
     else
     {
         sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.sendButtonHandler"));
         receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.receiveButtonHandler"));
+        makeButton->getElement().set("onclick", emscripten::val::module_property("MainPage.makeDutchButtonHandler"));
     }
 
     MainPage::appendChildren(container);
@@ -189,4 +192,5 @@ EMSCRIPTEN_BINDINGS(MainPage)
     emscripten::function("MainPage.sendButtonHandler", &MainPage::sendButtonHandler);
     emscripten::function("MainPage.receiveButtonHandler", &MainPage::receiveButtonHandler);
     emscripten::function("MainPage.notLoginedButtonHandler", &MainPage::notLoginedButtonHandler);
+    emscripten::function("MainPage.makeDutchButtonHandler", &MainPage::makeDutchButtonHandler);
 }

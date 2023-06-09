@@ -53,6 +53,7 @@ int SendPage::currentPageNumber = 0;
 
 SendPage::SendPage() : Element("div")
 {
+    currentPageNumber = 0;
     SendPage::getStyle()
         .setWidth("100%")
         .setHeight("100%")
