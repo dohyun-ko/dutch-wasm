@@ -53,6 +53,7 @@ int SendPage::currentPageNumber = 0;
 
 SendPage::SendPage() : Element("div")
 {
+    currentPageNumber = 0;
     SendPage::getStyle()
         .setWidth("100%")
         .setHeight("100%")
@@ -299,7 +300,7 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         }
         else
         {
-            dutchList[index]->getSendAmount()->setState("sended");
+            dutchList[index]->getSendAmount()->setState("Completed");
         }
     }
     catch (json::parse_error &e)

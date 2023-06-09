@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <emscripten/fetch.h>
 
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
@@ -12,14 +13,7 @@
 
 class MakeDutchPage : public Element
 {
-
-    State<vector<string>> *sendUsers;
-    State<string> *charge; // to @siwonpada - Input과 함께 사용하려면 string이어야 하기에 변경 by @Dohyun-Ko
-    State<string> *dutchType;
-
     Button *makeButton;
-    Button *addUserButtons[8]; // 전체 유저를 가져오는 버튼 (event의 target을 이용해서 유저 uuid를 가져올 수 있도록 로직 구성예정)
-    Button *subUserButtons[4]; // 선택된 유저를 제거하는 버튼 (event의 target을 이용해서 유저 uuid를 가져올 수 있도록 로직 구성예정)
 
     Input *dutchBalenceInput;
 
@@ -44,9 +38,6 @@ class MakeDutchPage : public Element
     Text *chargeLabel;   // 더치 금액 라벨
     Text *sendUserLabel; // 받는 사람 라벨
 
-    Element *userItems[8];
-    Element *sendUserItems[4];
-
     Style *userItemStyle;
     Style *subUserButtonStyle;
     Style *addUserButtonStyle;
@@ -58,9 +49,23 @@ class MakeDutchPage : public Element
 public:
     ~MakeDutchPage();
 
+    static Button *addUserButtons[8]; // 전체 유저를 가져오는 버튼 (event의 target을 이용해서 유저 uuid를 가져올 수 있도록 로직 구성예정)
+    static Button *subUserButtons[4]; // 선택된 유저를 제거하는 버튼 (event의 target을 이용해서 유저 uuid를 가져올 수 있도록 로직 구성예정)
+    static Element *userItems[8];
+    static Element *sendUserItems[4];
+    static State<string> *sendUsernames[4];
+    static State<string> *usernames[8];
+    static State<vector<string>> *sendUserUUIDs;
+    static State<vector<string>> *userUUIDs;
+    static State<string> *charge; // to @siwonpada - Input과 함께 사용하려면 string이어야 하기에 변경 by @Dohyun-Ko
+    static State<string> *dutchType;
     static MakeDutchPage *getInstance();
     static void makeButtonHandler(emscripten::val event);
     static void addUserButtonHandler(emscripten::val event);
     static void subUserButtonHandler(emscripten::val event);
+    static void dutchTypeRadioHandler(emscripten::val event);
     static void dutchBalanceInputHandler(emscripten::val event);
+    static void getUsersNetworkHandler(emscripten_fetch_t *fetch);
+    static void getUserInfoNetworkHandler(emscripten_fetch_t *fetch);
+    static void makeDutchNetworkHandler(emscripten_fetch_t *fetch);
 };
