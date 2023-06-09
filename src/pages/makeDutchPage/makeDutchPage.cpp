@@ -20,7 +20,7 @@ MakeDutchPage::MakeDutchPage() : Element("div")
         .setBackground(Style::primaryVariant)
         .setBorderRadius("10px");
 
-    billTitle = new Text(new State<string>("Dutch Detail"));
+    billTitle = new Text(new State<string>("Make Dutch"));
     billTitle->getStyle()
         .setFontSize("24px")
         .setFontWeight("bold");
@@ -36,7 +36,7 @@ MakeDutchPage::MakeDutchPage() : Element("div")
 
     chargeLabel = new Text(new State<string>("Total Charge: "));
     chargeInput = new Input(charge, Style::defaultInputStyle());
-    sendUserLabel = new Text(new State<string>("Receiver: "));
+    sendUserLabel = new Text(new State<string>("Receivers: "));
     sendUserContainer = new Flex("column", "start", "center", "10px");
 
     subUserButtonStyle = new Style();
