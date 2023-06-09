@@ -299,7 +299,7 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         }
         else
         {
-            dutchList[index]->getSendAmount()->setState("sended");
+            dutchList[index]->getSendAmount()->setState("Completed");
         }
     }
     catch (json::parse_error &e)
