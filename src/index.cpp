@@ -16,6 +16,7 @@
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
+#include "pages/makeDutchPage/makeDutchPage.h"
 #include "pages/mainPage/mainPage.h"
 #include "router/Router.h"
 
@@ -98,8 +99,10 @@ int main()
              { return ReceivePage::getInstance(); }},
             {"/sendDetail", []()
              { return SendDetailPage::getInstance(); }},
+            {"/makeDutch", []()
+             { return MakeDutchPage::getInstance(); }},
         },
-        "/main");
+        "/makeDutch");
 
     while (true)
     {
