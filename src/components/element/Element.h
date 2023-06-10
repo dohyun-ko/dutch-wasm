@@ -2,6 +2,8 @@
 
 #include <emscripten/val.h>
 #include <string>
+#include <memory>
+#include <vector>
 
 using namespace emscripten;
 using namespace std;

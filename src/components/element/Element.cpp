@@ -56,6 +56,7 @@ void Element::clearChildren()
     {
         delete child;
     }
+
     // children.clear(); // TODO: memory leak
 }
 

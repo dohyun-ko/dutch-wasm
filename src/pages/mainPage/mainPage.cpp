@@ -30,36 +30,36 @@ MainPage::MainPage() : Element("div")
         .setAlignItems("center")
         .setJustifyContent("center");
 
-    container = new Element("div");
+    container = std::make_unique<Element>("div");
     container->getStyle()
         .setWidth("100%")
         .setHeight("100%")
         .setDisplay("grid")
         .setGridTemplateColumns("4fr 3fr");
 
-    leftSide = new Flex("column", "center", "center", "10px");
+    leftSide = std::make_unique<Flex>("column", "center", "center", "10px");
     leftSide->getStyle()
         .setWidth("100%")
         .setHeight("100%");
 
-    rightSide = new Flex("column", "center", "center", "10px");
+    rightSide = std::make_unique<Flex>("column", "center", "center", "10px");
     rightSide->getStyle()
         .setWidth("100%")
         .setHeight("100%")
         .setBackground(Style::primary);
 
-    sendButton = new Button(new State<string>("Send"), Style::defaultButtonStyle());
-    receiveButton = new Button(new State<string>("Receive"), Style::defaultButtonStyle());
-    makeButton = new Button(new State<string>("Make"), Style::defaultButtonStyle());
+    sendButton = std::make_unique<Button>(make_shared<State<string>>("Send"), Style::defaultButtonStyle());
+    receiveButton = std::make_unique<Button>(make_shared<State<string>>("Receive"), Style::defaultButtonStyle());
+    makeButton = std::make_unique<Button>(make_shared<State<string>>("Make"), Style::defaultButtonStyle());
 
-    leftSide->appendChildren({sendButton, receiveButton, makeButton});
+    leftSide->appendChildren({sendButton.get(), receiveButton.get(), makeButton.get()});
 
-    myBalanceText = new Text(new State<string>("My Balance"));
+    myBalanceText = std::make_shared<Text>(new State<string>("My Balance"));
     myBalanceText->getStyle()
         .setFontSize("24px")
         .setColor("white");
 
-    balanceText = new Text(balanceState);
+    balanceText = std::make_shared<Text>(balanceState);
     balanceText->getStyle()
         .setFontSize("24px")
         .setColor(Style::secondary)
@@ -70,16 +70,16 @@ MainPage::MainPage() : Element("div")
         .setTextAlign("center")
         .setLineHeight("50px");
 
-    loginSuccessText = new Text(loginState);
+    loginSuccessText = std::make_shared<Text>(loginState);
 
-    loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
+    loginButton = std::make_unique<Button>(new State<string>("Login"), Style::defaultButtonStyle());
 
     loginButton->getStyle()
         .setBackground(Style::secondary);
 
     if (userState->getValue().getUUID() == "")
     {
-        rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginButton.get()});
     }
     else
     {
@@ -91,10 +91,10 @@ MainPage::MainPage() : Element("div")
 
         string url = "http://13.124.243.56:8080/account/user?uuid=" + userState->getValue().getUUID();
         emscripten_fetch(&attr, url.c_str());
-        rightSide->appendChildren({myBalanceText, balanceText, loginSuccessText});
+        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginSuccessText.get()});
     }
 
-    container->appendChildren({leftSide, rightSide});
+    container->appendChildren({leftSide.get(), rightSide.get()});
 
     loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
 
@@ -111,7 +111,7 @@ MainPage::MainPage() : Element("div")
         makeButton->getElement().set("onclick", emscripten::val::module_property("MainPage.makeDutchButtonHandler"));
     }
 
-    MainPage::appendChildren(container);
+    MainPage::appendChildren(container.get());
 }
 
 MainPage *MainPage::getInstance()
@@ -127,7 +127,7 @@ MainPage *MainPage::getInstance()
 MainPage::~MainPage()
 {
     MainPage::instance = nullptr;
-    delete container;
+    delete container.release();
 }
 
 void MainPage::sendButtonHandler(emscripten::val event)
@@ -172,7 +172,7 @@ void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         string balance = j["balance"];
-        MainPage::balanceState->setState("$"+balance);
+        MainPage::balanceState->setState("$" + balance);
     }
     catch (json::parse_error &e)
     {

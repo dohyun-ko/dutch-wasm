@@ -12,8 +12,8 @@ Flex::Flex(
     string direction,
     string justifyContent,
     string alignItems,
-    string gap
-) : Element("div", new Style()) {
+    string gap) : Element("div", new Style())
+{
     this->getStyle()
         .setDisplay("flex")
         .setFlexDirection(direction)
@@ -22,6 +22,6 @@ Flex::Flex(
         .setGap(gap);
 }
 
-Flex::~Flex() {
-    
+Flex::~Flex()
+{
 }

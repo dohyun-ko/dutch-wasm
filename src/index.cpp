@@ -44,7 +44,7 @@ int main()
 {
     val root = getElementById("root");
 
-    Element *layout = new Element("div");
+    std::unique_ptr<Element> layout = make_unique<Element>("div");
 
     layout->getStyle()
         .setPosition("relative")
@@ -52,7 +52,7 @@ int main()
         .setFlexDirection("column")
         .setAlignItems("center");
 
-    Element *header = new Element("div");
+    std::unique_ptr<Element> header = make_unique<Element>("div");
     header->getStyle()
         .setPosition("absolute")
         .setTop("0")
@@ -62,7 +62,7 @@ int main()
         .setWidth("100%")
         .setHeight("80px");
 
-    Element *body = new Element("div");
+    std::unique_ptr<Element> body = make_unique<Element>("div");
     body->getStyle()
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -72,7 +72,7 @@ int main()
         .setHeight("calc(100vh)")
         .setBackground(Style::secondary);
 
-    Button *backButton = new Button(new State<string>("⬅️"));
+    std::unique_ptr<Button> backButton = make_unique<Button>(new State<string>("⬅️"));
     backButton->getStyle()
         .setBorder("none")
         .setBackground("transparent")
@@ -80,13 +80,13 @@ int main()
         .setCursor("pointer");
 
     backButton->getElement().set("onclick", emscripten::val::module_property("layout.backButtonHander"));
-    header->appendChildren(backButton);
-    layout->appendChildren({header, body});
+    header->appendChildren(backButton.get());
+    layout->appendChildren({header.get(), body.get()});
 
     root.call<void>("appendChild", layout->getElement());
 
     Router router(
-        body,
+        body.get(),
         {
             {"/login", []()
              { return LoginPage::getInstance(); }},
@@ -107,7 +107,7 @@ int main()
         },
         "/main");
 
-  while (true)
+    while (true)
     {
         emscripten_sleep(100);
     }
