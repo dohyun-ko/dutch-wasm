@@ -62,7 +62,7 @@ int main()
         .setWidth("100%")
         .setHeight("80px");
 
-    std::unique_ptr<Element> body = make_unique<Element>("div");
+    std::shared_ptr<Element> body = make_shared<Element>("div");
     body->getStyle()
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -86,7 +86,7 @@ int main()
     root.call<void>("appendChild", layout->getElement());
 
     Router router(
-        body.get(),
+        body,
         {
             {"/login", []()
              { return LoginPage::getInstance(); }},

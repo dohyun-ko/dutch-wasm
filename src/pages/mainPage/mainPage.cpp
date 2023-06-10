@@ -48,11 +48,11 @@ MainPage::MainPage() : Element("div")
         .setHeight("100%")
         .setBackground(Style::primary);
 
-    sendButton = std::make_unique<Button>(make_shared<State<string>>("Send"), Style::defaultButtonStyle());
-    receiveButton = std::make_unique<Button>(make_shared<State<string>>("Receive"), Style::defaultButtonStyle());
-    makeButton = std::make_unique<Button>(make_shared<State<string>>("Make"), Style::defaultButtonStyle());
+    sendButton = new Button(make_shared<State<string>>("Send"), Style::defaultButtonStyle());
+    receiveButton = new Button(make_shared<State<string>>("Receive"), Style::defaultButtonStyle());
+    makeButton = new Button(make_shared<State<string>>("Make"), Style::defaultButtonStyle());
 
-    leftSide->appendChildren({sendButton.get(), receiveButton.get(), makeButton.get()});
+    leftSide->appendChildren({sendButton, receiveButton, makeButton});
 
     myBalanceText = std::make_shared<Text>(new State<string>("My Balance"));
     myBalanceText->getStyle()
@@ -72,14 +72,14 @@ MainPage::MainPage() : Element("div")
 
     loginSuccessText = std::make_shared<Text>(loginState);
 
-    loginButton = std::make_unique<Button>(new State<string>("Login"), Style::defaultButtonStyle());
+    loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
 
     loginButton->getStyle()
         .setBackground(Style::secondary);
 
     if (userState->getValue().getUUID() == "")
     {
-        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginButton.get()});
+        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginButton});
     }
     else
     {
@@ -127,7 +127,7 @@ MainPage *MainPage::getInstance()
 MainPage::~MainPage()
 {
     MainPage::instance = nullptr;
-    delete container.release();
+    cout << "MainPage::~MainPage()" << endl;
 }
 
 void MainPage::sendButtonHandler(emscripten::val event)

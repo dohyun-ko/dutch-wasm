@@ -17,12 +17,12 @@ class MainPage : public Element
     std::shared_ptr<Text> myBalanceText;
     std::shared_ptr<Text> loginSuccessText;
 
-    std::unique_ptr<Button> sendButton;
-    std::unique_ptr<Button> receiveButton;
-    std::unique_ptr<Button> loginButton;
-    std::unique_ptr<Button> makeButton;
-    std::unique_ptr<Button> makeDutchButton;
-    std::unique_ptr<Button> addBalanceButton;
+    Button *sendButton;
+    Button *receiveButton;
+    Button *loginButton;
+    Button *makeButton;
+    Button *makeDutchButton;
+    Button *addBalanceButton;
 
     static MainPage *instance;
     MainPage();

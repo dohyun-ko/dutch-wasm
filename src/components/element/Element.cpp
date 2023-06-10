@@ -1,5 +1,6 @@
 #include <emscripten/val.h>
 #include <string>
+#include <iostream>
 
 #include "../element/Element.h"
 #include "../style/Style.h"
@@ -24,6 +25,7 @@ Element::Element(string tag, Style *style, string id) : style(style)
 
 Element::~Element()
 {
+    std::cout << "delete id: " << id << std::endl;
     // for (Element* child : children) {
     //     delete child;
     // } // TODO : memory leak

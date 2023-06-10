@@ -5,32 +5,45 @@
 #include <iostream>
 #include <functional>
 
-Router* Router::instance = nullptr;
-
+Router *Router::instance = nullptr;
 
 Router::Router(
-    Element* layout,
-    const std::unordered_map<string, std::function<Element*()>>& routes,
-    const std::string& currentPath
-) : layout(layout), routes(routes), currentPath(currentPath) {
+    std::shared_ptr<Element> layout,
+    const std::unordered_map<string, std::function<Element *()>> &routes,
+    const std::string &currentPath) : layout(layout), routes(routes), currentPath(currentPath)
+{
     Router::instance = this;
 
     this->layout->appendChildren(this->routes[currentPath]());
 }
 
-Router::~Router() {
-
+Router::~Router()
+{
 }
 
-void Router::navigate(const std::string& path) {
+void Router::navigate(const std::string &path)
+{
 
-    if (path != "back") {
+    if (path != "back")
+    {
+        for (const auto &pair : routes)
+        {
+            std::cout << pair.first << std::endl;
+        }
+
+        std::cout << "path: " << path << std::endl;
+        std::cout << "currentPath: " << currentPath << std::endl;
+
+        // this->layout->clearChildren();
         delete this->routes[this->currentPath]();
         this->layout->appendChildren(this->routes[path]());
         this->pathHistory.push_back(this->currentPath);
         this->currentPath = path;
-    } else {
-        if (this->pathHistory.size() == 0) {
+    }
+    else
+    {
+        if (this->pathHistory.size() == 0)
+        {
             return;
         }
         delete this->routes[this->currentPath]();
@@ -40,11 +53,12 @@ void Router::navigate(const std::string& path) {
     }
 }
 
-Router* Router::getInstance() {
+Router *Router::getInstance()
+{
     return Router::instance;
 }
 
-Element* Router::getLayout() {
+std::shared_ptr<Element> Router::getLayout()
+{
     return this->layout;
 }
-
