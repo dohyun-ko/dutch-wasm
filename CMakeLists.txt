@@ -40,7 +40,7 @@ add_executable(index
 # Link the Emscripten bindings library
 target_link_libraries(index
     PRIVATE nlohmann_json::nlohmann_json
-    "--bind -lembind -fexceptions -s FETCH=1 -O3 -sASYNCIFY"
+    "--bind --emrun -lembind -fexceptions -s FETCH=1 -O3 -sASYNCIFY"
 )
 
 target_compile_options(index
