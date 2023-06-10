@@ -1,33 +1,59 @@
 #include "receivePage.h"
+
+#include <iostream>
+#include <sstream>
+#include <nlohmann/json.hpp>
+
 #include "../../components/style/Style.h"
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../globalState/userState/userState.h"
 #include "../../globalState/receiveDutchState/receiveDutchState.h"
 
+using json = nlohmann::json;
+
 ReceivePageStates::ReceivePageStates()
 {
     sendUserList = new State<string>("");
     targetAmount = new State<string>("");
+    dutchUUID = "";
 }
 
-State<string>* ReceivePageStates::getSendUserList()
+ReceivePageStates::~ReceivePageStates()
+{
+    delete sendUserList;
+    delete targetAmount;
+}
+
+State<string> *ReceivePageStates::getSendUserList()
 {
     return sendUserList;
 }
 
-State<string>* ReceivePageStates::getTargetAmount()
+State<string> *ReceivePageStates::getTargetAmount()
 {
     return targetAmount;
 }
 
-ReceivePage *ReceivePage::instance = nullptr;
-ReceivePageStates* ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
-State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
+string ReceivePageStates::getDutchUUID()
+{
+    return dutchUUID;
+}
 
+void ReceivePageStates::setDutchUUID(string uuid)
+{
+    dutchUUID = uuid;
+}
+
+ReceivePage *ReceivePage::instance = nullptr;
+ReceivePageStates *ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
+State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
+int ReceivePage::currentPageNumber = 0;
 
 ReceivePage::ReceivePage() : Element("div")
 {
+    currentPageNumber = 0;
+
     ReceivePage::getStyle()
         .setWidth("100%")
         .setHeight("100%")
@@ -163,6 +189,24 @@ ReceivePage::ReceivePage() : Element("div")
                                         dutchItemWrapper6});
 
     ReceivePage::appendChildren({prevButton, dutchItemContainer, nextButton});
+
+    nextButton->getElement().set("onclick", emscripten::val::module_property("ReceivePage.nextButtonHandler"));
+    prevButton->getElement().set("onclick", emscripten::val::module_property("ReceivePage.prevButtonHandler"));
+    dutchItem1->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+    dutchItem2->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+    dutchItem3->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+    dutchItem4->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+    dutchItem5->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+    dutchItem6->getElement().set("onclick", emscripten::val::module_property("ReceivePage.receiveDutchButtonHandler"));
+
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+    strcpy(attr.requestMethod, "GET");
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.onsuccess = ReceivePage::getDutchListHandler;
+
+    string url = "http://13.124.243.56:8080/dutch/normal/user?user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+    emscripten_fetch(&attr, url.c_str());
 }
 
 ReceivePage *ReceivePage::getInstance()
@@ -180,4 +224,157 @@ ReceivePage::~ReceivePage()
     ReceivePage::instance = nullptr;
 
     delete dutchItemContainer;
+}
+
+void ReceivePage::receiveDutchButtonHandler(emscripten::val event)
+{
+    std::cout << "ReceivePage::receiveDutchButtonHandler" << std::endl;
+    string buttonId = event["target"]["id"].as<std::string>();
+    buttonId.erase(buttonId.begin(), buttonId.begin() + 9);
+    std::stringstream ssInt(buttonId);
+    int index = 0;
+    ssInt >> index;
+    index--;
+
+    ReceiveDutchState::getInstance()->getNowUUID()->setState(dutchList[index]->getDutchUUID());
+
+    Router::getInstance()->navigate("/receiveDetail");
+}
+
+void ReceivePage::nextButtonHandler(emscripten::val event)
+{
+    std::cout << "ReceivePage::nextButtonHandler" << std::endl;
+    if (currentPageNumber * 6 + 6 >= dutchUUIDList->getValue().size())
+    {
+        return;
+    }
+    currentPageNumber++;
+
+    for (size_t i = 0; i < 6; i++)
+    {
+        if (dutchUUIDList->getValue().size() <= currentPageNumber * 6 + i)
+        {
+            dutchList[i]->getSendUserList()->setState("");
+            dutchList[i]->getTargetAmount()->setState("");
+            continue;
+        }
+        std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[currentPageNumber * 6 + i] << std::endl;
+        dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[currentPageNumber * 6 + i]);
+
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "GET");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = ReceivePage::getDutchInfoHandler;
+
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[currentPageNumber * 6 + i];
+        emscripten_fetch(&attr, url.c_str());
+    }
+}
+
+void ReceivePage::prevButtonHandler(emscripten::val event)
+{
+    std::cout << "ReceivePage::prevButtonHandler" << std::endl;
+    if (currentPageNumber == 0)
+    {
+        return;
+    }
+    currentPageNumber--;
+
+    for (size_t i = 0; i < 6; i++)
+    {
+        if (dutchUUIDList->getValue().size() <= currentPageNumber * 6 + i)
+        {
+            dutchList[i]->getSendUserList()->setState("");
+            dutchList[i]->getTargetAmount()->setState("");
+            continue;
+        }
+        std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[currentPageNumber * 6 + i] << std::endl;
+        dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[currentPageNumber * 6 + i]);
+
+        emscripten_fetch_attr_t attr;
+        emscripten_fetch_attr_init(&attr);
+        strcpy(attr.requestMethod, "GET");
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+        attr.onsuccess = ReceivePage::getDutchInfoHandler;
+
+        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[i + currentPageNumber * 6];
+        emscripten_fetch(&attr, url.c_str());
+    }
+}
+
+void ReceivePage::getDutchListHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "ReceivePage::getDutchLIstHandler" << std::endl;
+    std::cout << "status: " << fetch->status << std::endl;
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
+        dutchUUIDList->setState(j["dutch_"]); // 이거 고쳐야함
+        for (size_t i = 0; i < (dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++)
+        {
+            std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
+            dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[i]);
+
+            emscripten_fetch_attr_t attr;
+            emscripten_fetch_attr_init(&attr);
+            strcpy(attr.requestMethod, "GET");
+            attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+            attr.onsuccess = ReceivePage::getDutchInfoHandler;
+
+            string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[i];
+            emscripten_fetch(&attr, url.c_str());
+        }
+    }
+    catch (json::parse_error &e)
+    {
+        cout << "ReceivePage::getDutchListHandler: parse error" << e.what() << endl;
+    }
+    emscripten_fetch_close(fetch);
+}
+
+void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
+{
+    std::cout << "ReceivePage::getDutchInfoHandler" << std::endl;
+    std::cout << "status: " << fetch->status << std::endl;
+    try
+    {
+        json j = json::parse(string(fetch->data, fetch->numBytes));
+
+        int index;
+        for (size_t i = 0; i < 6; i++)
+        {
+            if (dutchList[i]->getDutchUUID() == j["dutch_uuid"])
+            {
+                index = i;
+                break;
+            }
+        }
+
+        vector<string> senders = j["user_list"];
+        string senderString = "";
+        for (string sender : senders)
+        {
+            senderString += sender + ", ";
+        }
+        senderString.erase(senderString.end() - 2, senderString.end());
+        dutchList[index]->getSendUserList()->setState(senderString);
+
+        int targetAmount = j["total_balence"];
+        int currentAmount = j["current_balence"];
+
+        dutchList[index]->getTargetAmount()->setState("$" + to_string(currentAmount) + " / $" + to_string(targetAmount));
+    }
+    catch (json::parse_error &e)
+    {
+        cout << "ReceivePage::getDutchInfoHandler: parse error" << e.what() << endl;
+    }
+    emscripten_fetch_close(fetch);
+}
+
+EMSCRIPTEN_BINDINGS(ReceivePage)
+{
+    emscripten::function("ReceivePage.receiveDutchButtonHandler", &ReceivePage::receiveDutchButtonHandler);
+    emscripten::function("ReceivePage.nextButtonHandler", &ReceivePage::nextButtonHandler);
+    emscripten::function("ReceivePage.prevButtonHandler", &ReceivePage::prevButtonHandler);
 }
