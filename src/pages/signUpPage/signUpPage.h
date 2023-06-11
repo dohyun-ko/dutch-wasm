@@ -9,7 +9,7 @@
 
 class SignUpPage : public Element
 {
-    std::shared_ptr<State<string>> signUpTextState;
+
     std::unique_ptr<Flex> container;
     Button *backwardButton;
     Button *signUpButton;

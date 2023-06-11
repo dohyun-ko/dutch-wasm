@@ -12,8 +12,8 @@
 class LoginPage : public Element
 {
 
-    std::shared_ptr<State<string>> loginTextState;
-    std::shared_ptr<State<string>> signUpTextState;
+    State<string> *loginTextState;
+    State<string> *signUpTextState;
 
     std::unique_ptr<Flex> container;
 

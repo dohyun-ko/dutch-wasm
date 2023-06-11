@@ -26,8 +26,8 @@ State<User> *LoginPage::userState = UserState::getInstance()->getCurrentUser();
 
 LoginPage::LoginPage() : Element("div")
 {
-    loginTextState = make_shared<State<string>>("Login");
-    signUpTextState = make_shared<State<string>>("Sign Up");
+    loginTextState = new State<string>("Login");
+    signUpTextState = new State<string>("Sign Up");
 
     container = make_unique<Flex>("column", "center", "center", "10px");
     loginButton = new Button(loginTextState, Style::defaultButtonStyle());
@@ -56,6 +56,7 @@ LoginPage::~LoginPage()
     delete signUpButton;
     delete usernameInput;
     delete passwordInput;
+    delete loginText;
 }
 
 LoginPage *LoginPage::getInstance()

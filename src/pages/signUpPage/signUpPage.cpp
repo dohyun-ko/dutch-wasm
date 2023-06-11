@@ -23,13 +23,11 @@ SignUpPage *SignUpPage::instance = nullptr;
 
 SignUpPage::SignUpPage() : Element("div")
 {
-    signUpTextState = make_shared<State<string>>("Sign Up");
-
     container = make_unique<Flex>("column", "center", "center", "10px");
     usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
     passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
     emailInput = new Input(new State<string>("Email"), Style::defaultInputStyle());
-    signUpButton = new Button(signUpTextState, Style::defaultButtonStyle_shared_ptr());
+    signUpButton = new Button(new State<string>("Sign Up"), Style::defaultButtonStyle());
     signUpText = make_unique<Text>(signUpSuccessState);
 
     container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton, signUpText.get()});
