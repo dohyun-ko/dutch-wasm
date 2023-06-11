@@ -48,9 +48,9 @@ MainPage::MainPage() : Element("div")
         .setHeight("100%")
         .setBackground(Style::primary);
 
-    sendButton = new Button(make_shared<State<string>>("Send"), Style::defaultButtonStyle());
-    receiveButton = new Button(make_shared<State<string>>("Receive"), Style::defaultButtonStyle());
-    makeButton = new Button(make_shared<State<string>>("Make"), Style::defaultButtonStyle());
+    sendButton = new Button(make_shared<State<string>>("Send"), Style::defaultButtonStyle_shared_ptr());
+    receiveButton = new Button(make_shared<State<string>>("Receive"), Style::defaultButtonStyle_shared_ptr());
+    makeButton = new Button(make_shared<State<string>>("Make"), Style::defaultButtonStyle_shared_ptr());
 
     leftSide->appendChildren({sendButton, receiveButton, makeButton});
 

@@ -388,7 +388,7 @@ void MakeDutchPage::dutchBalanceInputHandler(emscripten::val event)
 void MakeDutchPage::makeButtonHandler(emscripten::val event)
 {
     std::cout << "MakeDutchPage::makeButtonHandler" << std::endl;
-    int number=0;
+    int number = 0;
     if (sendUsernames[0]->getValue() == "")
     {
         return;
@@ -404,17 +404,16 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
         number++;
     }
     queryUserList.pop_back();
-    
+
     int chargeNumber;
     string chargeString = MakeDutchPage::charge->getValue();
     std::stringstream ssInt(chargeString);
     ssInt >> chargeNumber;
 
-    if (chargeNumber%number != 0 || chargeNumber == 0)
+    if (chargeNumber % number != 0 || chargeNumber == 0)
     {
         return;
     }
-
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
@@ -422,7 +421,7 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = MakeDutchPage::makeDutchNetworkHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance="+ charge->getValue() +"&user_list=" + queryUserList;
+    string url = "http://13.124.243.56:8080/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance=" + charge->getValue() + "&user_list=" + queryUserList;
     emscripten_fetch(&attr, url.c_str());
 }
 

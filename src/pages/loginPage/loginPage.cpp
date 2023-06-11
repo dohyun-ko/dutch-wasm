@@ -26,12 +26,10 @@ State<User> *LoginPage::userState = UserState::getInstance()->getCurrentUser();
 
 LoginPage::LoginPage() : Element("div")
 {
-    loginTextState = new State<string>("Login");
-    signUpTextState = new State<string>("Sign Up");
+    loginTextState = make_shared<State<string>>("Login");
+    signUpTextState = make_shared<State<string>>("Sign Up");
 
-    buttonStyle = new Style();
-
-    container = new Flex("column", "center", "center", "10px");
+    container = make_unique<Flex>("column", "center", "center", "10px");
     loginButton = new Button(loginTextState, Style::defaultButtonStyle());
     signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
     usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
@@ -47,15 +45,13 @@ LoginPage::LoginPage() : Element("div")
     loginButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.LoginButtonHandler"));
     signUpButton->getElement().set("onclick", emscripten::val::module_property("LoginPage.SignUpButtonHandler"));
 
-    LoginPage::appendChildren(container);
+    LoginPage::appendChildren(container.get());
 }
 
 LoginPage::~LoginPage()
 {
     LoginPage::instance = nullptr;
-    delete loginTextState;
-    delete signUpTextState;
-    delete container;
+
     delete loginButton;
     delete signUpButton;
     delete usernameInput;
@@ -76,7 +72,8 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
 {
     std::cout << "LoginPage::LoginButtonHander()" << std::endl;
 
-    if(LoginPage::usernameState->getValue() == "" || LoginPage::passwordState->getValue() == "") {
+    if (LoginPage::usernameState->getValue() == "" || LoginPage::passwordState->getValue() == "")
+    {
         LoginPage::loginState->setState("username or password is empty");
         return;
     }
@@ -112,7 +109,9 @@ void LoginPage::LoginSuccessHandler(emscripten_fetch_t *fetch)
     catch (json::parse_error &e)
     {
         cout << "parse error: " << e.what() << endl;
-    } catch (exception &e) {
+    }
+    catch (exception &e)
+    {
         cout << "network error" << endl;
     }
 
@@ -127,7 +126,9 @@ void LoginPage::LoginfailedHandler(emscripten_fetch_t *fetch)
     if (fetch->status == 401)
     {
         LoginPage::loginState->setState("login failed");
-    } else {
+    }
+    else
+    {
         LoginPage::loginState->setState("network error");
     }
     emscripten_fetch_close(fetch);

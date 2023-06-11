@@ -88,5 +88,6 @@
         "cfenv": "cpp",
         "span": "cpp",
         "stack": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
