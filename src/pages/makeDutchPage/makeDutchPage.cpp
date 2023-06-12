@@ -140,17 +140,15 @@ MakeDutchPage::MakeDutchPage() : Element("div")
     billLower->getStyle()
         .setMargin("10px");
 
-    dutchType = new State<string>("normal");
+    dutchType->setState("normal");
 
     radioContainer = new Flex("row", "center", "center", "10px");
     normalDutchRadio = new Radio(new State<string>("normal"), dutchType, nullptr, "normalDutchRadio");
     normalDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
     raceDutchRadio = new Radio(new State<string>("race"), dutchType, nullptr, "raceDutchRadio");
     raceDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
-    relayDutchRadio = new Radio(new State<string>("relay"), dutchType, nullptr, "relayDutchRadio");
-    relayDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
 
-    radioContainer->appendChildren({normalDutchRadio, raceDutchRadio, relayDutchRadio});
+    radioContainer->appendChildren({normalDutchRadio, raceDutchRadio});
 
     makeButton = new Button(new State<string>("Make"), Style::defaultButtonStyle());
     billLower->appendChildren({radioContainer, makeButton});
@@ -393,6 +391,7 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
     int number = 0;
     if (sendUsernames[0]->getValue() == "")
     {
+        emscripten_run_script("alert('select user!')");
         return;
     }
     string queryUserList = "";
@@ -414,6 +413,7 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
 
     if (chargeNumber % number != 0 || chargeNumber == 0)
     {
+        emscripten_run_script("alert('charge is not divided by user number!')");
         return;
     }
 

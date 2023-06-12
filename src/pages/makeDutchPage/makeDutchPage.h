@@ -23,7 +23,6 @@ class MakeDutchPage : public Element
     Input *chargeInput; // 더치 금액 입력창
     Radio *normalDutchRadio;
     Radio *raceDutchRadio;
-    Radio *relayDutchRadio;
 
     Flex *billContainer;       // 영수증 컨테이너
     Element *billUpper;        // 영수증 상단

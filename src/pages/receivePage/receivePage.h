@@ -15,6 +15,7 @@ class ReceivePageStates {
     State<string> *sendUserList;
     State<string> *targetAmount;
     string dutchUUID;
+    string dutchType;
 
     public:
         ReceivePageStates();
@@ -23,6 +24,8 @@ class ReceivePageStates {
         State<string>* getTargetAmount();
         string getDutchUUID();
         void setDutchUUID(string uuid);
+        string getDutchType();
+        void setDutchType(string type);
 };
 
 class ReceivePage : public Element

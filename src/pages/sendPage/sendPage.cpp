@@ -47,6 +47,16 @@ void SendPageStates::setDutchUUID(string uuid)
     this->dutchUUID = uuid;
 }
 
+string SendPageStates::getDutchType()
+{
+    return this->dutchType;
+}
+
+void SendPageStates::setDutchType(string type)
+{
+    this->dutchType = type;
+}
+
 SendPage *SendPage::instance = nullptr;
 SendPageStates *SendPage::dutchList[6] = {new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates(), new SendPageStates()};
 State<vector<string>> *SendPage::dutchUUIDList = SendDutchState::getInstance()->getSendUUIDs();
@@ -238,6 +248,7 @@ void SendPage::sendDutchButtonHandler(emscripten::val event)
     index--;
 
     SendDutchState::getInstance()->getNowUUID()->setState(dutchList[index]->getDutchUUID());
+    SendDutchState::getInstance()->getdutchType()->setState(dutchList[index]->getDutchType());
 
     Router::getInstance()->navigate("/sendDetail");
 }
@@ -294,6 +305,8 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
                 break;
             }
         }
+
+        dutchList[index]->setDutchType(j["type"]);
 
         std::cout << "index: " << index << std::endl;
 

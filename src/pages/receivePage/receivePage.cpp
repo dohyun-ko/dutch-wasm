@@ -18,6 +18,7 @@ ReceivePageStates::ReceivePageStates()
     sendUserList = new State<string>("");
     targetAmount = new State<string>("");
     dutchUUID = "";
+    dutchType = "";
 }
 
 ReceivePageStates::~ReceivePageStates()
@@ -44,6 +45,16 @@ string ReceivePageStates::getDutchUUID()
 void ReceivePageStates::setDutchUUID(string uuid)
 {
     dutchUUID = uuid;
+}
+
+string ReceivePageStates::getDutchType()
+{
+    return dutchType;
+}
+
+void ReceivePageStates::setDutchType(string type)
+{
+    dutchType = type;
 }
 
 ReceivePage *ReceivePage::instance = nullptr;
@@ -241,6 +252,7 @@ void ReceivePage::receiveDutchButtonHandler(emscripten::val event)
     index--;
 
     ReceiveDutchState::getInstance()->getNowUUID()->setState(dutchList[index]->getDutchUUID());
+    ReceiveDutchState::getInstance()->getdutchType()->setState(dutchList[index]->getDutchType());
 
     Router::getInstance()->navigate("/receiveDetail");
 }
@@ -355,6 +367,8 @@ void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
             }
         }
 
+        dutchList[index]->setDutchType(j["type"]);
+
         vector<string> sended = j["send_user_list"];
         vector<string> senders = j["user_name_list"];
         string senderString = "Dutch to ";
@@ -368,7 +382,7 @@ void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         int targetAmount = j["target_balance"];
         int currentAmount = j["current_balance"];
         
-        if (sended.size() == senders.size() && currentAmount == 0)
+        if (sended.size() == senders.size() && currentAmount <= 0)
         {
             dutchList[index]->getTargetAmount()->setState("Completed");
             return;

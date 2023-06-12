@@ -135,7 +135,7 @@ void SendDetailPage::sendButtonHandler(emscripten::val event)
         attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         attr.onsuccess = SendDetailPage::sendNetworkHandler;
 
-        string url = Constants::API_URL + "/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+        string url = Constants::API_URL + "/dutch/" + SendDutchState::getInstance()->getdutchType()->getValue() + "/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
         emscripten_fetch(&attr, url.c_str());
     }
     else

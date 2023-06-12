@@ -16,6 +16,7 @@ class SendPageStates
     State<string> *receiveUser;
     State<string> *sendAmount;
     string dutchUUID;
+    string dutchType;
 
 public:
     SendPageStates();
@@ -24,6 +25,8 @@ public:
     State<string> *getSendAmount();
     string getDutchUUID();
     void setDutchUUID(string uuid);
+    string getDutchType();
+    void setDutchType(string type);
 };
 
 // global state로 sendDutchPage에게 Dutch의 UUID or dutch의 모든 정보 전달해야함

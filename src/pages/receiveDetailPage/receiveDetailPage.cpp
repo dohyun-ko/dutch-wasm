@@ -132,7 +132,7 @@ void ReceiveDetailPage::completeButtonHandler(emscripten::val event)
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = ReceiveDetailPage::completeNetworkHandler;
 
-    string url = Constants::API_URL + "/dutch/normal/done?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+    string url = Constants::API_URL + "/dutch/"+ ReceiveDutchState::getInstance()->getdutchType()->getValue() +"/done?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -156,7 +156,7 @@ void ReceiveDetailPage::getDutchNetworkHandler(emscripten_fetch_t *fetch)
         } else {
             isSended = true;
         }
-        if (userList.size() == senduserList.size() && currentCharege == 0)
+        if (userList.size() == senduserList.size() && currentCharege <= 0)
         {
             isCompleted = true;
             currentCharge->setState("Completed");
