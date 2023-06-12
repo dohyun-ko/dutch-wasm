@@ -134,6 +134,7 @@ void ReceiveDetailPage::completeButtonHandler(emscripten::val event)
 
     string url = Constants::API_URL + "/dutch/"+ ReceiveDutchState::getInstance()->getdutchType()->getValue() +"/done?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
     emscripten_fetch(&attr, url.c_str());
+    isCompleted = true;
 }
 
 void ReceiveDetailPage::getDutchNetworkHandler(emscripten_fetch_t *fetch)
