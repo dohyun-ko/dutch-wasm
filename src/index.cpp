@@ -108,7 +108,7 @@ int main()
             {"/makeDutch", []()
              { return MakeDutchPage::getInstance(); }},
         },
-        "/receiveDetail");
+        "/main");
 
     while (true)
     {

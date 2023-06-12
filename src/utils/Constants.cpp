@@ -1,3 +1,3 @@
 #include "Constants.h"
 
-const std::string Constants::API_URL = "http://13.124.243.56";
+const std::string Constants::API_URL = "https://api.dutch.jaehong21.com";
