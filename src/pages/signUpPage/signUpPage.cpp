@@ -10,6 +10,8 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
+#include "../../utils/Constants.h"
+#include "../../router/Router.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -102,7 +104,7 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     attr.onerror = SignUpPage::SignUPFailedHandler;
     signUpSuccessState->setState("Signing Up...");
 
-    string url = "http://13.124.243.56:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
+    string url = Constants::API_URL + "/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -114,6 +116,7 @@ void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         SignUpPage::signUpSuccessState->setState(j["uuid"]);
+        Router::getInstance()->navigate("/login");
     }
     catch (json::parse_error &e)
     {

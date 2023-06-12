@@ -11,20 +11,19 @@ ReceivePageStates::ReceivePageStates()
     targetAmount = new State<string>("");
 }
 
-State<string>* ReceivePageStates::getSendUserList()
+State<string> *ReceivePageStates::getSendUserList()
 {
     return sendUserList;
 }
 
-State<string>* ReceivePageStates::getTargetAmount()
+State<string> *ReceivePageStates::getTargetAmount()
 {
     return targetAmount;
 }
 
 ReceivePage *ReceivePage::instance = nullptr;
-ReceivePageStates* ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
+ReceivePageStates *ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
 State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
-
 
 ReceivePage::ReceivePage() : Element("div")
 {

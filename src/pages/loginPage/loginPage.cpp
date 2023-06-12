@@ -9,6 +9,7 @@
 #include "../../router/Router.h"
 #include "../../components/element/Element.h"
 #include "../../globalState/userState/userState.h"
+#include "../../utils/Constants.h"
 
 #include <iostream>
 #include <functional>
@@ -87,7 +88,7 @@ void LoginPage::LoginButtonHandler(emscripten::val e)
     attr.onerror = LoginPage::LoginfailedHandler;
     loginState->setState("loading...");
 
-    string url = "http://13.124.243.56:8080/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue();
+    string url = Constants::API_URL + "/user/login?username=" + LoginPage::usernameState->getValue() + "&password=" + LoginPage::passwordState->getValue();
     emscripten_fetch(&attr, url.c_str());
 
     return;

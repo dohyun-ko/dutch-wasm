@@ -8,6 +8,7 @@
 
 #include "../../globalState/userState/userState.h"
 #include "../../router/Router.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -190,11 +191,12 @@ MakeDutchPage::MakeDutchPage() : Element("div")
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
-    strcpy(attr.requestMethod, "GET");
+    std::strcpy(attr.requestMethod, "GET");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = getUsersNetworkHandler;
 
-    emscripten_fetch(&attr, "http://13.124.243.56:8080/user/find/all");
+    std::string url = Constants::API_URL + "/user/find/all";
+    emscripten_fetch(&attr, url.c_str());
 }
 
 MakeDutchPage *MakeDutchPage::getInstance()
@@ -230,7 +232,7 @@ void MakeDutchPage::getUsersNetworkHandler(emscripten_fetch_t *fetch)
             attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
             attr.onsuccess = MakeDutchPage::getUserInfoNetworkHandler;
 
-            string url = "http://13.124.243.56:8080/user/find?uuid=" + userUUIDs->getValue()[i];
+            string url = Constants::API_URL + "/user/find?uuid=" + userUUIDs->getValue()[i];
             emscripten_fetch(&attr, url.c_str());
         }
     }
@@ -421,7 +423,7 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = MakeDutchPage::makeDutchNetworkHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance=" + charge->getValue() + "&user_list=" + queryUserList;
+    string url = Constants::API_URL + "/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance=" + charge->getValue() + "&user_list=" + queryUserList;
     emscripten_fetch(&attr, url.c_str());
 }
 

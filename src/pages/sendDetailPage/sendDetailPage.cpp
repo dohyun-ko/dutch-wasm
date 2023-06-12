@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../../router/Router.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -92,7 +93,7 @@ SendDetailPage::SendDetailPage() : Element("div")
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = SendDetailPage::getDutchNetworkHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + nowUUID->getValue();
+    string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + nowUUID->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -134,7 +135,7 @@ void SendDetailPage::sendButtonHandler(emscripten::val event)
         attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         attr.onsuccess = SendDetailPage::sendNetworkHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+        string url = Constants::API_URL + "/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
         emscripten_fetch(&attr, url.c_str());
     }
     else

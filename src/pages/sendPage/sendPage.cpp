@@ -10,6 +10,7 @@
 #include "../../components/state/State.cpp"
 #include "../../components/button/Button.h"
 #include "../../router/Router.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -198,7 +199,7 @@ SendPage::SendPage() : Element("div")
     dutchListFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     dutchListFetchAttr.onsuccess = SendPage::getDutchListHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/normal/user?user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+    string url = Constants::API_URL + "/dutch/normal/user?user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
     emscripten_fetch(&dutchListFetchAttr, url.c_str());
 }
 
@@ -252,7 +253,7 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
             dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
             dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-            string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[i];
+            string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + dutchUUIDList->getValue()[i];
             emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
         }
     }
@@ -333,7 +334,7 @@ void SendPage::nextButtonHandler(emscripten::val event)
         dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
+        string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
         emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }
@@ -362,7 +363,7 @@ void SendPage::prevButtonHandler(emscripten::val event)
         dutchInfoFetchAttr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         dutchInfoFetchAttr.onsuccess = SendPage::getDutchInfoHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
+        string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + SendPage::dutchUUIDList->getValue()[i + currentPageNumber * 6];
         emscripten_fetch(&dutchInfoFetchAttr, url.c_str());
     }
 }

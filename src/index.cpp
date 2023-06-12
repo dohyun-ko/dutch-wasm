@@ -16,6 +16,7 @@
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
+#include "pages/receiveDetailPage/receiveDetailPage.h"
 #include "pages/makeDutchPage/makeDutchPage.h"
 #include "pages/mainPage/mainPage.h"
 #include "pages/addBalancePage/addBalancePage.h"
@@ -102,10 +103,12 @@ int main()
              { return AddBalancePage::getInstance(); }},
             {"/sendDetail", []()
              { return SendDetailPage::getInstance(); }},
+            {"/receiveDetail", []()
+             { return ReceiveDetailPage::getInstance(); }},
             {"/makeDutch", []()
              { return MakeDutchPage::getInstance(); }},
         },
-        "/main");
+        "/receiveDetail");
 
     while (true)
     {

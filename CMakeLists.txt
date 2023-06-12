@@ -13,6 +13,7 @@ project(index)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(index
+    src/utils/Constants.cpp
     src/core/user/user.cpp
     src/core/dutch/dutch.cpp
     src/components/element/Element.cpp
