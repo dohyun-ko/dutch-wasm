@@ -30,18 +30,18 @@ class ReceivePage : public Element
     Button *prevButton; // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
     Button *nextButton; // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
 
-    std::shared_ptr<Style> dutchItemWrapperStyle;
-    std::shared_ptr<Style> dutchItemUserNameStyle;
-    std::shared_ptr<Style> dutchItemChargeStyle;
-    std::shared_ptr<Style> dutchItemButtonStyle;
-    std::shared_ptr<Style> dutchItemTitleStyle;
+    Style *dutchItemWrapperStyle;
+    Style *dutchItemUserNameStyle;
+    Style *dutchItemChargeStyle;
+    Style *dutchItemButtonStyle;
+    Style *dutchItemTitleStyle;
 
-    std::unique_ptr<Element> dutchItemWrapper1;
-    std::unique_ptr<Element> dutchItemWrapper2;
-    std::unique_ptr<Element> dutchItemWrapper3;
-    std::unique_ptr<Element> dutchItemWrapper4;
-    std::unique_ptr<Element> dutchItemWrapper5;
-    std::unique_ptr<Element> dutchItemWrapper6;
+    Element *dutchItemWrapper1;
+    Element *dutchItemWrapper2;
+    Element *dutchItemWrapper3;
+    Element *dutchItemWrapper4;
+    Element *dutchItemWrapper5;
+    Element *dutchItemWrapper6;
 
     // 받을 수 있는 더치 리스트 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
     Button *dutchItem1;

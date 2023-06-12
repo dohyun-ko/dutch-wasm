@@ -13,13 +13,17 @@ using json = nlohmann::json;
 ReceiveDetailPage *ReceiveDetailPage::instance = nullptr;
 
 bool ReceiveDetailPage::isCompleted = false;
+bool ReceiveDetailPage::isSended = false;
 State<string> *ReceiveDetailPage::nowUUID = ReceiveDutchState::getInstance()->getNowUUID();
 State<string> *ReceiveDetailPage::totalCharge = new State<string>("0");
 State<string> *ReceiveDetailPage::currentCharge = new State<string>("0");
 
 ReceiveDetailPage::ReceiveDetailPage() : Element("div")
 {
-    totalCharge = new State<string>("0");
+    totalCharge->setState("0");
+    currentCharge->setState("0");
+    isCompleted = false;
+    isSended = false;
 
     ReceiveDetailPage::getStyle()
         .setWidth("100%")
@@ -48,10 +52,13 @@ ReceiveDetailPage::ReceiveDetailPage() : Element("div")
         .setGridTemplateColumns("100px 1fr")
         .setGap("10px");
 
-    chargeLabel = std::make_unique<Text>(new State<string>("Charge Received: "));
-    chargeText = new Text(totalCharge);
+    targetChargeLabel = std::make_unique<Text>(new State<string>("Target: "));
+    targetChargeText = new Text(totalCharge);
 
-    billUpper->appendChildren({chargeLabel.get(), chargeText});
+    currentChargeLabel = std::make_unique<Text>(new State<string>("Received: "));
+    currentChargeText = new Text(currentCharge);
+
+    billUpper->appendChildren({targetChargeLabel.get(), targetChargeText, currentChargeLabel.get(), currentChargeText});
 
     billUpperDivider = std::make_unique<Element>("div");
     billUpperDivider->getStyle()
@@ -68,7 +75,7 @@ ReceiveDetailPage::ReceiveDetailPage() : Element("div")
     billLower->getStyle()
         .setMargin("10px");
 
-    completeButton = new Button(make_shared<State<string>>("Send"), Style::defaultButtonStyle_shared_ptr());
+    completeButton = new Button(make_shared<State<string>>("Complete"), Style::defaultButtonStyle_shared_ptr());
 
     billLower->appendChildren({completeButton});
 
@@ -76,7 +83,7 @@ ReceiveDetailPage::ReceiveDetailPage() : Element("div")
 
     ReceiveDetailPage::appendChildren({billContainer.get()});
 
-    completeButton->getElement().set("onclick", emscripten::val::module_property("SendDetailPage.sendButtonHandler"));
+    completeButton->getElement().set("onclick", emscripten::val::module_property("ReceiveDetailPage.completeButtonHandler"));
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
@@ -84,7 +91,7 @@ ReceiveDetailPage::ReceiveDetailPage() : Element("div")
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = ReceiveDetailPage::getDutchNetworkHandler;
 
-    string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + nowUUID->getValue();
+    string url = Constants::API_URL + "/dutch?dutch_uuid=" + nowUUID->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -100,7 +107,7 @@ ReceiveDetailPage *ReceiveDetailPage::getInstance()
 
 ReceiveDetailPage::~ReceiveDetailPage()
 {
-    delete instance;
+    instance = nullptr;
 }
 
 void ReceiveDetailPage::completeButtonHandler(emscripten::val event)
@@ -112,6 +119,11 @@ void ReceiveDetailPage::completeButtonHandler(emscripten::val event)
         emscripten_run_script("alert('already Completed this dutch')");
         return;
     }
+    if (!isSended)
+    {
+        emscripten_run_script("alert('Please send this dutch first')");
+        return;
+    }
 
     std::cout << "sendChargeStr == charge->getValue()" << std::endl;
     emscripten_fetch_attr_t attr;
@@ -120,7 +132,7 @@ void ReceiveDetailPage::completeButtonHandler(emscripten::val event)
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = ReceiveDetailPage::completeNetworkHandler;
 
-    string url = Constants::API_URL + "/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+    string url = Constants::API_URL + "/dutch/normal/done?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -133,8 +145,24 @@ void ReceiveDetailPage::getDutchNetworkHandler(emscripten_fetch_t *fetch)
         json j = json::parse(string(fetch->data, fetch->numBytes));
         int totalCharge = j["target_balance"];
         int currentCharege = j["current_balance"];
-        ReceiveDetailPage::totalCharge->setState(to_string(totalCharge));
-        ReceiveDetailPage::currentCharge->setState(to_string(currentCharege));
+        ReceiveDetailPage::totalCharge->setState("$"+to_string(totalCharge));
+        ReceiveDetailPage::currentCharge->setState("$"+to_string(currentCharege));
+
+        vector<string> userList = j["user_list"];
+        vector<string> senduserList = j["send_user_list"];
+        if (totalCharge > currentCharege)
+        {
+            isSended = false;
+        } else {
+            isSended = true;
+        }
+        if (userList.size() == senduserList.size() && currentCharege == 0)
+        {
+            isCompleted = true;
+            currentCharge->setState("Completed");
+        } else {
+            isCompleted = false;
+        }
     }
     catch (json::parse_error &e)
     {

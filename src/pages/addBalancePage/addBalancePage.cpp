@@ -83,6 +83,7 @@ void AddBalancePage::addBalanceButtonHandler(emscripten::val event)
     string patchedBalance;
     try {
         string stringUserBalance = UserState::getInstance()->getBalanceState()->getValue();
+        stringUserBalance.erase(stringUserBalance.begin(), stringUserBalance.begin() + 1);
         string stringAddBalance = addBalance->getValue();
         stringstream ss1(stringUserBalance);
         stringstream ss2(stringAddBalance);
@@ -91,6 +92,8 @@ void AddBalancePage::addBalanceButtonHandler(emscripten::val event)
         ss1 >> userBalance;
         ss2 >> addBalance;
         patchedBalance = to_string(userBalance + addBalance);
+
+        std::cout << userBalance << " + " << addBalance << " = " << patchedBalance << std::endl;
     } catch (exception &e)
     {
         std::cout << "error: " << e.what() << std::endl;
@@ -98,11 +101,11 @@ void AddBalancePage::addBalanceButtonHandler(emscripten::val event)
     }
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
-    strcpy(attr.requestMethod, "PATCH");
+    strcpy(attr.requestMethod, "POST");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = AddBalancePage::addBalanceNetworkHandler;
 
-    string url = Constants::API_URL + "/account/user?uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID(); + "&balance=" + patchedBalance;
+    string url = Constants::API_URL + "/account/user/update?uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&balance=" + patchedBalance;
 
     emscripten_fetch(&attr, url.c_str());
 }

@@ -74,7 +74,7 @@ SendPage::SendPage() : Element("div")
         .setGridTemplateColumns("repeat(3, 1fr)")
         .setGap("25px");
 
-    dutchItemWrapperStyle = std::make_shared<Style>();
+    dutchItemWrapperStyle = new Style();
     dutchItemWrapperStyle->setWidth("100%")
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -87,7 +87,7 @@ SendPage::SendPage() : Element("div")
         .setPadding("10px 0")
         .setColor(Style::primaryVariant);
 
-    dutchItemUserNameStyle = std::make_shared<Style>();
+    dutchItemUserNameStyle = new Style();
     dutchItemUserNameStyle->setFontSize("16px")
         .setFontWeight("600")
         .setWidth("calc(100\% - 20px)")
@@ -97,7 +97,7 @@ SendPage::SendPage() : Element("div")
         .setMargin("0")
         .setHeight("20%");
 
-    dutchItemChargeStyle = std::make_shared<Style>();
+    dutchItemChargeStyle = new Style();
     dutchItemChargeStyle->setFontSize("16px")
         .setFontWeight("400")
         .setWidth("calc(100\% - 20px)")
@@ -106,7 +106,7 @@ SendPage::SendPage() : Element("div")
         .setMargin("0")
         .setHeight("20%");
 
-    dutchItemTitleStyle = std::make_shared<Style>();
+    dutchItemTitleStyle = new Style();
     dutchItemTitleStyle->setFontSize("16px")
         .setBorder("none")
         .setBorderRadius("8px")
@@ -117,7 +117,7 @@ SendPage::SendPage() : Element("div")
 
     string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItemButtonStyle = std::make_shared<Style>();
+    dutchItemButtonStyle = new Style();
     dutchItemButtonStyle
         ->setBorder("none")
         .setBorderRadius("6px")
@@ -251,6 +251,8 @@ void SendPage::getDutchListHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         dutchUUIDList->setState(j["dutch_target_list"]);
+        std::cout << dutchUUIDList->getValue().size() << std::endl;
+
         for (size_t i = 0; i < (dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++)
         {
             std::cout << "SendDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
@@ -286,19 +288,32 @@ void SendPage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         for (size_t i = 0; i < 6; i++)
         {
             if (dutchList[i]->getDutchUUID() == j["dutch_uuid"])
-            {
+            { 
+                std::cout << "dutchList.DutchUUID: " + dutchList[i]->getDutchUUID() << std::endl;
                 index = i;
                 break;
             }
         }
 
+        std::cout << "index: " << index << std::endl;
+
         // 소유자 확인
         string receiver = j["owner_name"];
+        std::cout << "Receiver: " << receiver << std::endl;
         dutchList[index]->getReceiveUser()->setState("Dutch by " + receiver);
 
         // dutch에 돈을 냈는지 확인
         vector<string> sendUserList = j["send_user_list"];
-        std::cout << sendUserList[0] << ":::" << UserState::getInstance()->getCurrentUser()->getValue().getUUID() << std::endl;
+        std::cout << "sendUserList: " << sendUserList.size() << std::endl;
+
+        if (sendUserList.size() == 0)
+        {
+            // dutchList에 정보 저장
+            int total_charge = j["target_balance"];
+            int charge = total_charge / j["user_list"].size(); // 각자 내야하는 금액(normal dutch 기준)
+            dutchList[index]->getSendAmount()->setState("$" + to_string(charge));
+            return;
+        }
         if (find(sendUserList.begin(), sendUserList.end(), UserState::getInstance()->getCurrentUser()->getValue().getUUID()) == sendUserList.end())
         {
             // dutchList에 정보 저장

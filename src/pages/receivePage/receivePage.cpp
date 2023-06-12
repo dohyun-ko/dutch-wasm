@@ -54,6 +54,11 @@ int ReceivePage::currentPageNumber = 0;
 ReceivePage::ReceivePage() : Element("div")
 {
     currentPageNumber = 0;
+    for (size_t i = 0; i< 6; i++){
+        dutchList[i]->getSendUserList()->setState("");
+        dutchList[i]->getTargetAmount()->setState("");
+        dutchList[i]->setDutchUUID("");
+    }
 
     ReceivePage::getStyle()
         .setWidth("100%")
@@ -73,7 +78,7 @@ ReceivePage::ReceivePage() : Element("div")
         .setGridTemplateColumns("repeat(3, 1fr)")
         .setGap("25px");
 
-    dutchItemWrapperStyle = std::make_shared<Style>();
+    dutchItemWrapperStyle = new Style();
     dutchItemWrapperStyle->setWidth("100%")
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -86,7 +91,7 @@ ReceivePage::ReceivePage() : Element("div")
         .setPadding("10px 0")
         .setColor(Style::primaryVariant);
 
-    dutchItemUserNameStyle = std::make_shared<Style>();
+    dutchItemUserNameStyle = new Style();
     dutchItemUserNameStyle->setFontSize("12px")
         .setFontWeight("600")
         .setWidth("calc(100\% - 20px)")
@@ -96,7 +101,7 @@ ReceivePage::ReceivePage() : Element("div")
         .setMargin("0")
         .setHeight("20%");
 
-    dutchItemChargeStyle = std::make_shared<Style>();
+    dutchItemChargeStyle = new Style();
     dutchItemChargeStyle->setFontSize("16px")
         .setFontWeight("400")
         .setWidth("calc(100\% - 20px)")
@@ -104,7 +109,7 @@ ReceivePage::ReceivePage() : Element("div")
         .setPadding("0px 10px 10px 10px")
         .setMargin("0")
         .setHeight("20%");
-    dutchItemChargeStyle = std::make_shared<Style>();
+    dutchItemChargeStyle = new Style();
     dutchItemChargeStyle->setFontSize("16px")
         .setFontWeight("400")
         .setWidth("calc(100\% - 20px)")
@@ -113,7 +118,7 @@ ReceivePage::ReceivePage() : Element("div")
         .setMargin("0")
         .setHeight("20%");
 
-    dutchItemTitleStyle = std::make_shared<Style>();
+    dutchItemTitleStyle = new Style();
     dutchItemTitleStyle->setFontSize("16px")
         .setBorder("none")
         .setBorderRadius("8px")
@@ -124,7 +129,7 @@ ReceivePage::ReceivePage() : Element("div")
 
     string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
 
-    dutchItemButtonStyle = std::make_shared<Style>();
+    dutchItemButtonStyle = new Style();
     dutchItemButtonStyle
         ->setBorder("none")
         .setBorderRadius("6px")
@@ -146,48 +151,48 @@ ReceivePage::ReceivePage() : Element("div")
 
     dutchItem6 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem6");
 
-    dutchItemWrapper1 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper1 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper1->appendChildren({new Text(dutchList[0]->getSendUserList(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[0]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem1});
 
-    dutchItemWrapper2 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper2 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper2->appendChildren({new Text(dutchList[1]->getSendUserList(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[1]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem2});
 
-    dutchItemWrapper3 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper3 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper3->appendChildren({new Text(dutchList[2]->getSendUserList(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[2]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem3});
 
-    dutchItemWrapper4 = std::make_unique<Element>("div", dutchItemWrapperStyle);
-    dutchItemWrapper4->appendChildren({new Text(dutchList[3]->getSendUserList(), dutchItemTitleStyle),
+    dutchItemWrapper4 = new Element("div", dutchItemWrapperStyle);
+    dutchItemWrapper4->appendChildren({new Text(dutchList[3]->getSendUserList()),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[3]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem4});
 
-    dutchItemWrapper5 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper5 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper5->appendChildren({new Text(dutchList[4]->getSendUserList(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[4]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem5});
 
-    dutchItemWrapper6 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper6 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper6->appendChildren({new Text(dutchList[5]->getSendUserList(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[5]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem6});
 
-    dutchItemContainer->appendChildren({dutchItemWrapper1.get(),
-                                        dutchItemWrapper2.get(),
-                                        dutchItemWrapper3.get(),
-                                        dutchItemWrapper4.get(),
-                                        dutchItemWrapper5.get(),
-                                        dutchItemWrapper6.get()});
+    dutchItemContainer->appendChildren({dutchItemWrapper1,
+                                        dutchItemWrapper2,
+                                        dutchItemWrapper3,
+                                        dutchItemWrapper4,
+                                        dutchItemWrapper5,
+                                        dutchItemWrapper6});
 
     ReceivePage::appendChildren({prevButton, dutchItemContainer.get(), nextButton});
 
@@ -309,7 +314,7 @@ void ReceivePage::getDutchListHandler(emscripten_fetch_t *fetch)
     try
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
-        dutchUUIDList->setState(j["dutch_"]); // 이거 고쳐야함
+        dutchUUIDList->setState(j["dutch_owner_list"]); 
         for (size_t i = 0; i < (dutchUUIDList->getValue().size() < 6 ? dutchUUIDList->getValue().size() : 6); i++)
         {
             std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
@@ -350,8 +355,9 @@ void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
             }
         }
 
-        vector<string> senders = j["user_list"];
-        string senderString = "";
+        vector<string> sended = j["send_user_list"];
+        vector<string> senders = j["user_name_list"];
+        string senderString = "Dutch to ";
         for (string sender : senders)
         {
             senderString += sender + ", ";
@@ -359,14 +365,24 @@ void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
         senderString.erase(senderString.end() - 2, senderString.end());
         dutchList[index]->getSendUserList()->setState(senderString);
 
-        int targetAmount = j["total_balence"];
-        int currentAmount = j["current_balence"];
+        int targetAmount = j["target_balance"];
+        int currentAmount = j["current_balance"];
+        
+        if (sended.size() == senders.size() && currentAmount == 0)
+        {
+            dutchList[index]->getTargetAmount()->setState("Completed");
+            return;
+        }
 
         dutchList[index]->getTargetAmount()->setState("$" + to_string(currentAmount) + " / $" + to_string(targetAmount));
     }
     catch (json::parse_error &e)
     {
         cout << "ReceivePage::getDutchInfoHandler: parse error" << e.what() << endl;
+    }
+    catch (exception &e)
+    {
+        std::cout << "ReceivePage::getDutchInfoHandler: " << e.what() << std::endl;
     }
     emscripten_fetch_close(fetch);
 }

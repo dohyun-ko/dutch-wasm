@@ -27,6 +27,9 @@ State<User> *LoginPage::userState = UserState::getInstance()->getCurrentUser();
 
 LoginPage::LoginPage() : Element("div")
 {
+    loginState->setState("Login");
+    userState->setState(User("","",""));
+
     loginTextState = new State<string>("Login");
     signUpTextState = new State<string>("Sign Up");
 

@@ -93,7 +93,7 @@ SendDetailPage::SendDetailPage() : Element("div")
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = SendDetailPage::getDutchNetworkHandler;
 
-    string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + nowUUID->getValue();
+    string url = Constants::API_URL + "/dutch?dutch_uuid=" + nowUUID->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
