@@ -87,6 +87,8 @@
         "__tree": "cpp",
         "cfenv": "cpp",
         "span": "cpp",
-        "stack": "cpp"
-    }
+        "stack": "cpp",
+        "filesystem": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

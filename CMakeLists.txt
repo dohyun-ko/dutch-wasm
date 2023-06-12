@@ -13,6 +13,7 @@ project(index)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(index
+    src/utils/Constants.cpp
     src/core/user/user.cpp
     src/core/dutch/dutch.cpp
     src/components/element/Element.cpp
@@ -34,6 +35,7 @@ add_executable(index
     src/pages/receiveDetailPage/receiveDetailPage.cpp
     src/pages/sendPage/sendPage.cpp
     src/pages/sendDetailPage/sendDetailPage.cpp
+    src/pages/addBalancePage/addBalancePage.cpp
     src/pages/makeDutchPage/makeDutchPage.cpp
     src/index.cpp
 )

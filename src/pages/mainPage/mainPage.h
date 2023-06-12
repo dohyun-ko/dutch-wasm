@@ -10,18 +10,19 @@
 
 class MainPage : public Element
 {
-    Element *container;
-    Flex *leftSide;
-    Flex *rightSide;
-    Text *balanceText;
-    Text *myBalanceText;
-    Text *loginSuccessText;
+    std::unique_ptr<Element> container;
+    std::unique_ptr<Flex> leftSide;
+    std::unique_ptr<Flex> rightSide;
+    std::shared_ptr<Text> balanceText;
+    std::shared_ptr<Text> myBalanceText;
+    std::shared_ptr<Text> loginSuccessText;
 
     Button *sendButton;
     Button *receiveButton;
-    Button *loginButton; // global state에 유저 정보가 있으면 이 버튼을 안보이게 해야함 - branch 20 참고
+    Button *loginButton;
     Button *makeButton;
     Button *makeDutchButton;
+    Button *addBalanceButton;
 
     static MainPage *instance;
     MainPage();
@@ -29,15 +30,16 @@ class MainPage : public Element
 public:
     ~MainPage();
 
-    static State<User>* userState;
-    static State<string>* loginState;
-    static State<string>* balanceState;
+    static State<User> *userState;
+    static State<string> *loginState;
+    static State<string> *balanceState;
 
     static MainPage *getInstance();
     static void sendButtonHandler(emscripten::val event);
     static void receiveButtonHandler(emscripten::val event);
     static void loginButtonHandler(emscripten::val event);
     static void makeDutchButtonHandler(emscripten::val event);
+    static void addBalanceButtonHandler(emscripten::val event);
     static void notLoginedButtonHandler(emscripten::val event);
     static void getBalanceNetworkHandler(emscripten_fetch_t *fetch);
 };

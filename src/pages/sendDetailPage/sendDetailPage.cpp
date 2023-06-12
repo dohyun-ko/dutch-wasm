@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../../router/Router.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -92,7 +93,7 @@ SendDetailPage::SendDetailPage() : Element("div")
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = SendDetailPage::getDutchNetworkHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/normal?dutch_uuid=" + nowUUID->getValue();
+    string url = Constants::API_URL + "/dutch/normal?dutch_uuid=" + nowUUID->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -125,7 +126,7 @@ void SendDetailPage::sendButtonHandler(emscripten::val event)
         emscripten_run_script("alert('already Sended this dutch')");
         return;
     }
-    else if(sendChargeStr == charge->getValue())
+    else if (sendChargeStr == charge->getValue())
     {
         std::cout << "sendChargeStr == charge->getValue()" << std::endl;
         emscripten_fetch_attr_t attr;
@@ -134,9 +135,11 @@ void SendDetailPage::sendButtonHandler(emscripten::val event)
         attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         attr.onsuccess = SendDetailPage::sendNetworkHandler;
 
-        string url = "http://13.124.243.56:8080/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
+        string url = Constants::API_URL + "/dutch/normal/pay?dutch_uuid=" + nowUUID->getValue() + "&user_uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID();
         emscripten_fetch(&attr, url.c_str());
-    } else {
+    }
+    else
+    {
         emscripten_run_script("alert('Please input correct amount to send')");
     }
 }
@@ -161,23 +164,26 @@ void SendDetailPage::getDutchNetworkHandler(emscripten_fetch_t *fetch)
         SendDetailPage::receiveUser->setState(receiveUser);
 
         vector<string> sendUserList = j["send_user_list"];
-        if (find(sendUserList.begin(), sendUserList.end(), UserState::getInstance()->getCurrentUser()->getValue().getUUID()) == sendUserList.end()) {
+        if (find(sendUserList.begin(), sendUserList.end(), UserState::getInstance()->getCurrentUser()->getValue().getUUID()) == sendUserList.end())
+        {
             std::cout << "not sended" << std::endl;
             isSended = false;
-        } else {
+        }
+        else
+        {
             isSended = true;
             SendDetailPage::charge->setState("Completed");
         }
     }
-    catch(json::parse_error& e)
+    catch (json::parse_error &e)
     {
         std::cout << e.what() << std::endl;
     }
-    catch(exception &e)
+    catch (exception &e)
     {
         std::cout << e.what() << std::endl;
     }
-    
+
     emscripten_fetch_close(fetch);
 }
 

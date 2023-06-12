@@ -48,7 +48,7 @@ void ReceivePageStates::setDutchUUID(string uuid)
 ReceivePage *ReceivePage::instance = nullptr;
 ReceivePageStates *ReceivePage::dutchList[6] = {new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates(), new ReceivePageStates()};
 State<vector<string>> *ReceivePage::dutchUUIDList = ReceiveDutchState::getInstance()->getReceiveUUIDs();
-int ReceivePage::currentPageNumber = 0;
+
 
 ReceivePage::ReceivePage() : Element("div")
 {

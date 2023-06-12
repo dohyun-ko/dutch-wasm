@@ -2,6 +2,8 @@
 
 #include <emscripten/val.h>
 #include <string>
+#include <memory>
+#include <vector>
 
 using namespace emscripten;
 using namespace std;
@@ -13,6 +15,7 @@ class Element
     string id;
     val element;
     Style *style;
+    std::shared_ptr<Style> style_shared_ptr;
     vector<Element *> children;
 
     void appendChild(Element *child);
@@ -22,6 +25,7 @@ protected:
 
 public:
     explicit Element(string tag, Style *style = nullptr, string id = "");
+    explicit Element(string tag, shared_ptr<Style> style, string id = "");
 
     virtual ~Element();
 

@@ -16,8 +16,10 @@
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
+#include "pages/receiveDetailPage/receiveDetailPage.h"
 #include "pages/makeDutchPage/makeDutchPage.h"
 #include "pages/mainPage/mainPage.h"
+#include "pages/addBalancePage/addBalancePage.h"
 #include "router/Router.h"
 
 using namespace emscripten;
@@ -43,7 +45,7 @@ int main()
 {
     val root = getElementById("root");
 
-    Element *layout = new Element("div");
+    std::unique_ptr<Element> layout = make_unique<Element>("div");
 
     layout->getStyle()
         .setPosition("relative")
@@ -51,7 +53,7 @@ int main()
         .setFlexDirection("column")
         .setAlignItems("center");
 
-    Element *header = new Element("div");
+    std::unique_ptr<Element> header = make_unique<Element>("div");
     header->getStyle()
         .setPosition("absolute")
         .setTop("0")
@@ -61,7 +63,7 @@ int main()
         .setWidth("100%")
         .setHeight("80px");
 
-    Element *body = new Element("div");
+    std::shared_ptr<Element> body = make_shared<Element>("div");
     body->getStyle()
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -71,7 +73,7 @@ int main()
         .setHeight("calc(100vh)")
         .setBackground(Style::secondary);
 
-    Button *backButton = new Button(new State<string>("⬅️"));
+    std::unique_ptr<Button> backButton = make_unique<Button>(new State<string>("⬅️"));
     backButton->getStyle()
         .setBorder("none")
         .setBackground("transparent")
@@ -79,8 +81,8 @@ int main()
         .setCursor("pointer");
 
     backButton->getElement().set("onclick", emscripten::val::module_property("layout.backButtonHander"));
-    header->appendChildren(backButton);
-    layout->appendChildren({header, body});
+    header->appendChildren(backButton.get());
+    layout->appendChildren({header.get(), body.get()});
 
     root.call<void>("appendChild", layout->getElement());
 
@@ -97,12 +99,16 @@ int main()
              { return SendPage::getInstance(); }},
             {"/receive", []()
              { return ReceivePage::getInstance(); }},
+            {"/addBalance", []()
+             { return AddBalancePage::getInstance(); }},
             {"/sendDetail", []()
              { return SendDetailPage::getInstance(); }},
+            {"/receiveDetail", []()
+             { return ReceiveDetailPage::getInstance(); }},
             {"/makeDutch", []()
              { return MakeDutchPage::getInstance(); }},
         },
-        "/main");
+        "/receiveDetail");
 
     while (true)
     {

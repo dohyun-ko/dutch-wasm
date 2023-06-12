@@ -10,6 +10,7 @@
 #include "../../components/style/Style.h"
 #include "../../router/Router.h"
 #include "../../globalState/userState/userState.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -30,36 +31,37 @@ MainPage::MainPage() : Element("div")
         .setAlignItems("center")
         .setJustifyContent("center");
 
-    container = new Element("div");
+    container = std::make_unique<Element>("div");
     container->getStyle()
         .setWidth("100%")
         .setHeight("100%")
         .setDisplay("grid")
         .setGridTemplateColumns("4fr 3fr");
 
-    leftSide = new Flex("column", "center", "center", "10px");
+    leftSide = std::make_unique<Flex>("column", "center", "center", "10px");
     leftSide->getStyle()
         .setWidth("100%")
         .setHeight("100%");
 
-    rightSide = new Flex("column", "center", "center", "10px");
+    rightSide = std::make_unique<Flex>("column", "center", "center", "10px");
     rightSide->getStyle()
         .setWidth("100%")
         .setHeight("100%")
         .setBackground(Style::primary);
 
-    sendButton = new Button(new State<string>("Send"), Style::defaultButtonStyle());
-    receiveButton = new Button(new State<string>("Receive"), Style::defaultButtonStyle());
-    makeButton = new Button(new State<string>("Make"), Style::defaultButtonStyle());
+    sendButton = new Button(make_shared<State<string>>("Send"), Style::defaultButtonStyle_shared_ptr());
+    receiveButton = new Button(make_shared<State<string>>("Receive"), Style::defaultButtonStyle_shared_ptr());
+    makeButton = new Button(make_shared<State<string>>("Make"), Style::defaultButtonStyle_shared_ptr());
+    addBalanceButton = new Button(make_shared<State<string>>("Deposit"), Style::defaultButtonStyle_shared_ptr());
 
-    leftSide->appendChildren({sendButton, receiveButton, makeButton});
+    leftSide->appendChildren({sendButton, receiveButton, makeButton, addBalanceButton});
 
-    myBalanceText = new Text(new State<string>("My Balance"));
+    myBalanceText = std::make_shared<Text>(new State<string>("My Balance"));
     myBalanceText->getStyle()
         .setFontSize("24px")
         .setColor("white");
 
-    balanceText = new Text(balanceState);
+    balanceText = std::make_shared<Text>(balanceState);
     balanceText->getStyle()
         .setFontSize("24px")
         .setColor(Style::secondary)
@@ -70,7 +72,7 @@ MainPage::MainPage() : Element("div")
         .setTextAlign("center")
         .setLineHeight("50px");
 
-    loginSuccessText = new Text(loginState);
+    loginSuccessText = std::make_shared<Text>(loginState);
 
     loginButton = new Button(new State<string>("Login"), Style::defaultButtonStyle());
 
@@ -79,7 +81,7 @@ MainPage::MainPage() : Element("div")
 
     if (userState->getValue().getUUID() == "")
     {
-        rightSide->appendChildren({myBalanceText, balanceText, loginButton});
+        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginButton});
     }
     else
     {
@@ -89,12 +91,12 @@ MainPage::MainPage() : Element("div")
         attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
         attr.onsuccess = MainPage::getBalanceNetworkHandler;
 
-        string url = "http://13.124.243.56:8080/account/user?uuid=" + userState->getValue().getUUID();
+        string url = Constants::API_URL + "/account/user?uuid=" + userState->getValue().getUUID();
         emscripten_fetch(&attr, url.c_str());
-        rightSide->appendChildren({myBalanceText, balanceText, loginSuccessText});
+        rightSide->appendChildren({myBalanceText.get(), balanceText.get(), loginSuccessText.get()});
     }
 
-    container->appendChildren({leftSide, rightSide});
+    container->appendChildren({leftSide.get(), rightSide.get()});
 
     loginButton->getElement().set("onclick", emscripten::val::module_property("MainPage.loginButtonHandler"));
 
@@ -103,15 +105,17 @@ MainPage::MainPage() : Element("div")
         sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
         receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
         makeButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
+        addBalanceButton->getElement().set("onclick", emscripten::val::module_property("MainPage.notLoginedButtonHandler"));
     }
     else
     {
         sendButton->getElement().set("onclick", emscripten::val::module_property("MainPage.sendButtonHandler"));
         receiveButton->getElement().set("onclick", emscripten::val::module_property("MainPage.receiveButtonHandler"));
         makeButton->getElement().set("onclick", emscripten::val::module_property("MainPage.makeDutchButtonHandler"));
+        addBalanceButton->getElement().set("onclick", emscripten::val::module_property("MainPage.addBalanceButtonHandler"));
     }
 
-    MainPage::appendChildren(container);
+    MainPage::appendChildren(container.get());
 }
 
 MainPage *MainPage::getInstance()
@@ -127,35 +131,37 @@ MainPage *MainPage::getInstance()
 MainPage::~MainPage()
 {
     MainPage::instance = nullptr;
-    delete container;
+    cout << "MainPage::~MainPage()" << endl;
 }
 
 void MainPage::sendButtonHandler(emscripten::val event)
 {
     std::cout << "MainPage::sendButtonHandler" << std::endl;
-    Router *router = Router::getInstance();
-    router->navigate("/send");
+    Router::getInstance()->navigate("/send");
 }
 
 void MainPage::receiveButtonHandler(emscripten::val event)
 {
     std::cout << "MainPage::receiveButtonHandler" << std::endl;
-    Router *router = Router::getInstance();
-    router->navigate("/receive");
+    Router::getInstance()->navigate("/receive");
 }
 
 void MainPage::loginButtonHandler(emscripten::val event)
 {
     std::cout << "MainPage::loginButtonHandler" << std::endl;
-    Router *router = Router::getInstance();
-    router->navigate("/login");
+    Router::getInstance()->navigate("/login");
 }
 
 void MainPage::makeDutchButtonHandler(emscripten::val event)
 {
     std::cout << "MainPage::makeDutchButtonHandler" << std::endl;
-    Router *router = Router::getInstance();
-    router->navigate("/makeDutch");
+    Router::getInstance()->navigate("/makeDutch");
+}
+
+void MainPage::addBalanceButtonHandler(emscripten::val event)
+{
+    std::cout << "MainPage::addBalanceButtonHandler" << std::endl;
+    Router::getInstance()->navigate("/addBalance");
 }
 
 void MainPage::notLoginedButtonHandler(emscripten::val event)
@@ -172,7 +178,7 @@ void MainPage::getBalanceNetworkHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         string balance = j["balance"];
-        MainPage::balanceState->setState("$"+balance);
+        MainPage::balanceState->setState("$" + balance);
     }
     catch (json::parse_error &e)
     {
