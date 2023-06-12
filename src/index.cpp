@@ -108,23 +108,10 @@ int main()
             {"/makeDutch", []()
              { return MakeDutchPage::getInstance(); }},
         },
-        "/receiveDetail");
+        "/main");
 
     while (true)
     {
         emscripten_sleep(100);
     }
-
-    // emscripten_set_main_loop() // TODO: use this instead of sleep
-
-    // router.navigate("/signUp");
-
-    // SignUpPage* signUpPage = new SignUpPage(root);
-    // signUpPage->render();
-
-    // emscripten_sleep(3000);
-
-    // signUpPage->remove();
-
-    // mainPage->render();
 }

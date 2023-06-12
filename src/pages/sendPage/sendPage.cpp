@@ -216,6 +216,15 @@ SendPage *SendPage::getInstance()
 SendPage::~SendPage()
 {
     SendPage::instance = nullptr;
+
+    delete nextButton;
+    delete prevButton;
+    delete dutchItem1;
+    delete dutchItem2;
+    delete dutchItem3;
+    delete dutchItem4;
+    delete dutchItem5;
+    delete dutchItem6;
 }
 
 void SendPage::sendDutchButtonHandler(emscripten::val event)

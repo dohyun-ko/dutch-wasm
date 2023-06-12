@@ -1,6 +1,7 @@
 #pragma once
 
 #include <emscripten/fetch.h>
+#include <memory>
 
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
@@ -31,8 +32,6 @@ class SendPage : public Element
 
     Button *nextButton; // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
     Button *prevButton; // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
-
-    std::shared_ptr<State<int>> currentPage = 0;
 
     std::shared_ptr<Style> dutchItemWrapperStyle;
     std::shared_ptr<Style> dutchItemUserNameStyle;

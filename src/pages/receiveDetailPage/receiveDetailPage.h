@@ -1,5 +1,7 @@
 #pragma once
 
+#include <emscripten/fetch.h>
+
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
