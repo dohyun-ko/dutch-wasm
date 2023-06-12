@@ -1,5 +1,7 @@
 #include "addBalancePage.h"
+
 #include "../../components/state/State.cpp"
+#include "../../globalState/userState/userState.h"
 
 AddBalancePage *AddBalancePage::instance = nullptr;
 

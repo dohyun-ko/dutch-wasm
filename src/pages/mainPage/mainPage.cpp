@@ -199,4 +199,5 @@ EMSCRIPTEN_BINDINGS(MainPage)
     emscripten::function("MainPage.receiveButtonHandler", &MainPage::receiveButtonHandler);
     emscripten::function("MainPage.notLoginedButtonHandler", &MainPage::notLoginedButtonHandler);
     emscripten::function("MainPage.makeDutchButtonHandler", &MainPage::makeDutchButtonHandler);
+    emscripten::function("MainPage.addBalanceButtonHandler", &MainPage::addBalanceButtonHandler);
 }
