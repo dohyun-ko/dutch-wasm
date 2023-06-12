@@ -4,11 +4,12 @@
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
+#include "../../globalState/receiveDutchState/receiveDutchState.h"
+#include "../../globalState/userState/userState.h"
 
 class ReceiveDetailPage : public Element
 {
 
-    State<string> *charge;   // 더치 금액
     State<bool> *isComplete; // 더치 완료 여부
 
     Button *completeButton; // 더치 완료 버튼
@@ -30,6 +31,13 @@ class ReceiveDetailPage : public Element
 public:
     ~ReceiveDetailPage();
 
+    static State<string> *nowUUID;
+    static State<string> *totalCharge;   // 더치 금액
+    static State<string> *currentCharge; // 현재 더치 금액
+    static bool isCompleted;
+
     static ReceiveDetailPage *getInstance();
     static void completeButtonHandler(emscripten::val event);
+    static void completeNetworkHandler(emscripten_fetch_t *fetch);
+    static void getDutchNetworkHandler(emscripten_fetch_t *fetch);
 };
