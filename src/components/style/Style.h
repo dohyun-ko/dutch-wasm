@@ -108,5 +108,6 @@ public:
     static string secondaryVariant;
 
     static Style *defaultButtonStyle();
+    static std::shared_ptr<Style> defaultButtonStyle_shared_ptr();
     static Style *defaultInputStyle();
 };

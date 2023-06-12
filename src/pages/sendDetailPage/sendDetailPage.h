@@ -14,7 +14,7 @@
 class SendDetailPage : public Element
 {
 
-    State<std::string> *myBalance;  // 내 잔액
+    State<std::string> *myBalance; // 내 잔액
 
     Text *chargeText;       // 더치 금액 보여주기
     Text *receiveUserText;  // 받는 사람 보여주기
@@ -45,9 +45,9 @@ public:
     ~SendDetailPage();
 
     static State<string> *nowUUID;
-    static State<string> *charge; //더치 금액
-    static State<string> *sendCharge; //보낼 금액
-    static State<string> *receiveUser; //받는 사람
+    static State<string> *charge;      // 더치 금액
+    static State<string> *sendCharge;  // 보낼 금액
+    static State<string> *receiveUser; // 받는 사람
     static bool isSended;
     static SendDetailPage *getInstance();
     static void sendButtonHandler(emscripten::val event);

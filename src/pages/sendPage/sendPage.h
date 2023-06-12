@@ -1,6 +1,7 @@
 #pragma once
 
 #include <emscripten/fetch.h>
+#include <memory>
 
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
@@ -15,6 +16,7 @@ class SendPageStates
     State<string> *receiveUser;
     State<string> *sendAmount;
     string dutchUUID;
+    string dutchType;
 
 public:
     SendPageStates();
@@ -23,6 +25,8 @@ public:
     State<string> *getSendAmount();
     string getDutchUUID();
     void setDutchUUID(string uuid);
+    string getDutchType();
+    void setDutchType(string type);
 };
 
 // global state로 sendDutchPage에게 Dutch의 UUID or dutch의 모든 정보 전달해야함
@@ -31,8 +35,6 @@ class SendPage : public Element
 
     Button *nextButton; // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
     Button *prevButton; // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
-
-    State<int> *currentPage = 0;
 
     Style *dutchItemWrapperStyle;
     Style *dutchItemUserNameStyle;
@@ -57,7 +59,7 @@ class SendPage : public Element
 
     State<std::string> *dutchItemButtonTextState;
 
-    Element *dutchItemContainer;
+    std::unique_ptr<Element> dutchItemContainer;
 
     static SendPage *instance;
     SendPage();
@@ -73,5 +75,6 @@ public:
     static void prevButtonHandler(emscripten::val event);
     static void sendDutchButtonHandler(emscripten::val event);
     static void getDutchListHandler(emscripten_fetch_t *fetch);
-    static void getDutchInfoHandler(emscripten_fetch_t *fetch);;
+    static void getDutchInfoHandler(emscripten_fetch_t *fetch);
+    ;
 };

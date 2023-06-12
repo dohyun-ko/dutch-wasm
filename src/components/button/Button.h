@@ -18,7 +18,9 @@ class Button : public Element
 
 public:
     Button(State<string> *text, Style *style = nullptr, string id = "");
-    Button(std::shared_ptr<State<string>> text, Style *style = nullptr, string id = "");
+    Button(State<string> *text, std::shared_ptr<Style> style, string id = "");
+    Button(std::shared_ptr<State<string>> text, Style *style, string id = "");
+    Button(std::shared_ptr<State<string>> text, std::shared_ptr<Style> style = nullptr, string id = "");
 
     virtual ~Button() override;
 

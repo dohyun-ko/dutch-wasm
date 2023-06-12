@@ -1,10 +1,20 @@
 #include "addBalancePage.h"
+
+#include <emscripten/bind.h>
+#include <iostream>
+#include <sstream>
+
 #include "../../components/state/State.cpp"
+#include "../../router/Router.h"
+#include "../../globalState/userState/userState.h"
+#include "../../utils/Constants.h"
 
 AddBalancePage *AddBalancePage::instance = nullptr;
+State<string> *AddBalancePage::addBalance = new State<string>("0");
 
 AddBalancePage::AddBalancePage() : Element("div")
 {
+
     AddBalancePage::getStyle()
         .setWidth("100%")
         .setHeight("100%")
@@ -19,8 +29,8 @@ AddBalancePage::AddBalancePage() : Element("div")
         .setGridTemplateColumns("150px 1fr")
         .setGap("10px");
 
-    myBalance = new State<string>("0");
-    addBalance = new State<string>("0");
+    myBalance = UserState::getInstance()->getBalanceState();
+    addBalance->setState("0");
 
     Style *textStyle = new Style();
     textStyle->setFontSize("16px")
@@ -42,6 +52,9 @@ AddBalancePage::AddBalancePage() : Element("div")
 
     container->appendChildren({balanceGrid, addButton});
     AddBalancePage::appendChildren(container);
+
+    addBalanceInput->getElement().set("onchange", emscripten::val::module_property("AddBalancePage.addBalanceInputHandler"));
+    addButton->getElement().set("onclick", emscripten::val::module_property("AddBalancePage.addBalanceButtonHandler"));
 }
 
 AddBalancePage *AddBalancePage::getInstance()
@@ -56,5 +69,56 @@ AddBalancePage *AddBalancePage::getInstance()
 
 AddBalancePage::~AddBalancePage()
 {
-    delete instance;
+    instance = nullptr;
 }
+
+void AddBalancePage::addBalanceInputHandler(emscripten::val event)
+{
+    string value = event["target"]["value"].as<string>();
+    addBalance->setState(value);
+}
+
+void AddBalancePage::addBalanceButtonHandler(emscripten::val event)
+{
+    string patchedBalance;
+    try {
+        string stringUserBalance = UserState::getInstance()->getBalanceState()->getValue();
+        stringUserBalance.erase(stringUserBalance.begin(), stringUserBalance.begin() + 1);
+        string stringAddBalance = addBalance->getValue();
+        stringstream ss1(stringUserBalance);
+        stringstream ss2(stringAddBalance);
+        int userBalance;
+        int addBalance;
+        ss1 >> userBalance;
+        ss2 >> addBalance;
+        patchedBalance = to_string(userBalance + addBalance);
+
+        std::cout << userBalance << " + " << addBalance << " = " << patchedBalance << std::endl;
+    } catch (exception &e)
+    {
+        std::cout << "error: " << e.what() << std::endl;
+        return;
+    }
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+    strcpy(attr.requestMethod, "POST");
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.onsuccess = AddBalancePage::addBalanceNetworkHandler;
+
+    string url = Constants::API_URL + "/account/user/update?uuid=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&balance=" + patchedBalance;
+
+    emscripten_fetch(&attr, url.c_str());
+}
+
+void  AddBalancePage::addBalanceNetworkHandler(emscripten_fetch_t *fetch)
+{
+    cout << "addBalanceNetworkHandler" << endl;
+    Router::getInstance()->navigate("/main");
+}
+
+EMSCRIPTEN_BINDINGS(AddBalancePage)
+{
+    emscripten::function("AddBalancePage.addBalanceInputHandler", &AddBalancePage::addBalanceInputHandler);
+    emscripten::function("AddBalancePage.addBalanceButtonHandler", &AddBalancePage::addBalanceButtonHandler);
+}
+

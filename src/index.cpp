@@ -16,6 +16,7 @@
 #include "pages/sendPage/sendPage.h"
 #include "pages/sendDetailPage/sendDetailPage.h"
 #include "pages/receivePage/receivePage.h"
+#include "pages/receiveDetailPage/receiveDetailPage.h"
 #include "pages/makeDutchPage/makeDutchPage.h"
 #include "pages/mainPage/mainPage.h"
 #include "pages/addBalancePage/addBalancePage.h"
@@ -62,7 +63,7 @@ int main()
         .setWidth("100%")
         .setHeight("80px");
 
-    std::unique_ptr<Element> body = make_unique<Element>("div");
+    std::shared_ptr<Element> body = make_shared<Element>("div");
     body->getStyle()
         .setDisplay("flex")
         .setFlexDirection("column")
@@ -86,7 +87,7 @@ int main()
     root.call<void>("appendChild", layout->getElement());
 
     Router router(
-        body.get(),
+        body,
         {
             {"/login", []()
              { return LoginPage::getInstance(); }},
@@ -102,6 +103,8 @@ int main()
              { return AddBalancePage::getInstance(); }},
             {"/sendDetail", []()
              { return SendDetailPage::getInstance(); }},
+            {"/receiveDetail", []()
+             { return ReceiveDetailPage::getInstance(); }},
             {"/makeDutch", []()
              { return MakeDutchPage::getInstance(); }},
         },
@@ -111,17 +114,4 @@ int main()
     {
         emscripten_sleep(100);
     }
-
-    // emscripten_set_main_loop() // TODO: use this instead of sleep
-
-    // router.navigate("/signUp");
-
-    // SignUpPage* signUpPage = new SignUpPage(root);
-    // signUpPage->render();
-
-    // emscripten_sleep(3000);
-
-    // signUpPage->remove();
-
-    // mainPage->render();
 }

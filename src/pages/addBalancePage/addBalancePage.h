@@ -1,5 +1,8 @@
 #pragma once
 
+#include <emscripten.h>
+#include <emscripten/fetch.h>
+
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
@@ -9,7 +12,6 @@
 class AddBalancePage : public Element
 {
     State<string> *myBalance;  // 내 잔액
-    State<string> *addBalance; // 추가할 잔액
 
     Flex *container;      // 컨테이너
     Element *balanceGrid; // 잔액 그리드
@@ -29,6 +31,10 @@ class AddBalancePage : public Element
 
 public:
     ~AddBalancePage();
+    static State<string> *addBalance; // 추가할 잔액
 
     static AddBalancePage *getInstance();
+    static void addBalanceInputHandler(emscripten::val event);
+    static void addBalanceButtonHandler(emscripten::val event);
+    static void addBalanceNetworkHandler(emscripten_fetch_t *fetch);
 };

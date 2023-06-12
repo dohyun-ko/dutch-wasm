@@ -11,34 +11,32 @@
 
 class LoginPage : public Element
 {
-    
+
     State<string> *loginTextState;
     State<string> *signUpTextState;
 
-    Style* buttonStyle;
+    std::unique_ptr<Flex> container;
 
-    Flex* container;
+    Button *loginButton;
+    Button *signUpButton;
 
-    Button* loginButton;
-    Button* signUpButton;
+    Input *usernameInput;
+    Input *passwordInput;
 
-    Input* usernameInput;
-    Input* passwordInput;
+    Text *loginText;
 
-    Text* loginText;
-
-    static LoginPage* instance;
+    static LoginPage *instance;
     LoginPage();
 
 public:
     ~LoginPage();
 
-    static State<string>* loginState;
-    static State<User>* userState;
-    static State<string>* usernameState;
-    static State<string>* passwordState;
+    static State<string> *loginState;
+    static State<User> *userState;
+    static State<string> *usernameState;
+    static State<string> *passwordState;
 
-    static LoginPage* getInstance();
+    static LoginPage *getInstance();
 
     static void LoginButtonHandler(emscripten::val event);
     static void SignUpButtonHandler(emscripten::val event);

@@ -10,6 +10,8 @@
 #include "../../components/flex/Flex.h"
 #include "../../components/input/Input.h"
 #include "../../components/style/Style.h"
+#include "../../utils/Constants.h"
+#include "../../router/Router.h"
 
 using json = nlohmann::json;
 using namespace std;
@@ -23,16 +25,14 @@ SignUpPage *SignUpPage::instance = nullptr;
 
 SignUpPage::SignUpPage() : Element("div")
 {
-    signUpTextState = new State<string>("Sign Up");
-
-    container = new Flex("column", "center", "center", "10px");
+    container = make_unique<Flex>("column", "center", "center", "10px");
     usernameInput = new Input(new State<string>("Username"), Style::defaultInputStyle());
     passwordInput = new Input(new State<string>("Password"), Style::defaultInputStyle());
     emailInput = new Input(new State<string>("Email"), Style::defaultInputStyle());
-    signUpButton = new Button(signUpTextState, Style::defaultButtonStyle());
-    signUpText = new Text(signUpSuccessState);
+    signUpButton = new Button(new State<string>("Sign Up"), Style::defaultButtonStyle());
+    signUpText = make_unique<Text>(signUpSuccessState);
 
-    container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton, signUpText});
+    container->appendChildren({usernameInput, passwordInput, emailInput, signUpButton, signUpText.get()});
 
     signUpButton->getElement().set("onclick", emscripten::val::module_property("SignUpPage.SignUpButtonHander"));
     usernameInput->getElement().set("onchange", emscripten::val::module_property("SignUpPage.getUsername"));
@@ -41,7 +41,7 @@ SignUpPage::SignUpPage() : Element("div")
 
     passwordInput->getElement().set("type", "password");
 
-    SignUpPage::appendChildren(container);
+    SignUpPage::appendChildren(container.get());
 }
 
 SignUpPage *SignUpPage::getInstance()
@@ -57,8 +57,6 @@ SignUpPage *SignUpPage::getInstance()
 SignUpPage::~SignUpPage()
 {
     SignUpPage::instance = nullptr;
-    delete signUpTextState;
-    delete container;
     delete signUpButton;
     delete usernameInput;
     delete passwordInput;
@@ -92,7 +90,8 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     std::cout << "username: " << SignUpPage::usernameState->getValue() << std::endl;
     std::cout << "password: " << SignUpPage::passwordState->getValue() << std::endl;
     std::cout << "email: " << SignUpPage::emailState->getValue() << std::endl;
-    if(SignUpPage::usernameState->getValue() == "" || SignUpPage::passwordState->getValue() == "" || SignUpPage::emailState->getValue() == "") {
+    if (SignUpPage::usernameState->getValue() == "" || SignUpPage::passwordState->getValue() == "" || SignUpPage::emailState->getValue() == "")
+    {
         SignUpPage::signUpSuccessState->setState("Please fill out all fields");
         return;
     }
@@ -105,7 +104,7 @@ void SignUpPage::SignUpButtonHander(emscripten::val e)
     attr.onerror = SignUpPage::SignUPFailedHandler;
     signUpSuccessState->setState("Signing Up...");
 
-    string url = "http://13.124.243.56:8080/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
+    string url = Constants::API_URL + "/user?username=" + SignUpPage::usernameState->getValue() + "&password=" + SignUpPage::passwordState->getValue() + "&email=" + SignUpPage::emailState->getValue();
     emscripten_fetch(&attr, url.c_str());
 }
 
@@ -117,6 +116,7 @@ void SignUpPage::SignUpNetworkHandler(emscripten_fetch_t *fetch)
     {
         json j = json::parse(string(fetch->data, fetch->numBytes));
         SignUpPage::signUpSuccessState->setState(j["uuid"]);
+        Router::getInstance()->navigate("/login");
     }
     catch (json::parse_error &e)
     {
@@ -129,9 +129,12 @@ void SignUpPage::SignUPFailedHandler(emscripten_fetch_t *fetch)
 {
     std::cout << "SignUpPage.SignUPFailedHandler" << std::endl;
     std::cout << "status: " << fetch->status << std::endl;
-    if (fetch->status == 401) {
+    if (fetch->status == 401)
+    {
         SignUpPage::signUpSuccessState->setState("Username already exists");
-    } else {
+    }
+    else
+    {
         SignUpPage::signUpSuccessState->setState("Sign Up Failed");
     }
     emscripten_fetch_close(fetch);

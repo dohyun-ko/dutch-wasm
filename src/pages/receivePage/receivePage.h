@@ -1,28 +1,37 @@
 #pragma once
 
 #include <emscripten.h>
+#include <emscripten/fetch.h>
+#include <emscripten/bind.h>
+#include <memory>
 
 #include "../../components/element/Element.h"
 #include "../../components/button/Button.h"
 #include "../../components/flex/Flex.h"
 #include "../../components/text/Text.h"
+#include "../../router/Router.h"
 
 class ReceivePageStates {
     State<string> *sendUserList;
     State<string> *targetAmount;
+    string dutchUUID;
+    string dutchType;
 
     public:
         ReceivePageStates();
+        ~ReceivePageStates();
         State<string>* getSendUserList();
         State<string>* getTargetAmount();
+        string getDutchUUID();
+        void setDutchUUID(string uuid);
+        string getDutchType();
+        void setDutchType(string type);
 };
 
 class ReceivePage : public Element
 {
-    Button *nextButton; // 8개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
-    Button *prevButton; // 8개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
-
-    State<int> *currentPage = 0;
+    Button *prevButton; // 6개 이상의 더치가 있을 경우 이전 페이지로 넘어가는 버튼
+    Button *nextButton; // 6개 이상의 더치가 있을 경우 다음 페이지로 넘어가는 버튼
 
     Style *dutchItemWrapperStyle;
     Style *dutchItemUserNameStyle;
@@ -45,9 +54,9 @@ class ReceivePage : public Element
     Button *dutchItem5;
     Button *dutchItem6;
 
-    State<std::string> *dutchItemButtonTextState;
+    std::shared_ptr<State<std::string>> dutchItemButtonTextState;
 
-    Element *dutchItemContainer;
+    std::unique_ptr<Element> dutchItemContainer;
 
     static ReceivePage *instance;
     ReceivePage();
@@ -57,8 +66,12 @@ public:
 
     static ReceivePageStates *dutchList[6];
     static State<vector<string>> *dutchUUIDList;
+    static int currentPageNumber;
     static ReceivePage *getInstance();
     static void nextButtonHandler(emscripten::val event);
     static void prevButtonHandler(emscripten::val event);
     static void receiveDutchButtonHandler(emscripten::val event);
+    static void getDutchListHandler(emscripten_fetch_t *fetch);
+    static void getDutchInfoHandler(emscripten_fetch_t *fetch);
+
 };

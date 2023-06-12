@@ -28,6 +28,25 @@ Style *Style::defaultButtonStyle()
     return style;
 }
 
+std::shared_ptr<Style> Style::defaultButtonStyle_shared_ptr()
+{
+    std::shared_ptr<Style> style = std::make_shared<Style>();
+
+    style->setWidth("200px")
+        .setHeight("44px")
+        .setBackground(Style::primary)
+        .setBorder("none")
+        .setBorderRadius("6px")
+        .setFontSize("1rem")
+        .setColor("#FFFFFF")
+        .setPadding("0 25px")
+        .setBoxShadow("2px 4px 3px rgba(0, 0, 0, 0.15)")
+        .setCursor("pointer")
+        .setFontWeight("500");
+
+    return style;
+}
+
 Style *Style::defaultInputStyle()
 {
     Style *style = new Style();

@@ -8,6 +8,7 @@
 
 #include "../../globalState/userState/userState.h"
 #include "../../router/Router.h"
+#include "../../utils/Constants.h"
 
 using json = nlohmann::json;
 
@@ -139,17 +140,15 @@ MakeDutchPage::MakeDutchPage() : Element("div")
     billLower->getStyle()
         .setMargin("10px");
 
-    dutchType = new State<string>("normal");
+    dutchType->setState("normal");
 
     radioContainer = new Flex("row", "center", "center", "10px");
     normalDutchRadio = new Radio(new State<string>("normal"), dutchType, nullptr, "normalDutchRadio");
     normalDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
     raceDutchRadio = new Radio(new State<string>("race"), dutchType, nullptr, "raceDutchRadio");
     raceDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
-    relayDutchRadio = new Radio(new State<string>("relay"), dutchType, nullptr, "relayDutchRadio");
-    relayDutchRadio->getElement().set("onclick", emscripten::val::module_property("MakeDutchPage.dutchTypeRadioHandler"));
 
-    radioContainer->appendChildren({normalDutchRadio, raceDutchRadio, relayDutchRadio});
+    radioContainer->appendChildren({normalDutchRadio, raceDutchRadio});
 
     makeButton = new Button(new State<string>("Make"), Style::defaultButtonStyle());
     billLower->appendChildren({radioContainer, makeButton});
@@ -190,11 +189,12 @@ MakeDutchPage::MakeDutchPage() : Element("div")
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
-    strcpy(attr.requestMethod, "GET");
+    std::strcpy(attr.requestMethod, "GET");
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = getUsersNetworkHandler;
 
-    emscripten_fetch(&attr, "http://13.124.243.56:8080/user/find/all");
+    std::string url = Constants::API_URL + "/user/find/all";
+    emscripten_fetch(&attr, url.c_str());
 }
 
 MakeDutchPage *MakeDutchPage::getInstance()
@@ -230,7 +230,7 @@ void MakeDutchPage::getUsersNetworkHandler(emscripten_fetch_t *fetch)
             attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
             attr.onsuccess = MakeDutchPage::getUserInfoNetworkHandler;
 
-            string url = "http://13.124.243.56:8080/user/find?uuid=" + userUUIDs->getValue()[i];
+            string url = Constants::API_URL + "/user/find?uuid=" + userUUIDs->getValue()[i];
             emscripten_fetch(&attr, url.c_str());
         }
     }
@@ -388,9 +388,10 @@ void MakeDutchPage::dutchBalanceInputHandler(emscripten::val event)
 void MakeDutchPage::makeButtonHandler(emscripten::val event)
 {
     std::cout << "MakeDutchPage::makeButtonHandler" << std::endl;
-    int number=0;
+    int number = 0;
     if (sendUsernames[0]->getValue() == "")
     {
+        emscripten_run_script("alert('select user!')");
         return;
     }
     string queryUserList = "";
@@ -404,17 +405,17 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
         number++;
     }
     queryUserList.pop_back();
-    
+
     int chargeNumber;
     string chargeString = MakeDutchPage::charge->getValue();
     std::stringstream ssInt(chargeString);
     ssInt >> chargeNumber;
 
-    if (chargeNumber%number != 0 || chargeNumber == 0)
+    if (chargeNumber % number != 0 || chargeNumber == 0)
     {
+        emscripten_run_script("alert('charge is not divided by user number!')");
         return;
     }
-
 
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
@@ -422,7 +423,7 @@ void MakeDutchPage::makeButtonHandler(emscripten::val event)
     attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
     attr.onsuccess = MakeDutchPage::makeDutchNetworkHandler;
 
-    string url = "http://13.124.243.56:8080/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance="+ charge->getValue() +"&user_list=" + queryUserList;
+    string url = Constants::API_URL + "/dutch/" + dutchType->getValue() + "?owner=" + UserState::getInstance()->getCurrentUser()->getValue().getUUID() + "&target_balance=" + charge->getValue() + "&user_list=" + queryUserList;
     emscripten_fetch(&attr, url.c_str());
 }
 
