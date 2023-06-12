@@ -125,62 +125,62 @@ SendPage::SendPage() : Element("div")
         .setMargin("0")
         .setBackground(Style::primaryVariant);
 
-    dutchItemButtonTextState = std::make_shared<State<std::string>>("View Detail");
+    dutchItemButtonTextState = new State<std::string>("View Detail");
 
-    dutchItem1 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem1");
+    dutchItem1 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem1");
 
-    dutchItem2 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem2");
+    dutchItem2 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem2");
 
-    dutchItem3 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem3");
+    dutchItem3 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem3");
 
-    dutchItem4 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem4");
+    dutchItem4 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem4");
 
-    dutchItem5 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem5");
+    dutchItem5 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem5");
 
-    dutchItem6 = new Button(dutchItemButtonTextState, dutchItemButtonStyle, "dutchItem6");
+    dutchItem6 = new Button(dutchItemButtonTextState, Style::defaultButtonStyle(), "dutchItem6");
 
-    dutchItemWrapper1 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper1 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper1->appendChildren({new Text(dutchList[0]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[0]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem1});
 
-    dutchItemWrapper2 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper2 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper2->appendChildren({new Text(dutchList[1]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[1]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem2});
 
-    dutchItemWrapper3 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper3 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper3->appendChildren({new Text(dutchList[2]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[2]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem3});
 
-    dutchItemWrapper4 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper4 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper4->appendChildren({new Text(dutchList[3]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[3]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem4});
 
-    dutchItemWrapper5 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper5 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper5->appendChildren({new Text(dutchList[4]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[4]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem5});
 
-    dutchItemWrapper6 = std::make_unique<Element>("div", dutchItemWrapperStyle);
+    dutchItemWrapper6 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper6->appendChildren({new Text(dutchList[5]->getReceiveUser(), dutchItemTitleStyle),
                                        new Text(new State<string>(username), dutchItemUserNameStyle),
                                        new Text(dutchList[5]->getSendAmount(), dutchItemChargeStyle),
                                        dutchItem6});
 
-    dutchItemContainer->appendChildren({dutchItemWrapper1.get(),
-                                        dutchItemWrapper2.get(),
-                                        dutchItemWrapper3.get(),
-                                        dutchItemWrapper4.get(),
-                                        dutchItemWrapper5.get(),
-                                        dutchItemWrapper6.get()});
+    dutchItemContainer->appendChildren({dutchItemWrapper1,
+                                        dutchItemWrapper2,
+                                        dutchItemWrapper3,
+                                        dutchItemWrapper4,
+                                        dutchItemWrapper5,
+                                        dutchItemWrapper6});
 
     SendPage::appendChildren({prevButton, dutchItemContainer.get(), nextButton});
 

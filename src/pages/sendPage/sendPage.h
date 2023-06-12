@@ -39,12 +39,12 @@ class SendPage : public Element
     std::shared_ptr<Style> dutchItemButtonStyle;
     std::shared_ptr<Style> dutchItemTitleStyle;
 
-    std::unique_ptr<Element> dutchItemWrapper1;
-    std::unique_ptr<Element> dutchItemWrapper2;
-    std::unique_ptr<Element> dutchItemWrapper3;
-    std::unique_ptr<Element> dutchItemWrapper4;
-    std::unique_ptr<Element> dutchItemWrapper5;
-    std::unique_ptr<Element> dutchItemWrapper6;
+    Element *dutchItemWrapper1;
+    Element *dutchItemWrapper2;
+    Element *dutchItemWrapper3;
+    Element *dutchItemWrapper4;
+    Element *dutchItemWrapper5;
+    Element *dutchItemWrapper6;
 
     // 보낼 수 있는 더치 리스트 클릭시 해당 sendDutchPage로 이동 (event의 target을 이용해서 더치 uuid를 가져올 수 있도록 로직 구성예정)
     Button *dutchItem1;
@@ -54,7 +54,7 @@ class SendPage : public Element
     Button *dutchItem5;
     Button *dutchItem6;
 
-    std::shared_ptr<State<std::string>> dutchItemButtonTextState;
+    State<std::string> *dutchItemButtonTextState;
 
     std::unique_ptr<Element> dutchItemContainer;
 
