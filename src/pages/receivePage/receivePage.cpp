@@ -17,6 +17,7 @@ ReceivePageStates::ReceivePageStates()
 {
     sendUserList = new State<string>("");
     targetAmount = new State<string>("");
+    usernameText = new State<string>("");
     dutchUUID = "";
     dutchType = "";
 }
@@ -25,6 +26,7 @@ ReceivePageStates::~ReceivePageStates()
 {
     delete sendUserList;
     delete targetAmount;
+    delete usernameText;
 }
 
 State<string> *ReceivePageStates::getSendUserList()
@@ -35,6 +37,11 @@ State<string> *ReceivePageStates::getSendUserList()
 State<string> *ReceivePageStates::getTargetAmount()
 {
     return targetAmount;
+}
+
+State<string> *ReceivePageStates::getUsernameText()
+{
+    return usernameText;
 }
 
 string ReceivePageStates::getDutchUUID()
@@ -164,37 +171,37 @@ ReceivePage::ReceivePage() : Element("div")
 
     dutchItemWrapper1 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper1->appendChildren({new Text(dutchList[0]->getSendUserList(), dutchItemTitleStyle),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[0]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[0]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem1});
 
     dutchItemWrapper2 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper2->appendChildren({new Text(dutchList[1]->getSendUserList(), dutchItemTitleStyle),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[1]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[1]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem2});
 
     dutchItemWrapper3 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper3->appendChildren({new Text(dutchList[2]->getSendUserList(), dutchItemTitleStyle),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[2]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[2]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem3});
 
     dutchItemWrapper4 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper4->appendChildren({new Text(dutchList[3]->getSendUserList()),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[3]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[3]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem4});
 
     dutchItemWrapper5 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper5->appendChildren({new Text(dutchList[4]->getSendUserList(), dutchItemTitleStyle),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[4]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[4]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem5});
 
     dutchItemWrapper6 = new Element("div", dutchItemWrapperStyle);
     dutchItemWrapper6->appendChildren({new Text(dutchList[5]->getSendUserList(), dutchItemTitleStyle),
-                                       new Text(new State<string>(username), dutchItemUserNameStyle),
+                                       new Text(dutchList[5]->getUsernameText(), dutchItemUserNameStyle),
                                        new Text(dutchList[5]->getTargetAmount(), dutchItemChargeStyle),
                                        dutchItem6});
 
@@ -272,6 +279,7 @@ void ReceivePage::nextButtonHandler(emscripten::val event)
         {
             dutchList[i]->getSendUserList()->setState("");
             dutchList[i]->getTargetAmount()->setState("");
+            dutchList[i]->getUsernameText()->setState("");
             continue;
         }
         std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[currentPageNumber * 6 + i] << std::endl;
@@ -303,6 +311,7 @@ void ReceivePage::prevButtonHandler(emscripten::val event)
         {
             dutchList[i]->getSendUserList()->setState("");
             dutchList[i]->getTargetAmount()->setState("");
+            dutchList[i]->getUsernameText()->setState("");
             continue;
         }
         std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[currentPageNumber * 6 + i] << std::endl;
@@ -331,6 +340,7 @@ void ReceivePage::getDutchListHandler(emscripten_fetch_t *fetch)
         {
             std::cout << "ReceiveDutchList: " << dutchUUIDList->getValue()[i] << std::endl;
             dutchList[i]->setDutchUUID(dutchUUIDList->getValue()[i]);
+            dutchList[i]->getUsernameText()->setState("");
 
             emscripten_fetch_attr_t attr;
             emscripten_fetch_attr_init(&attr);
@@ -367,7 +377,10 @@ void ReceivePage::getDutchInfoHandler(emscripten_fetch_t *fetch)
             }
         }
 
+        string username = UserState::getInstance()->getCurrentUser()->getValue().getUsername();
+
         dutchList[index]->setDutchType(j["type"]);
+        dutchList[index]->getUsernameText()->setState(username);
 
         vector<string> sended = j["send_user_list"];
         vector<string> senders = j["user_name_list"];

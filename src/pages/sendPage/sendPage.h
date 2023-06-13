@@ -15,6 +15,7 @@ class SendPageStates
 {
     State<string> *receiveUser;
     State<string> *sendAmount;
+    State<string> *usernameText;
     string dutchUUID;
     string dutchType;
 
@@ -23,6 +24,7 @@ public:
     ~SendPageStates();
     State<string> *getReceiveUser();
     State<string> *getSendAmount();
+    State<string> *getUsernameText();
     string getDutchUUID();
     void setDutchUUID(string uuid);
     string getDutchType();
