@@ -1,4 +1,4 @@
-# [Check Service at Here](https://dutch-7cs.pages.dev)
+# [Check Demo at Here](https://dutch-7cs.pages.dev)
 
 # How to compile
 1. chmod +x compile.sh
