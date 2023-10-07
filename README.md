@@ -1,5 +1,9 @@
 # [Check Demo at Here](https://dutch-7cs.pages.dev)
 
+# Contributors
+- [siwonpada](https://github.com/siwonpada)
+- [dohyun-ko](https://github.com/dohyun-ko)
+
 # How to compile
 1. chmod +x compile.sh
 2. ./compile.h (or compile.h for windows)
